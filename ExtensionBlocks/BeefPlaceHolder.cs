@@ -2,7 +2,7 @@
 
 namespace ExtensionBlocks
 {
-    internal class BeefPlaceHolder : BeefBase
+    public class BeefPlaceHolder : BeefBase
     {
         public BeefPlaceHolder(byte[] rawBytes)
             : base(rawBytes)

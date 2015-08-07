@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ExtensionBlocks
 {
-    internal class Beef0005 : BeefBase
+    public class Beef0005 : BeefBase
     {
         public Beef0005(byte[] rawBytes)
             : base(rawBytes)
