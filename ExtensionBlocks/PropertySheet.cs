@@ -526,7 +526,7 @@ namespace ExtensionBlocks
         {
             var sb = new StringBuilder();
 
-            var s = string.Join("; ", PropertyNames.Select(x => $"Key: {x.Key}, Value: {x.Value}"));
+            var s = string.Join("; ", PropertyNames.Select(x => $"Guid: {GUID}, Key: {x.Key} ==> {Utils.GetDescriptionFromGuidAndKey(GUID,int.Parse(x.Key))}, Value: {x.Value}"));
 
             sb.Append(s);
 

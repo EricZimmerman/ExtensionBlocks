@@ -132,10 +132,9 @@ namespace ExtensionBlocks
                     os = "Windows 2008, 7, 8";
                     break;
                 case 0x2e:
-                    os = "Windows 8.1";
+                    os = "Windows 8.1, 10";
                     break;
-                default:
-                    break;
+                
             }
 
             sb.AppendLine($"Identifier: {Identifier:X2} ({os})");

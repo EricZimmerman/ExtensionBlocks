@@ -100,7 +100,7 @@ namespace ExtensionBlocks
                             desc = "AppUserModel ID";
                             break;
                         case 6:
-                            desc = "AppUserModel Is Dest List Separator";
+                            desc = "AppUserModel Is DestList Separator";
                             break;
                         case 9:
                             desc = "AppUserModel Prevent Pinning";
