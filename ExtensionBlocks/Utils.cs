@@ -20,6 +20,315 @@ namespace ExtensionBlocks
             return fullPattern;
         }
 
+        public static string GetDescriptionFromGuidAndKey(string guid, int key)
+        {
+            var desc = "(Description not available)";
+
+            switch (guid)
+            {
+                case "46588ae2-4cbc-4338-bbfc-139326986dce":
+                    switch (key)
+                    {
+                        case 4:
+                            desc = "SID";
+                            break;
+                    }
+                    break;
+                case "dabd30ed-0043-4789-a7f8-d013a4736622":
+                    switch (key)
+                    {
+                        case 100:
+                            desc = "Folder Path (Narrow)";
+                            break;
+                    }
+                    break;
+                case "28636aa6-953d-11d2-b5d6-00c04fd918d0":
+                    switch (key)
+                    {
+                        case 24:
+                            desc = "Parsing Name";
+                            break;
+                        case 9:
+                            desc = "Perceived Type";
+                            break;
+                        case 2:
+                            desc = "Description ID";
+                            break;
+                        case 12:
+                            desc = "File count";
+                            break;
+                        case 0:
+                            desc = "Find Data";
+                            break;
+                        case 33:
+                            desc = "Is Send To Target";
+                            break;
+                        case 8:
+                            desc = "Folder Path (Narrow)";
+                            break;
+                        case 11:
+                            desc = "Item Type";
+                            break;
+                        case 6:
+                            desc = "Namespace CLSID";
+                            break;
+                        case 5:
+                            desc = "Computer name";
+                            break;
+                        case 25:
+                            desc = "SFGAO Flags";
+                            break;
+                        case 29:
+                            desc = "Contained items";
+                            break;
+                        case 14:
+                            desc = "Total File Size";
+                            break;
+                        case 30:
+                            desc = "Parsing Path";
+                            break;
+                    }
+                    break;
+
+                case "9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3":
+                    switch (key)
+                    {
+                        case 8:
+                            desc = "AppUserModel Exclude From Show In New Install";
+                            break;
+                        case 5:
+                            desc = "AppUserModel ID";
+                            break;
+                        case 6:
+                            desc = "AppUserModel Is Dest List Separator";
+                            break;
+                        case 9:
+                            desc = "AppUserModel Prevent Pinning";
+                            break;
+                        case 2:
+                            desc = "AppUserModel RelaunchCommand";
+                            break;
+                        case 4:
+                            desc = "AppUserModel Relaunch Display Name Resource";
+                            break;
+                        case 3:
+                            desc = "AppUserModel Relaunch Icon Resource";
+                            break;
+                    }
+                    break;
+
+                case "446d16b1-8dad-4870-a748-402ea43d788c":
+                    switch (key)
+                    {
+                        case 100:
+                            desc = "Thumbnail Cache Id";
+                            break;
+                    }
+                    break;
+
+                case "fb8d2d7b-90d1-4e34-bf60-6eac09922bbf":
+                    switch (key)
+                    {
+                        case 2:
+                            desc = "WinX Hash";
+                            break;
+                    }
+                    break;
+
+                case "f29f85e0-4ff9-1068-ab91-08002b27b3d9":
+                    switch (key)
+                    {
+                        case 18:
+                            desc = "Application Name";
+                            break;
+                        case 4:
+                            desc = "Author";
+                            break;
+                        case 6:
+                            desc = "Comment";
+                            break;
+                        case 5:
+                            desc = "Keywords";
+                            break;
+                        case 3:
+                            desc = "Subject";
+                            break;
+                        case 17:
+                            desc = "Thumbnail";
+                            break;
+                        case 27:
+                            desc = "Thumbnail Stream";
+                            break;
+                        case 2:
+                            desc = "Title";
+                            break;
+                        case 16:
+                            desc = "Document Character Count";
+                            break;
+                        case 12:
+                            desc = "Document Date Created";
+                            break;
+                        case 11:
+                            desc = "Document Date Printed";
+                            break;
+                        case 13:
+                            desc = "Document Date Saved";
+                            break;
+                        case 8:
+                            desc = "Document Last Author";
+                            break;
+                        case 14:
+                            desc = "Document Page Count";
+                            break;
+                        case 9:
+                            desc = "Document Revision Number";
+                            break;
+                        case 19:
+                            desc = "Document Security";
+                            break;
+                        case 7:
+                            desc = "Document Template";
+                            break;
+                        case 10:
+                            desc = "Document Total Editing Time";
+                            break;
+                        case 15:
+                            desc = "Document Word Count";
+                            break;
+                    }
+                    break;
+
+                case "841e4f90-ff59-4d16-8947-e81bbffab36d":
+                    switch (key)
+                    {
+                        case 16:
+                            desc = "Software Date Last Used";
+                            break;
+
+                        case 2:
+                            desc = "Publisher Display Name";
+                            break;
+                    }
+                    break;
+
+                case "86d40b4d-9069-443c-819a-2a54090dccec":
+                    switch (key)
+                    {
+                        case 2:
+                            desc = "Tile Small Image Location";
+                            break;
+                        case 4:
+                            desc = "Tile Background Color";
+                            break;
+                        case 5:
+                            desc = "Tile Foreground Color";
+                            break;
+                        case 11:
+                            desc = "Tile Display Name";
+                            break;
+                        case 12:
+                            desc = "Tile Image Location";
+                            break;
+                        case 14:
+                            desc = "Tile Unknown Flags";
+                            break;
+                    }
+
+                    break;
+                    
+                case "b725f130-47ef-101a-a5f1-02608c9eebac":
+                    switch (key)
+                    {
+                        case 16:
+                            desc = "Date Accessed";
+                            break;
+                        case 15:
+                            desc = "Date Created";
+                            break;
+                        case 14:
+                            desc = "Date Modified";
+                            break;
+                        case 18:
+                            desc = "File Allocation Size";
+                            break;
+                        case 13:
+                            desc = "File Attributes";
+                            break;
+                        case 21:
+                            desc = "File Reference Number";
+                            break;
+                        case 2:
+                            desc = "Item Folder Name Display";
+                            break;
+                        case 10:
+                            desc = "Item Name Display";
+                            break;
+                        case 4:
+                            desc = "Item Type Text";
+                            break;
+                        case 12:
+                            desc = "Size";
+                            break;
+                        case 19:
+                            desc = "Search Contents";
+                            break;
+                    }
+                    break;
+                case "e3e0584c-b788-4a5a-bb20-7f5a44c9acdd":
+                    switch (key)
+                    {
+                        case 6:
+                            desc = "Item Folder Path Display";
+                            break;
+                        case 7:
+                            desc = "Item Path Display";
+                            break;
+                        case 10:
+                            desc = "Is Read";
+                            break;
+                        case 11:
+                            desc = "Importance";
+                            break;
+                        case 21:
+                            desc = "Message AttachmentNames";
+                            break;
+                        case 2:
+                            desc = "Message BccAddress";
+                            break;
+                        case 3:
+                            desc = "Message BccName";
+                            break;
+                        case 4:
+                            desc = "Message CcAddress";
+                            break;
+                        case 5:
+                            desc = "Message CcName";
+                            break;
+                        case 13:
+                            desc = "Message FromAddress";
+                            break;
+                        case 14:
+                            desc = "Message FromName";
+                            break;
+                        case 20:
+                            desc = "Message DateReceived";
+                            break;
+                        case 16:
+                            desc = "Message ToAddress";
+                            break;
+                        case 17:
+                            desc = "Message ToName";
+                            break;
+                        case 18:
+                            desc = "Contact WebPage";
+                            break;
+                    }
+                    break;
+            }
+
+            return desc;
+        }
+
 
         public static IExtensionBlock GetExtensionBlockFromBytes(long signature, byte[] rawBytes)
         {

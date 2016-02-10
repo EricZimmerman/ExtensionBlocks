@@ -414,6 +414,13 @@ namespace ExtensionBlocks
 
                             break;
 
+                        case 0x0002:
+                            //VT_I2 (0x0002) Either the specified type, or the type of the element or contained field MUST be a 2-byte signed int
+
+                            PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), BitConverter.ToUInt16(propertyValue.Value, propertyIndex).ToString(CultureInfo.InvariantCulture));
+
+                            break;
+
                         case 0x101f:
                             //VT_VECTOR | VT_LPWSTR 0x101F Type is Vector of UnicodeString, and the minimum property set version is 0
 
