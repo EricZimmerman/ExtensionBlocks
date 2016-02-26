@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -265,9 +266,9 @@ namespace ExtensionBlocks
 
                         default:
                             PropertyNames.Add(propertyName,
-                                $"Unknown property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
+                                $"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
 
-                            throw new Exception($"Unknown property type: {namedType.ToString("X")}");
+                            throw new Exception($"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
                     }
                 }
 
@@ -336,7 +337,20 @@ namespace ExtensionBlocks
                                 "VT_VECTOR data not implemented (yet)");
 
                             break;
+                        case 0x01e:
+                            var uniLength1e = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
+                            propertyIndex += 4;
 
+                            var unicodeName1e =
+                                Encoding.Unicode.GetString(propertyValue.Value, propertyIndex, uniLength1e)
+                                    .Split('\0')
+                                    .First();
+
+                           // Debug.WriteLine($"Find me: {BitConverter.ToString(propertyValue.Value)}, propertyIndex: {propertyIndex} unicodeName1e: {unicodeName1e}");
+
+                            PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), unicodeName1e);
+
+                            break;
                         case 0x001f: //unicode string
 
                             var uniLength = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
@@ -495,9 +509,9 @@ namespace ExtensionBlocks
 
                         default:
                             PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture),
-                                $"Unknown property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
+                                $"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
 
-                            throw new Exception($"Unknown property type: {numericType.ToString("X")}");
+                            throw new Exception($"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
                     }
                 }
 
