@@ -266,9 +266,9 @@ namespace ExtensionBlocks
 
                         default:
                             PropertyNames.Add(propertyName,
-                                $"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
-
-                            throw new Exception($"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
+                                $"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}. Send file to saericzimmerman@gmail.com to get support added");
+                            break;
+                            //throw new Exception($"Unknown named property type: {namedType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
                     }
                 }
 
@@ -509,9 +509,9 @@ namespace ExtensionBlocks
 
                         default:
                             PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture),
-                                $"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
-
-                            throw new Exception($"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
+                                $"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}. Send file to saericzimmerman@gmail.com to get support added");
+                            break;
+                          //  throw new Exception($"Unknown numeric property type: {numericType.ToString("X")}, Hex data (after property type): {BitConverter.ToString(propertyValue.Value, propertyIndex)}");
                     }
                 }
 
