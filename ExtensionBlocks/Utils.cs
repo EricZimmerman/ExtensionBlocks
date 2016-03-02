@@ -597,9 +597,18 @@ namespace ExtensionBlocks
 
             switch (tempValue)
             {
+                case "141d98ad-3e07-4c44-a578-4dca078286a4":
+                    return "Time and Date";
+                case "7940acf8-60ba-4213-a7c3-f3b400ee266d":
+                    return "Set up a workspace task";
+                case "040873cb-404a-49fe-a254-a9bb9cefaea5":
+                    return "Programs and Features";
+                case "4de175b5-44ab-4397-9e01-38e9de4f0fb1":
+                    return "AutoPlay";
                 case "088e3905-0323-4b02-9826-5d99428e115f":
                     return "Desktop";
-
+                case "91ba8e01-f854-4418-a108-e63323ddae60":
+                    return "Optional features";
                 case "047ddc7e-f9c2-11dd-a093-79d855d89593":
                     return "Kaspersky Suite";
 
@@ -1927,10 +1936,9 @@ namespace ExtensionBlocks
             }
             catch (Exception)
             {
-                if (day != 0 && month < 13)
-                {
-                    throw;
-                }
+                
+                    return null;
+                
             }
 
             return thedate;
