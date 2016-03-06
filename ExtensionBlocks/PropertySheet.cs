@@ -540,9 +540,20 @@ namespace ExtensionBlocks
         {
             var sb = new StringBuilder();
 
-            var s = string.Join("; ", PropertyNames.Select(x => $"Guid: {GUID}, Key: {x.Key} ==> {Utils.GetDescriptionFromGuidAndKey(GUID,int.Parse(x.Key))}, Value: {x.Value}"));
+            if (PropertySheetType == PropertySheetTypeEnum.Numeric)
+            {
+                var s = string.Join("; ", PropertyNames.Select(x => $"Guid: {GUID}, Key: {x.Key} ==> {Utils.GetDescriptionFromGuidAndKey(GUID, int.Parse(x.Key))}, Value: {x.Value}"));
 
-            sb.Append(s);
+                sb.Append(s);
+            }
+            else
+            {
+                var s = string.Join("; ", PropertyNames.Select(x => $"Guid: {GUID}, Key: {x.Key} ==> {x.Key}, Value: {x.Value}"));
+
+                sb.Append(s);
+            }
+
+            
 
             return sb.ToString();
         }
