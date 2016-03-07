@@ -205,6 +205,12 @@ namespace ExtensionBlocks
                             uniLength = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
                             propertyIndex += 4;
 
+                            if (uniLength <= 0)
+                            {
+                                PropertyNames.Add(propertyName, string.Empty);
+                                break;
+                            }
+
                             unicodeName = Encoding.Unicode.GetString(propertyValue.Value, propertyIndex,
                                 (uniLength*2) - 2);
                             propertyIndex += (uniLength*2);
@@ -355,6 +361,13 @@ namespace ExtensionBlocks
 
                             var uniLength = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
                             propertyIndex += 4;
+
+
+                            if (uniLength <= 0)
+                            {
+                                PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), string.Empty);
+                                break;
+                            }
 
                             var unicodeName = Encoding.Unicode.GetString(propertyValue.Value, propertyIndex,
                                 (uniLength*2) - 2);
