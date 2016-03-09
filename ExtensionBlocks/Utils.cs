@@ -597,6 +597,14 @@ namespace ExtensionBlocks
 
             switch (tempValue)
             {
+                case "416651e4-9c3c-11d9-8bde-f66bad1e3f3a":
+                    return "Nokia Phone Browser";
+                case "24ad3ad4-a569-4530-98e1-ab02f9417aa8":
+                    return "Pictures";
+                case "f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a":
+                    return "Videos";
+                case "3dfdf296-dbec-4fb4-81d1-6a3438bcf4de":
+                    return "Music";
                 case "141d98ad-3e07-4c44-a578-4dca078286a4":
                     return "Time and Date";
                 case "7940acf8-60ba-4213-a7c3-f3b400ee266d":
