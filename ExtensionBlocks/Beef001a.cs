@@ -31,9 +31,12 @@ namespace ExtensionBlocks
 
             //TODO get shell item list
 
-            Message =
-                "Unsupported Extension block. Please report to Report to saericzimmerman@gmail.com to get it added!";
-
+            if (index != 38)
+            {
+                Message =
+                    "Unsupported Extension block. Please report to Report to saericzimmerman@gmail.com to get it added!";
+            }
+            
             VersionOffset = BitConverter.ToInt16(rawBytes, index);
         }
 
