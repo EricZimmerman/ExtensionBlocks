@@ -1689,6 +1689,9 @@ namespace ExtensionBlocks
                 case "9e3995ab-1f9c-4f13-b827-48b24b6c7174":
                     return "User Pinned";
 
+                case "e31ea727-12ed-4702-820c-4b6445f28e1a":
+                    return "Dropbox";
+
                 case "9e52ab10-f80d-49df-acb8-4330f5687855":
                     return "Temporary Burn Folder";
 
