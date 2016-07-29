@@ -453,12 +453,19 @@ namespace ExtensionBlocks
 
                             propertyIndex += 4;
 
-                            uniLength = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
-                            propertyIndex += 4;
+                            unicodeName = string.Empty;
 
-                            unicodeName = Encoding.Unicode.GetString(propertyValue.Value, propertyIndex,
-                                (uniLength*2) - 2);
-                            propertyIndex += (uniLength*2);
+                            if (propertyValue.Value.Length>propertyIndex)
+                            {
+                                uniLength = BitConverter.ToInt32(propertyValue.Value, propertyIndex);
+                                propertyIndex += 4;
+
+                                unicodeName = Encoding.Unicode.GetString(propertyValue.Value, propertyIndex,
+                                    (uniLength * 2) - 2);
+                                propertyIndex += (uniLength * 2);
+                            }
+
+                           
 
                             PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), unicodeName);
 
