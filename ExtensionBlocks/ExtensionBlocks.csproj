@@ -76,6 +76,7 @@
     <Compile Include="Beef0017.cs" />
     <Compile Include="Beef0019.cs" />
     <Compile Include="Beef001a.cs" />
+    <Compile Include="Beef001b.cs" />
     <Compile Include="Beef0021.cs" />
     <Compile Include="Beef0025.cs" />
     <Compile Include="BeefBase.cs" />

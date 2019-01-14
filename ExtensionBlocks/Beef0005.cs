@@ -11,7 +11,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0005)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0005 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0005 but is 0x{Signature:X}");
             }
 
             var guid = Utils.ExtractGuidFromShellItem(rawBytes.Skip(8).Take(16).ToArray());

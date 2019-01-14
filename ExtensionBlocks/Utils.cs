@@ -414,6 +414,12 @@ namespace ExtensionBlocks
 
                     break;
 
+                case 0xbeef001b:
+                    var beef001B = new Beef001b(rawBytes);
+                    block = beef001B;
+
+                    break;
+
                 case 0xbeef0013:
                     var beef0013 = new Beef0013(rawBytes);
                     block = beef0013;

@@ -3,14 +3,14 @@ using System.Text;
 
 namespace ExtensionBlocks
 {
-    public class Beef001a : BeefBase
+    public class Beef001b : BeefBase
     {
-        public Beef001a(byte[] rawBytes)
+        public Beef001b(byte[] rawBytes)
             : base(rawBytes)
         {
-            if (Signature != 0xbeef001a)
+            if (Signature != 0xbeef001b)
             {
-                throw new Exception($"Signature mismatch! Should be Beef001a but is 0x{Signature:X}");
+                throw new Exception($"Signature mismatch! Should be Beef001b but is 0x{Signature:X}");
             }
 
             var len = 0;

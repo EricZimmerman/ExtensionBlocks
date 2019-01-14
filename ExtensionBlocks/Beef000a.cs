@@ -10,7 +10,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef000a)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef000a but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef000a but is 0x{Signature:X}");
             }
 
             VersionOffset = BitConverter.ToInt16(rawBytes, 12);

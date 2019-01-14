@@ -16,7 +16,7 @@ namespace ExtensionBlocks
 
             if (Signature != 0xbeef0004)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0004 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0004 but is 0x{Signature:X}");
             }
 
             var createdDate =

@@ -10,7 +10,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0025)
             {
-                throw new Exception($"Signature mismatch! Should be Beef0025 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be Beef0025 but is 0x{Signature:X}");
             }
 
             var ft1 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12));

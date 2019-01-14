@@ -10,7 +10,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0013)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0013 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0013 but is 0x{Signature:X}");
             }
 
             Message = "The purpose of this extension block is unknown";

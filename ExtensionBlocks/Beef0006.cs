@@ -10,7 +10,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0006)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0006 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0006 but is 0x{Signature:X}");
             }
 
             var len = 0;

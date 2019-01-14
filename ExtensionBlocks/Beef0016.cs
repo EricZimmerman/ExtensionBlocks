@@ -10,7 +10,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0016)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0016 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0016 but is 0x{Signature:X}");
             }
 
             Value = Encoding.Unicode.GetString(rawBytes, 10, rawBytes.Length - 14);

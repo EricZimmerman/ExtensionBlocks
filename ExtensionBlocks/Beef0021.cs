@@ -11,7 +11,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0021)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0021 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0021 but is 0x{Signature:X}");
             }
 
             var propStore = new PropertyStore(rawBytes.Skip(8).ToArray());
