@@ -20,5 +20,21 @@ namespace ExtensionBlocks.Test
             var foo = new PropertyStore(fooBytes);
             Debug.WriteLine(foo);
         }
+
+
+        [Test]
+        public void guidLookup()
+        {
+
+            var aaa = Utils.GetDescriptionFromGuidAndKey("de35258c-c695-4cbc-b982-38b0ad24ced0", 2);
+
+            Assert.AreEqual(aaa,"Shell Omit From View");
+
+
+//            {"de35258c-c695-4cbc-b982-38b0ad24ced0",new HashSet<IdName>()
+//            { 
+//                new IdName (2, "Shell Omit From View"),
+//            } },
+        }
     }
 }

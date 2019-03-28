@@ -20,310 +20,3859 @@ namespace ExtensionBlocks
             return fullPattern;
         }
 
+        private class IdName:IEquatable<IdName>
+        {
+            public IdName(int id, string name)
+            {
+                Id = id;
+                Name = name;
+            }
+
+            public int Id { get; }
+            public string Name { get; }
+
+
+            public bool Equals(IdName other)
+            {
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return Id == other.Id && string.Equals(Name, other.Name);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+
+                return Equals((IdName) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return (Id * 397) ^ (Name != null ? Name.GetHashCode() : 0);
+                }
+            }
+        }
+
+        private static Dictionary<string, HashSet<IdName>> PropertyStoreInfo = new Dictionary<string, HashSet<IdName>>()
+        {
+            //updated list provided by david.via@FireEye.com on 03/27/2019!
+
+            {"46588ae2-4cbc-4338-bbfc-139326986dce",new HashSet<IdName>()
+            {
+                new IdName(4,"SID"),
+            } },
+
+
+            //new block
+            {"dabd30ed-0043-4789-a7f8-d013a4736622",new HashSet<IdName>()
+            {
+                new IdName(100,"Item Folder Path Display Narrow"),
+            } },
+
+            {"28636aa6-953d-11d2-b5d6-00c04fd918d0",new HashSet<IdName>()
+            {
+                new IdName(    0, "Find Data"),
+                new IdName(    1, "Network Resource"),
+                new IdName(    2, "Description ID"),
+                new IdName(    3, "Which Folder"),
+                new IdName(    4, "Network Location"),
+                new IdName(    5, "Computer Name"),
+                new IdName(    6, "Namespace CLSID"),
+                new IdName(    8, "Item Path Display Narrow"),
+                new IdName(    9, "Perceived Type"),
+                new IdName(    10, "Computer Simple Name"),
+                new IdName(    11, "Item Type"),
+                new IdName(    12, "File Count"),
+                new IdName(    14, "Total File Size"),
+                new IdName(    22, "Max Stack Count"),
+                new IdName(    23, "List Description"),
+                new IdName(    24, "Parsing Name"),
+                new IdName(    25, "SFGAO Flags"),
+                new IdName(    26, "Order"),
+                new IdName(    27, "Computer Description"),
+                new IdName(    29, "Contained Items"),
+                new IdName(    30, "Parsing Path"),
+                new IdName(    31, "Network Provider"),
+                new IdName(    32, "Delegate ID List"),
+                new IdName(    33, "Is SendTo Target"),
+                new IdName(    34, "Hide On Desktop"),
+                new IdName(    35, "Network Places Default Name"),
+                new IdName(    36, "Storage System Type"),
+                new IdName(    37, "Item SubType"),
+            } },
+
+            {"9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3",new HashSet<IdName>()
+            {
+                new IdName(    2, "App User Model Relaunch Command"),
+                new IdName(    3, "App User Model Relaunch Icon Resource"),
+                new IdName(    4, "App User Model Relaunch Display Name Resource"),
+                new IdName(    5, "App User Model ID"),
+                new IdName(    6, "App User Model Is DestList Separator"),
+                new IdName(    7, "App User Model Is DestList Link"),
+                new IdName(    8, "App User Model Exclude From Show In New Install"),
+                new IdName(    9, "App User Model Prevent Pinning"),
+                new IdName(    10, "App User Model Best Shortcut"),
+                new IdName(    11, "App User Model Is Dual Mode"),
+                new IdName(    12, "App User Model Start Pin Option"),
+                new IdName(    13, "App User Model Relevance"),
+                new IdName(    14, "App User Model Host Environment"),
+                new IdName(    15, "App User Model Package Install Path"),
+                new IdName(    16, "App User Model Record State"),
+                new IdName(    17, "App User Model Package Family Name"),
+                new IdName(    18, "App User Model Installed By"),
+                new IdName(    19, "App User Model Parent ID"),
+                new IdName(    20, "App User Model Activation Context"),
+                new IdName(    21, "App User Model Package Full Name"),
+                new IdName(    22, "App User Model Package Relative Application ID"),
+                new IdName(    23, "App User Model Excluded From Launcher"),
+                new IdName(    24, "App User Model AppCompat ID"),
+                new IdName(    25, "App User Model Run Flags"),
+                new IdName(    26, "App User Model Toast Activator CLSID"),
+                new IdName(    27, "App User Model DestList Provided Title"),
+                new IdName(    28, "App User Model DestList Provided Description"),
+                new IdName(    29, "App User Model DestList Logo Uri"),
+                new IdName(    30, "App User Model DestList Provided Group Name"),
+            } },
+
+            {"446d16b1-8dad-4870-a748-402ea43d788c",new HashSet<IdName>()
+            {
+                new IdName(100,"Thumbnail Cache Id"),
+                new IdName(104,"Volume Id"),
+                new IdName(105,"Tooltip Thumbnail Stream"),
+            } },
+
+            {"fb8d2d7b-90d1-4e34-bf60-6eac09922bbf",new HashSet<IdName>()
+            {
+                new IdName(2,"WinX Hash"),
+            } },
+
+            {"f29f85e0-4ff9-1068-ab91-08002b27b3d9",new HashSet<IdName>()
+            {
+                new IdName(    3, "Subject"),
+                new IdName(    4, "Author"),
+                new IdName(    5, "Keywords"),
+                new IdName(    6, "Comment"),
+                new IdName(    7, "Document Template"),
+                new IdName(    8, "Document Last Author"),
+                new IdName(    9, "Document Revision Number"),
+                new IdName(    10, "Document Total Editing Time"),
+                new IdName(    11, "Document Date Printed"),
+                new IdName(    12, "Document Date Created"),
+                new IdName(    13, "Document Date Saved"),
+                new IdName(    14, "Document Page Count"),
+                new IdName(    15, "Document Word Count"),
+                new IdName(    16, "Document Character Count"),
+                new IdName(    17, "Thumbnail"),
+                new IdName(    18, "Application Name"),
+                new IdName(    19, "Document Security"),
+                new IdName(    24, "High Keywords"),
+                new IdName(    25, "Low Keywords"),
+                new IdName(    26, "Medium Keywords"),
+                new IdName(    27, "Thumbnail Stream"),
+            } },
+
+
+            {"841e4f90-ff59-4d16-8947-e81bbffab36d",new HashSet<IdName>()
+            {
+                new IdName(    2, "Publisher Display Name"),
+                new IdName(    3, "Software Registered Owner"),
+                new IdName(    4, "Software Registered Company"),
+                new IdName(    5, "Software AppId"),
+                new IdName(    6, "Software Support Url"),
+                new IdName(    7, "Software Support Telephone"),
+                new IdName(    8, "Software Help Link"),
+                new IdName(    9, "Software Install Location"),
+                new IdName(    10, "Software Install Source"),
+                new IdName(    11, "Software Date Installed"),
+                new IdName(    12, "Software Support Contact Name"),
+                new IdName(    13, "Software ReadMe Url"),
+                new IdName(    14, "Software Update Info Url"),
+                new IdName(    15, "Software Times Used"),
+                new IdName(    16, "Software Date Last Used"),
+                new IdName(    17, "Software Tasks File Url"),
+                new IdName(    18, "Software Parent Name"),
+                new IdName(    19, "Software Product ID"),
+                new IdName(    20, "Software Comments"),
+                new IdName(    997, "Software Null Preview Total Size"),
+                new IdName(    998, "Software Null Preview Subtitle"),
+                new IdName(    999, "Software Null Preview Title"),
+            } },
+
+            {"86d40b4d-9069-443c-819a-2a54090dccec",new HashSet<IdName>()
+            {
+                new IdName(    2, "Tile Small Image Location"),
+                new IdName(    4, "Tile Background Color"),
+                new IdName(    5, "Tile Foreground Color"),
+                new IdName(    11, "Tile Display Name"),
+                new IdName(    12, "Tile Image Location"),
+                new IdName(    13, "Tile Wide 310x150 Logo Path"),
+                new IdName(    14, "Tile Unknown Flags"),
+                new IdName(    15, "Tile Badge Logo Path"),
+                new IdName(    16, "Tile Suite Display Name"),
+                new IdName(    17, "Tile Suite Sor tName"),
+                new IdName(    18, "Tile Display Name Language"),
+                new IdName(    19, "Tile Square 310x310 Logo Path"),
+                new IdName(    20, "Tile Square 70x70 Logo Path"),
+                new IdName(    21, "Tile Fence Post"),
+                new IdName(    22, "Tile Install Progress"),
+                new IdName(    23, "Tile Encoded Target Path"),
+            } },
+
+            {"b725f130-47ef-101a-a5f1-02608c9eebac",new HashSet<IdName>()
+            {
+                new IdName(    2, "Item Folder Name Display"),
+                new IdName(    3, "Search ClassID"),
+                new IdName(    4, "Item Type Text"),
+                new IdName(    8, "File Index"),
+                new IdName(    9, "Search Last Change USN"),
+                new IdName(    10, "Item Name Display"),
+                new IdName(    12, "Size"),
+                new IdName(    13, "File Attributes"),
+                new IdName(    14, "Date Modified"),
+                new IdName(    15, "Date Created"),
+                new IdName(    16, "Date Accessed"),
+                new IdName(    18, "File Allocation Size"),
+                new IdName(    19, "Search Contents"),
+                new IdName(    20, "Search ShortName"),
+                new IdName(    21, "File FRN"),
+                new IdName(    22, "Search Scope"),
+                new IdName(    23, "Item Name Sort Override"),
+                new IdName(    24, "Item Name Display Without Extension"),
+                new IdName(    25, "Folder Name Display"),
+            } },
+
+            {"e3e0584c-b788-4a5a-bb20-7f5a44c9acdd",new HashSet<IdName>()
+            {
+                new IdName(  2, "Message Bcc Address"),
+                new IdName(    3, "Message Bcc Name"),
+                new IdName(    4, "Message Cc Address"),
+                new IdName(    5, "Message Cc Name"),
+                new IdName(    6, "Item Folder Path Display"),
+                new IdName(    7, "Item Path Display"),
+                new IdName(    9, "Communication Account Name"),
+                new IdName(    10, "Is Read"),
+                new IdName(    11, "Importance"),
+                new IdName(    12, "Flag Status"),
+                new IdName(    13, "Message From Address"),
+                new IdName(    14, "Message From Name"),
+                new IdName(    15, "Message Store"),
+                new IdName(    16, "Message To Address"),
+                new IdName(    17, "Message To Name"),
+                new IdName(    18, "Contact Web Page"),
+                new IdName(    19, "Message Date Sent"),
+                new IdName(    20, "Message Date Received"),
+                new IdName(    21, "Message Attachment Names"),
+            } },
+
+            {"00000000-0000-0000-0000-000000000000",new HashSet<IdName>()
+            {
+                new IdName(    0, "Null"),
+            } },
+
+            {"000214a1-0000-0000-c000-000000000046}",new HashSet<IdName>()
+            {
+                new IdName(    9, "Status"),
+            } },
+
+
+            {"00bc20a3-bd48-4085-872c-a88d77f5097e",new HashSet<IdName>()
+            {
+                new IdName(    105, "Music Composer Sort Override"),
+            } },
+
+            {"00f58a38-c54b-4c40-8696-97235980eae1",new HashSet<IdName>()
+            {
+                new IdName(    100, "Calendar Resources"),
+            } },
+
+            {"00f63dd8-22bd-4a5d-ba34-5cb0b9bdcb03",new HashSet<IdName>()
+            {
+                new IdName(    101, "Contact Job Info1 Yomi Company Name"),
+                new IdName(    102, "Contact Job Info1 Company Name"),
+                new IdName(    103, "Contact Job Info1 Title"),
+                new IdName(    104, "Contact Job Info1 Office Location"),
+                new IdName(    105, "Contact Job Info1 Manager"),
+                new IdName(    106, "Contact Job Info1 Department"),
+                new IdName(    107, "Contact Job Info2 Yomi Company Name"),
+                new IdName(    108, "Contact Job Info2 Company Name"),
+                new IdName(    109, "Contact Job Info2 Title"),
+                new IdName(    110, "Contact Job Info2 Office Location"),
+                new IdName(    112, "Contact Job Info2 Manager"),
+                new IdName(    113, "Contact Job Info2 Department"),
+                new IdName(    114, "Contact Job Info3 Yomi Company Name"),
+                new IdName(    115, "Contact Job Info3 Company Name"),
+                new IdName(    116, "Contact Job Info3 Title"),
+                new IdName(    117, "Contact Job Info3 Office Location"),
+                new IdName(    118, "Contact Job Info3 Manager"),
+                new IdName(    119, "Contact Job Info3 Department"),
+                new IdName(    120, "Contact Job Info1 Company Address"),
+                new IdName(    121, "Contact Job Info2 Company Address"),
+                new IdName(    123, "Contact Job Info3 Company Address"),
+                new IdName(    124, "Contact Webpage 2"),
+                new IdName(    125, "Contact Webpage 3"),
+            } },
+
+
+            {"026e516e-b814-414b-83cd-856d6fef4822",new HashSet<IdName>()
+            {
+                new IdName(    3, "Devices Interface Enabled"),
+                new IdName(    4, "Devices Interface Class Guid"),
+                new IdName(    6, "Devices Restricted Interface"),
+            } },
+
+            {"029c0252-5b86-46c7-aca0-2769ffc8e3d4",new HashSet<IdName>()
+            { 
+                new IdName (100, "GPS Latitude Ref"),
+            } },
+
+            {"02b0f689-a914-4e45-821d-1dda452ed2c4",new HashSet<IdName>()
+            { 
+                new IdName (100, "GPS Longitude Numerator"),
+            } },
+
+            {"03089873-8ee8-4191-bd60-d31f72b7900b",new HashSet<IdName>()
+            { 
+                new IdName (100, "Contact Display Other Phone Numbers"),
+            } },
+
+            
+
+
+ {"0337ecec-39fb-4581-a0bd-4c4cc51e9914",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Aperture Numerator"),
+} },
+
+ {"048658ad-2db8-41a4-bbb6-ac1ef1207eb1",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Class Type"),
+} },
+
+ {"05e932b1-7ca2-491f-bd69-99b4cb266cbb",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Disambiguation Text"),
+} },
+
+ {"06704b0c-e830-4c81-9178-91e4e95a80a0",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Notification Store"),
+    new IdName (3, "Devices Notification"),
+} },
+
+
+ {"084d8a0a-e6d5-40de-bf1f-c8820e7c877c",new HashSet<IdName>()
+             { 
+new IdName (100, "Task CompletionStatus"),
+} },
+
+ {"08a65aa1-f4c9-43dd-9ddf-a33d8e7ead85",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact HomeAddressCountry"),
+} },
+
+ {"08c7cc5f-60f2-4494-ad75-55e3e0b5add0",new HashSet<IdName>()
+             { 
+new IdName (100, "Task Owner"),
+} },
+
+ {"08f6d7c2-e3f2-44fc-af1e-5aa5c81a2d3e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo MaxAperture"),
+} },
+
+ {"09329b74-40a3-4c68-bf07-af9a572f607c",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Folder"),
+} },
+
+ {"0933f3f5-4786-4f46-a8e8-d64dd37fa521",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Plane X Resolution Denominator"),
+} },
+
+ {"09429607-582d-437f-84c3-de93a2b24c3c",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Optional AttendeeNames"),
+} },
+
+ {"09736039-456b-4219-ba3e-ec573b58cf97",new HashSet<IdName>()
+             { 
+new IdName (2, "Secondary Tile Is Uninstalled"),
+} },
+
+ {"09edd5b6-b301-43c5-9990-d00302effd46",new HashSet<IdName>()
+             { 
+new IdName (100, "Media Average Level"),
+} },
+
+ {"0a7b84ef-0c27-463f-84ef-06c5070001be",new HashSet<IdName>()
+             { 
+new IdName (10, "Device Interface Printer Name"),
+} },
+
+ {"0abe4d16-9384-426b-b41a-eac3c8e0f147",new HashSet<IdName>()
+             { 
+new IdName (2, "Search Content Snippet"),
+} },
+
+ {"0adef160-db3f-4308-9a21-06237b16fa2a",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Address Street"),
+} },
+
+ {"0b48f35a-be6e-4f17-b108-3c4073d1669a",new HashSet<IdName>()
+             { 
+new IdName (15, "Device Printer URL"),
+} },
+
+ {"0b63e343-9ccc-11d0-bcdb-00805fccce04",new HashSet<IdName>()
+             {
+    new IdName (2, "Search Url To Index"),
+    new IdName (12, "Search Url To Index With Modification Time"),
+    new IdName (23, "Search Is Closed Directory"),
+    new IdName (24, "Search Is Fully Contained"),
+    new IdName (25, "Search Provider Class"),
+    new IdName (26, "Search Provider Web Domain"),
+    new IdName (27, "Search Provider Result Limit"),
+} },
+
+
+ {"0b63e350-9ccc-11d0-bcdb-00805fccce04",new HashSet<IdName>()
+             {
+    new IdName (5, "MIME Type"),
+    new IdName (8, "Search Gather Time"),
+    new IdName (9, "Search Access Count"),
+    new IdName (11, "Search Last Indexed Total Time"),
+} },
+
+
+ {"0b8bb018-2725-4b44-92ba-7933aeb2dde7",new HashSet<IdName>()
+             {
+    new IdName (2, "Contact Account Picture Dynamic Video"),
+    new IdName (3, "Contact Account Picture Large"),
+    new IdName (4, "Contact Account Picture Small"),
+} },
+
+
+ {"0ba7d6c3-568d-4159-ab91-781a91fb71e5",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Required Attendee Addresses"),
+} },
+
+ {"0bba1ede-7566-4f47-90ec-25fc567ced2a",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices AepContainer Children"),
+    new IdName (3, "Devices AepContainer Can Pair"),
+    new IdName (4, "Devices AepContainer Is Paired"),
+    new IdName (6, "Devices AepContainer Manufacturer"),
+    new IdName (7, "Devices AepContainer Model Name"),
+    new IdName (8, "Devices AepContainer Model Ids"),
+    new IdName (9, "Devices AepContainer Categories"),
+    new IdName (11, "Devices AepContainer Is Present"),
+    new IdName (12, "Devices AepContainer Container Id"),
+    new IdName (13, "Devices AepContainer Protocol Ids"),
+} },
+
+
+ {"0be1c8e7-1981-4676-ae14-fdd78f05a6e7",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Sender Address"),
+} },
+
+ {"0be3fd71-3f87-40e0-aead-0294cf674635",new HashSet<IdName>()
+             { 
+new IdName (2, "Shell Is Dav Resource"),
+} },
+
+ {"0c73b141-39d6-4653-a683-cab291eaf95b",new HashSet<IdName>()
+             {
+    new IdName (2, "Supplemental Album Id"),
+    new IdName (3, "Supplemental Resource Id"),
+} },
+
+
+ {"0c840a88-b043-466d-9766-d4b26da3fa77",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Subject Distance Denominator"),
+} },
+
+ {"0cb2bf5a-9ee7-4a86-8222-f01e07fdadaf",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Photo Advanced"),
+} },
+
+ {"0cef7d53-fa64-11d1-a203-0000f81fedee",new HashSet<IdName>()
+             {
+    new IdName (3, "File Description"),
+    new IdName (4, "File Version"),
+    new IdName (5, "Internal Name"),
+    new IdName (6, "Original File Name"),
+    new IdName (7, "Software Product Name"),
+    new IdName (8, "Software Product Version"),
+    new IdName (9, "Trademarks"),
+    new IdName (11, "Platform"),
+} },
+
+ 
+
+ {"0cf8fb02-1837-42f1-a697-a7017aa289b9",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS DOP"),
+} },
+
+ {"0da41cfa-d224-4a18-ae2f-596158db4b3a",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Sender Name"),
+} },
+
+ {"0ded77b3-c614-456c-ae5b-285b38d7b01b",new HashSet<IdName>()
+             {
+    new IdName (2, "Launcher Order"),
+    new IdName (3, "Launcher Group ID"),
+    new IdName (6, "Launcher View ID"),
+    new IdName (7, "Launcher App State"),
+    new IdName (8, "Launcher Tile Size"),
+    new IdName (9, "Launcher Group Name"),
+    new IdName (10, "Launcher Splash Screen Image"),
+    new IdName (11, "Launcher TileSize Timestamp"),
+    new IdName (12, "Launcher ItemPosition Timestamp"),
+    new IdName (13, "Launcher View ID Timestamp"),
+    new IdName (14, "Launcher Group Membership Timestamp"),
+    new IdName (15, "Launcher Group Name Timestamp"),
+    new IdName (16, "Launcher Default Tile Size"),
+    new IdName (17, "Launcher Placeholder Expiry Candidate"),
+    new IdName (18, "Launcher Placeholder Expiry Candidate Timestamp"),
+    new IdName (19, "Launcher Item Flags"),
+    new IdName (20, "Launcher Group Position Timestamp"),
+    new IdName (21, "Launcher Store Category"),
+    new IdName (22, "Launcher Win Store Category Name"),
+    new IdName (23, "Launcher SubgroupID"),
+} },
+
+
+ {"0f55cde2-4f49-450d-92c1-dcd16301b1b7",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Latitude Decimal"),
+} },
+
+ {"10984e0a-f9f2-4321-b7ef-baf195af4319",new HashSet<IdName>()
+             { 
+new IdName (100, "Parental Rating Reason"),
+} },
+
+ {"10b24595-41a2-4e20-93c2-5761c1395f32",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Img Direction Denominator"),
+} },
+
+ {"10dabe05-32aa-4c29-bf1a-63e2d220587f",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Image Id"),
+} },
+
+ {"1173f62a-2a55-4f62-aed6-8c7112e0f7a3",new HashSet<IdName>()
+             { 
+new IdName (5, "Force Full Text"),
+} },
+
+ {"11d6336b-38c4-4ec9-84d6-eb38d0b150af",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Email Addresses"),
+} },
+
+ {"125491f4-818f-46b2-91b5-d537753617b2",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Status"),
+} },
+
+ {"12ea418f-d8cd-4cdf-9b23-457eaac7ff0d",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Directory Server"),
+} },
+
+ {"12fa14f5-c6fe-4545-bce2-1ed6cb6b8422",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Link Text"),
+} },
+
+ {"13673f42-a3d6-49f6-b4da-ae46e0c5237c",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices DevObject Type"),
+} },
+
+ {"13eb7ffc-ec89-4346-b19d-ccc6f1784223",new HashSet<IdName>()
+             { 
+new IdName (101, "Music Album Title Sort Override"),
+} },
+
+ {"14977844-6b49-4aad-a714-a4513bf60460",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact First Name"),
+} },
+
+ {"149c0b69-2c2d-48fc-808f-d318d78c4636",new HashSet<IdName>()
+             { 
+new IdName (2, "Volume Is Mapped Drive"),
+} },
+
+ {"14b81da1-0135-4d31-96d9-6cbfc9671a99",new HashSet<IdName>()
+             {
+    new IdName (259, "Image Compression"),
+    new IdName (271, "Photo Camera Manufacturer"),
+    new IdName (272, "Photo Camera Model"),
+    new IdName (273, "Photo Camera Serial Number"),
+    new IdName (274, "Photo Orientation"),
+    new IdName (305, "Software Used"),
+    new IdName (18248, "Photo Event"),
+    new IdName (18258, "Date Imported"),
+    new IdName (33432, "Image Copyright"),
+    new IdName (33434, "Photo Exposure Time"),
+    new IdName (33437, "Photo FNumber"),
+    new IdName (34850, "Photo Exposure Program"),
+    new IdName (34855, "Photo ISO Speed"),
+    new IdName (36867, "Photo Date Taken"),
+    new IdName (37377, "Photo Shutter Speed"),
+    new IdName (37378, "Photo Aperture"),
+    new IdName (37380, "Photo Exposure Bias"),
+    new IdName (37382, "Photo Subject Distance"),
+    new IdName (37383, "Photo Metering Mode"),
+    new IdName (37384, "Photo Light Source"),
+    new IdName (37385, "Photo Flash"),
+    new IdName (37386, "Photo Focal Length"),
+    new IdName (40096, "Image Property Bag"),
+    new IdName (40961, "Image Color Space"),
+    new IdName (41483, "Photo Flash Energy"),
+} },
+
+
+ {"1506935d-e3e7-450f-8637-82233ebe5f6e",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices WiFi Direct Interface Address"),
+    new IdName (3, "Devices WiFi Direct Interface Guid"),
+    new IdName (4, "Devices WiFi Direct Group Id"),
+    new IdName (5, "Devices WiFi Direct Is Connected"),
+    new IdName (6, "Devices WiFi Direct Is Visible"),
+    new IdName (7, "Devices WiFi Direct Is Legacy Device"),
+    new IdName (8, "Devices WiFi Direct Miracast Version"),
+    new IdName (9, "Devices WiFi Direct Is Miracast Lcp Supported"),
+    new IdName (10, "Devices WiFi Direct Services"),
+    new IdName (11, "Devices WiFi Direct Supported ChannelList"),
+    new IdName (12, "Devices WiFi Direct Information Elements"),
+    new IdName (13, "Devices WiFi Direct Device Address"),
+} },
+
+
+ {"16473c91-d017-4ed9-ba4d-b6baa55dbcf8",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Img Direction"),
+} },
+
+ {"16cbb924-6500-473b-a5be-f1599bcbe413",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Digital Zoom Numerator"),
+} },
+
+ {"16e634ee-2bff-497b-bd8a-4341ad39eeb9",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Latitude Denominator"),
+} },
+
+ {"16ea4042-d6f4-4bca-8349-7c78d30fb333",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Shutter Speed Numerator"),
+} },
+
+ {"176dc63c-2688-4e89-8143-a347800f25e9",new HashSet<IdName>()
+             {
+    new IdName (6, "Contact Job Title"),
+    new IdName (7, "Contact Office Location"),
+    new IdName (20, "Contact Home Telephone"),
+    new IdName (25, "Contact Primary Telephone"),
+    new IdName (35, "Contact Mobile Telephone"),
+    new IdName (47, "Contact Birthday"),
+    new IdName (48, "Contact Primary Email Address"),
+    new IdName (65, "Contact Hom eAddress City"),
+    new IdName (69, "Contact Personal Title"),
+    new IdName (70, "Contact Given Name"),
+    new IdName (71, "Contact Middle Name"),
+    new IdName (73, "Contact Suffix"),
+    new IdName (74, "Contact Nick Name"),
+    new IdName (75, "Contact Prefix"),
+} },
+
+
+ {"1804d1fb-9fa4-441d-a536-76468ac43307",new HashSet<IdName>()
+             { 
+new IdName (100, "WebDav Path"),
+} },
+
+ {"182c1ea6-7c1c-4083-ab4b-ac6c9f4ed128",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Longitude Ref"),
+} },
+
+ {"188c1f91-3c40-4132-9ec5-d8b03b72a8a2",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Response Status"),
+} },
+
+ {"18bbd425-ecfd-46ef-b612-7b4a6034eda0",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address Postal Code"),
+} },
+
+ {"19b51fa6-1f92-4a5c-ab48-7df0abd67444",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Resolution Unit"),
+} },
+
+ {"1a701bf6-478c-4361-83ab-3701bb053c58",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Brightness"),
+} },
+
+ {"1a9ba605-8e7c-4d11-ad7d-a50ada18ba1b",new HashSet<IdName>()
+             { 
+new IdName (2, "Message Participants"),
+} },
+
+ {"1b5439e7-eba1-4af8-bdd7-7af1d4549493",new HashSet<IdName>()
+             { 
+new IdName (100, "RecordedTV Station Name"),
+} },
+
+ {"1b97738a-fdfc-462f-9d93-1957e08be90c",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo FNumber Numerator"),
+} },
+
+ 
+
+ {"30c8eef4-a832-41e2-ab32-e3c3ca28fd29",new HashSet<IdName>()
+             {
+    new IdName (2, "Home Grouping"),
+    new IdName (3, "Home Sort Order"),
+    new IdName (4, "Home Is Pinned"),
+    new IdName (5, "Home PropList Sort"),
+    new IdName (6, "Home Item Folder Path Display"),
+} },
+
+
+ {"3143bf7c-80a8-4854-8880-e2e40189bdd0",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Attachment Contents"),
+} },
+
+ {"315b9c8d-80a9-4ef9-ae16-8e746da51d70",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Is Recurring"),
+} },
+
+ {"318a6b45-087f-4dc2-b8cc-05359551fc9e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Related Sound File"),
+} },
+
+ {"31b37743-7c5e-4005-93e6-e953f92b82e9",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices WiFi Direct Services Service Address"),
+    new IdName (3, "Devices WiFi Direct Services Service Name"),
+    new IdName (4, "Devices WiFi Direct Services Service Information"),
+    new IdName (5, "Devices WiFi Direct Services Advertisement Id"),
+    new IdName (6, "Devices WiFi Direct Services Service Config Methods"),
+    new IdName (7, "Devices WiFi Direct Services Request Service Information"),
+} },
+
+
+ {"328d8b21-7729-4bfc-954c-902b329d56b0",new HashSet<IdName>()
+             { 
+new IdName (2, "Sync Copy In"),
+} },
+
+ {"32bcb03c-7f34-4e3f-bbb2-ebe63629f5e4",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Simple Item"),
+} },
+
+ {"33dcf22b-28d5-464c-8035-1ee9efd25278",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Longitude Ref"),
+} },
+
+ {"341796f1-1df9-4b1c-a564-91bdefa43877",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo PhotometricInterpretation"),
+} },
+
+ {"346c8bd1-2e6a-4c45-89a4-61b78e8e700f",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Incomplete"),
+} },
+
+ {"35dbe6fe-44c3-4400-aaae-d2c799c407e8",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Track Ref"),
+} },
+
+ {"3602c812-0f3b-45f0-85ad-603468d69423",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Date"),
+} },
+
+ {"3633de59-6825-4381-a49b-9f6ba13a1471",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Playback State"),
+    new IdName (3, "Devices Playback Title"),
+    new IdName (4, "Devices Remaining Duration"),
+    new IdName (5, "Devices Playback Position Percent"),
+} },
+
+
+ {"364028da-d895-41fe-a584-302b1bb70a76",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Display Business Phone Numbers"),
+} },
+
+ {"364b6fa9-37ab-482a-be2b-ae02f60d4318",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Compressed Bits Per  Pixel"),
+} },
+
+ {"37ebd11f-7e72-4ebc-9d4c-c790f8c277c2",new HashSet<IdName>()
+             { 
+new IdName (2, "Device Interface Spb Controller Friendly Name"),
+} },
+
+ {"38965063-edc8-4268-8491-b7723172cf29",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Email Address 2"),
+} },
+
+ {"38d43380-d418-4830-84d5-46935a81c5c6",new HashSet<IdName>()
+             { 
+new IdName (32, "Security Allowed Enterprise Data Protection Identities"),
+} },
+
+ {"39a7f922-477c-48de-8bc8-b28441e342e3",new HashSet<IdName>()
+             { 
+new IdName (100, "Project"),
+} },
+
+ {"39b77f4f-a104-4863-b395-2db2ad8f7bc1",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Connected Service Display Name"),
+} },
+
+ {"3a372292-7fca-49a7-99d5-e47bb2d4e7ab",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Latitude Denominator"),
+} },
+
+ {"3b2ce006-5e61-4fde-bab8-9b8aac9b26df",new HashSet<IdName>()
+             {
+    new IdName (5, "Devices Aep Protocol Id"),
+    new IdName (8, "Devices Aep Id"),
+} },
+
+
+ 
+
+ {"3c8cee58-d4f0-4cf9-b756-4e5d24447bcd",new HashSet<IdName>()
+             {
+    new IdName (100, "Contact Gender"),
+    new IdName (101, "Contact Gender Value"),
+} },
+
+
+ {"3d658d4d-bc38-464a-b555-418d554a8df8",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Description"),
+} },
+
+ {"3d75e4f5-a391-4952-81f7-c7072fe53025",new HashSet<IdName>()
+             { 
+new IdName (100, "File Reparse Point Tag"),
+} },
+
+ {"3f08e66f-2f44-4bb9-a682-ac35d2562322",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Compression Text"),
+} },
+
+ {"3f5d9b45-5e9f-4d5c-8a5e-403181bf177b",new HashSet<IdName>()
+             {
+    new IdName (2, "Extensions Type"),
+    new IdName (3, "Extensions Date Last Used"),
+    new IdName (4, "Extensions Used Count"),
+    new IdName (5, "Extensions Blocked Count"),
+    new IdName (6, "Extensions CLSID"),
+    new IdName (7, "Extensions Status"),
+    new IdName (8, "Check State"),
+    new IdName (9, "Extensions Suspect"),
+    new IdName (10, "Extensions File Name"),
+    new IdName (11, "Extensions File Path"),
+    new IdName (12, "Extensions Flags"),
+} },
+
+
+ {"3f8472b5-e0af-4db2-8071-c53fe76ae7ce",new HashSet<IdName>()
+             { 
+new IdName (100, "Due Date"),
+} },
+
+ {"402b5934-ec5a-48c3-93e6-85e86a2d934e",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address City"),
+} },
+
+ {"41cf5ae0-f75a-4806-bd87-59c7d9248eb9",new HashSet<IdName>()
+             { 
+new IdName (100, "File Name"),
+} },
+
+ {"425d69e5-48ad-4900-8d80-6eb6b8d0ac86",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Longitude Denominator"),
+} },
+
+ {"428040ac-a177-4c8a-9760-f6f761227f9a",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Date Item Expires"),
+} },
+
+ {"42864dfd-9da4-4f77-bded-4aad7b256735",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Gain Control Denominator"),
+} },
+
+ {"4340a6c5-93fa-4706-972c-7b648008a5a7",new HashSet<IdName>()
+             {
+    new IdName (8, "Devices Parent"),
+    new IdName (9, "Devices Children"),
+} },
+
+
+ {"436f2667-14e2-4feb-b30a-146c53b5b674",new HashSet<IdName>()
+             { 
+new IdName (100, "Link Arguments"),
+} },
+
+ {"43f8d7b7-a444-4f87-9383-52271c9b915c",new HashSet<IdName>()
+             { 
+new IdName (100, "DateArchived"),
+} },
+
+
+ 
+
+ {"446f787f-10c4-41cb-a6c4-4d0343551597",new HashSet<IdName>()
+ { 
+     new IdName (100, "Contact Business Address State"),
+ } },
+
+ {"4530d076-b598-4a81-8813-9b11286ef6ea",new HashSet<IdName>()
+ {
+     new IdName (2, "Fonts Font Embeddability"),
+     new IdName (5, "Fonts Type"),
+     new IdName (7, "Fonts File Names"),
+ } },
+
+
+ {"4596208c-32fa-41d2-9695-af0cb9e8dcfe",new HashSet<IdName>()
+ { 
+     new IdName (100, "Stack Thumbnail Cache Ids"),
+  } },
+
+ {"45eae747-8e2a-40ae-8cbf-ca52aba6152a",new HashSet<IdName>()
+ { 
+     new IdName (100, "Flag Color Text"),
+ } },
+
+
+ {"4679c1b5-844d-4590-baf5-f322231f1b81",new HashSet<IdName>()
+ { 
+     new IdName (100, "GPS Longitude Decimal"),
+ } },
+
+ {"467ee575-1f25-4557-ad4e-b8b58b0d9c15",new HashSet<IdName>()
+ { 
+     new IdName (100, "GPS Satellites"),
+ } },
+
+ {"4684fe97-8765-4842-9c13-f006447b178c",new HashSet<IdName>()
+ { 
+     new IdName (100, "Recorded TV Original Broadcast Date"),
+ } },
+
+ {"46ac629d-75ea-4515-867f-6dc4321c5844",new HashSet<IdName>()
+ { 
+     new IdName (100, "GPS Altitude Ref"),
+ } },
+
+ {"46b4e8de-cdb2-440d-885c-1658eb65b914",new HashSet<IdName>()
+ { 
+     new IdName (100, "Note Color Text"),
+ } },
+
+ {"47166b16-364f-4aa0-9f31-e2ab3df449c3",new HashSet<IdName>()
+ { 
+     new IdName (100, "GPS DOP Numerator"),
+ } },
+
+ {"4776cafa-bce4-4cb1-a23e-265e76d8eb11",new HashSet<IdName>()
+ { 
+     new IdName (100, "Note Color"),
+ } },
+
+ {"47a96261-cb4c-4807-8ad3-40b9d9dbc6bc",new HashSet<IdName>()
+ { 
+     new IdName (100, "GPS DestLongitude"),
+ } },
+
+ {"48fd6ec8-8a12-4cdf-a03e-4ec5a511edde",new HashSet<IdName>()
+ { 
+     new IdName (100, "Start Date"),
+ } },
+
+ 
+
+ {"49237325-a95a-4f67-b211-816b2d45d2e0",new HashSet<IdName>()
+ { 
+     new IdName (100, "Photo Saturation"),
+ } },
+
+ {"49691c90-7e17-101a-a91c-08002b2ecda9",new HashSet<IdName>()
+ {
+     new IdName (2, "Search Results Rank"),
+     new IdName (3, "Search Rank"),
+     new IdName (4, "Search Hit Count"),
+     new IdName (5, "Search Entry Id"),
+     new IdName (8, "Search Reverse File Name"),
+     new IdName (9, "Item Url"),
+     new IdName (10, "Content Url"),
+     new IdName (15, "Search Row Id"),
+     new IdName (21, "Search Query Property Hits"),
+     new IdName (22, "Search Completion"),
+     new IdName (28, "Search Result Set Aggregate Attributes"),
+ } },
+
+
+ {"49753869-849c-4323-a41f-26d73f28b53b",new HashSet<IdName>()
+ { 
+     new IdName (100, "Fonts Vendors"),
+ } },
+
+ {"49cd1f76-5626-4b17-a4e8-18b4aa1a2213",new HashSet<IdName>()
+ {
+     new IdName (2, "Devices Signal Strength"),
+     new IdName (3, "Devices Text Messages"),
+     new IdName (4, "Devices New Pictures"),
+     new IdName (5, "Devices Missed Calls"),
+     new IdName (6, "Devices Voicemail"),
+     new IdName (7, "Devices Network Name"),
+     new IdName (8, "Devices Network Type"),
+     new IdName (9, "Devices Roaming"),
+     new IdName (10, "Devices Battery Life"),
+     new IdName (11, "Devices Charging State"),
+     new IdName (12, "Devices Storage Capacity"),
+     new IdName (13, "Devices Storage Free Space"),
+     new IdName (14, "Devices Storage Free Space Percent"),
+     new IdName (22, "Devices Battery Plus Charging"),
+     new IdName (23, "Devices Battery Plus Charging Text"),
+ } },
+
+ 
+ {"49d1091f-082e-493f-b23f-d2308aa9668c",new HashSet<IdName>()
+ { 
+     new IdName (100, "PropList Non Personal"),
+ } },
+
+ {"49eb6558-c09c-46dc-8668-1f848c290d0b",new HashSet<IdName>()
+ {
+     new IdName (1, "Shell Exclusion"),
+     new IdName (3, "Shell Item Offline Status"),
+ } },
+
+
+ {"4ac903f8-e780-4e4b-b7b8-4d00a99804fc",new HashSet<IdName>()
+ { 
+     new IdName (100, "Home Group Sharing Status"),
+ } },
+
+ {"4b486401-5468-4381-9b5a-42df4cb49f53",new HashSet<IdName>()
+ { 
+     new IdName (100, "Fonts Category"),
+ } },
+
+ {"4bd13b3d-e68b-44ec-89ee-7611789d4070",new HashSet<IdName>()
+ {
+     new IdName (100, "Start Menu Group"),
+     new IdName (101, "Start Menu Run Command"),
+     new IdName (102, "Start Menu Query"),
+     new IdName (103, "Start Menu Group Item"),
+     new IdName (104, "Start Menu Include In Scope"),
+     new IdName (105, "Start Menu Result Source Id"),
+ } },
+
+
+ {"4c6bf15c-4c03-4aac-91f5-64c0f852bcf4",new HashSet<IdName>()
+ {
+     new IdName (2, "Device Interface Serial Usb Vendor Id"),
+     new IdName (3, "Device Interface Serial Usb Product Id"),
+     new IdName (4, "Device Interface Serial Port Name"),
+ } },
+
+
+ {"4d1ebee8-0803-4774-9842-b77db50265e9",new HashSet<IdName>()
+ {
+     new IdName (2, "Storage Portable"),
+     new IdName (3, "Storage Removable Media"),
+     new IdName (4, "Storage System Critical"),
+ } },
+
+
+ {"4e9cfc01-5d36-406a-83cd-4e7423923604",new HashSet<IdName>()
+ { 
+     new IdName (2, "Offline Sync Time"),
+ } },
+
+ {"4f289a46-2bbb-4ae8-9eda-e5e034707a71",new HashSet<IdName>()
+ {
+     new IdName (2, "Lzh Folder Compressed Size"),
+     new IdName (3, "Lzh Folder CRC16"),
+     new IdName (4, "Lzh Folder Method"),
+     new IdName (5, "Lzh Folder Ratio"),
+ } },
+
+ 
+
+ {"4fffe4d0-914f-4ac4-8d6f-c9c61de169b1",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Plane Y Resolution"),
+} },
+
+ {"502cfeab-47eb-459c-b960-e6d8728f7701",new HashSet<IdName>()
+             {
+    new IdName (100, "Zone Identifier"),
+    new IdName (101, "Last Writer Package Family Name"),
+    new IdName (102, "App Zone Identifier"),
+} },
+
+
+ {"5068bcdf-d697-4d85-8c53-1f1cdab01763",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Display Home Phone Numbers"),
+} },
+
+ {"508161fa-313b-43d5-83a1-c1accf68622c",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address"),
+} },
+
+ {"51236583-0c4a-4fe8-b81f-166aec13f510",new HashSet<IdName>()
+             {
+    new IdName (100, "Devices App Package Family Name"),
+    new IdName (123, "Devices Glyph Icon"),
+} },
+
+
+ {"51ec3f47-dd50-421d-8769-334f50424b1e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Sharpness Text"),
+} },
+
+ {"53da57cf-62c0-45c4-81de-7610bcefd7f5",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Show Time As Text"),
+} },
+
+ {"540b947e-8b40-45bc-a8a2-6a0b894cbda2",new HashSet<IdName>()
+             {
+    new IdName (5, "Devices Present"),
+    new IdName (6, "Devices Device Has Problem"),
+    new IdName (9, "Devices Physical Device Location"),
+} },
+
+
+ {"54b3a473-59aa-445b-aecd-77541ba8b7c9",new HashSet<IdName>()
+             {
+    new IdName (2, "User Name"),
+    new IdName (3, "User Display Name"),
+    new IdName (5, "User Profile Path"),
+} },
+
+
+ {"5567bf77-2be2-4222-befa-d0c9c9cc4b6e",new HashSet<IdName>()
+             { 
+new IdName (2, "Velocity Feature Id"),
+} },
+
+ {"55e98597-ad16-42e0-b624-21599a199838",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Time Denominator"),
+} },
+
+ {"560c36c0-503a-11cf-baa1-00004c752a9a",new HashSet<IdName>()
+             {
+    new IdName (2, "Search Auto Summary"),
+    new IdName (3, "Search Query Focused Summary"),
+    new IdName (4, "Search Query Focused Summary With Fallback"),
+} },
+
+
+ {"56310920-2491-4919-99ce-eadb06fafdb2",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Home Page"),
+} },
+
+
+ 
+ {"56a3372e-ce9c-11d2-9f0e-006097c686f6",new HashSet<IdName>()
+             {
+    new IdName (2, "Music Artist"),
+    new IdName (4, "Music Album Title"),
+    new IdName (5, "Media Year"),
+    new IdName (7, "Music Track Number"),
+    new IdName (11, "Music Genre"),
+    new IdName (12, "Music Lyrics"),
+    new IdName (13, "Music Album Artist"),
+    new IdName (33, "Music Content Group Description"),
+    new IdName (34, "Music Initial Key"),
+    new IdName (35, "Music Beats Per Minute"),
+    new IdName (36, "Music Conductor"),
+    new IdName (37, "Music Part Of Set"),
+    new IdName (38, "Media Sub Title"),
+    new IdName (39, "Music Mood"),
+    new IdName (100, "Music Album Id"),
+} },
+
+
+ {"56c90e9d-9d46-4963-886f-2e1cd9a694ef",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Email Addresses"),
+} },
+
+ {"57086c23-86c6-478f-afb2-236188c8f47f",new HashSet<IdName>()
+             {
+    new IdName (2, "Taskbar Tab Active"),
+    new IdName (3, "Taskbar Tab List"),
+} },
+
+
+ {"5741cf9c-56fe-485b-8901-4786449e188d",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Designed For"),
+} },
+
+ {"59569556-0a08-4212-95b9-fae2ad6413db",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Notifications New Voicemail"),
+} },
+
+ {"596fd41b-af9b-4ba8-9b49-33b16f16678c",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Styles"),
+} },
+
+ {"59d49e61-840f-4aa9-a939-e2099b7f6399",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Processing Method"),
+} },
+
+ {"59dde9f2-5253-40ea-9a8b-479e96c6249a",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Contrast Text"),
+} },
+
+ {"5ab5c75f-15e1-4d65-924a-04754567243c",new HashSet<IdName>()
+             {
+    new IdName (2, "Setting Host Id"),
+    new IdName (3, "Setting Setting Id"),
+    new IdName (4, "Setting Page Id"),
+    new IdName (5, "Setting Group Id"),
+    new IdName (6, "Setting Condition"),
+    new IdName (7, "Setting Glyph"),
+    new IdName (8, "Setting Glyph Rtl"),
+} },
+
+
+ {"5bf396d4-5eb2-466f-bde9-2fb3f2361d6e",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Show Time As"),
+} },
+
+ {"5cbf2787-48cf-4208-b90e-ee5e5d420294",new HashSet<IdName>()
+             {
+    new IdName (1, "History Url Hash"),
+    new IdName (2, "Link Target Url"),
+    new IdName (3, "Url Scheme"),
+    new IdName (4, "Url HostName"),
+    new IdName (5, "History Url Extra Info"),
+    new IdName (6, "History Code Page"),
+    new IdName (7, "History Visit Count"),
+    new IdName (8, "History Is History"),
+    new IdName (9, "History I sDownload"),
+    new IdName (10, "History Download Location"),
+    new IdName (11, "History Download Size"),
+    new IdName (12, "History Favorite IconKey"),
+    new IdName (13, "History Is Favorite"),
+    new IdName (14, "History Is Offline Favorite"),
+    new IdName (15, "History Is Pinned Favorite"),
+    new IdName (16, "History Is Typed Url"),
+    new IdName (17, "History Is Top Level"),
+    new IdName (18, "History Is Feed"),
+    new IdName (19, "History Keywords"),
+    new IdName (20, "History User Keywords"),
+    new IdName (21, "Link Description"),
+    new IdName (22, "History User Description"),
+    new IdName (23, "Link Date Visited"),
+    new IdName (24, "History Icon Bits"),
+    new IdName (25, "Icon Path"),
+    new IdName (26, "Icon Index"),
+    new IdName (27, "History Icon Date"),
+    new IdName (28, "History Points"),
+    new IdName (29, "History Sessions"),
+    new IdName (33, "History Subscription Cookie"),
+    new IdName (34, "History Tracking"),
+    new IdName (35, "Link Working Folder Path"),
+    new IdName (36, "Link Hot Key"),
+    new IdName (37, "Link Show Cmd"),
+    new IdName (38, "Link Whats New"),
+    new IdName (39, "History Date Changed"),
+    new IdName (40, "History Flags"),
+    new IdName (41, "History Watch"),
+    new IdName (42, "History Favorite Icon Hash"),
+    new IdName (43, "Icon Secondary Stream Name"),
+} },
+
+
+ {"5cda5fc8-33ee-4ff3-9094-ae7bd8868c4d",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Deleted"),
+} },
+
+ {"5cde9f0e-1de4-4453-96a9-56e8832efa3d",new HashSet<IdName>()
+             {
+    new IdName (1, "Computer Domain Name"),
+    new IdName (2, "Computer Workgroup"),
+} },
+
+
+ {"5d76b67f-9b3d-44bb-b6ae-25da4f638a67",new HashSet<IdName>()
+             {
+    new IdName (2, "Is Pinned To Name Space Tree"),
+    new IdName (3, "Is Default Save Location"),
+    new IdName (4, "Is Search Only Item"),
+    new IdName (5, "Is Default Non Owner Save Location"),
+    new IdName (6, "Owner SID"),
+    new IdName (7, "Is Default Save Location For Display"),
+    new IdName (8, "Is Location Supported"),
+    new IdName (9, "Library Location Support Status"),
+    new IdName (10, "Default Save Location Display"),
+    new IdName (11, "Default Save Location Icon Container"),
+} },
+
+
+ {"5da84765-e3ff-4278-86b0-a27967fbdd03",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Flagged"),
+} },
+
+ {"5dc2253f-5e11-4adf-9cfe-910dd01e3e70",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Hobbies"),
+} },
+
+ {"5f5aff6a-37e5-4780-97ea-80c7565cf535",new HashSet<IdName>()
+             { 
+new IdName (34, "Security Encryption Owners"),
+} },
+
+ {"5fbd34cd-561a-412e-ba98-478a6b0fef1d",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Aep Bluetooth Cod Major"),
+    new IdName (3, "Devices Aep Bluetooth Cod Minor"),
+    new IdName (4, "Devices Aep Bluetooth Cod Services Limited Discovery"),
+    new IdName (5, "Devices Aep Bluetooth Cod Services Positioning"),
+    new IdName (6, "Devices Aep Bluetooth Cod Services Networking"),
+    new IdName (7, "Devices Aep Bluetooth Cod Services Rendering"),
+    new IdName (8, "Devices Aep Bluetooth Cod Services Capturing"),
+    new IdName (9, "Devices Aep Bluetooth Cod Services Object Xfer"),
+    new IdName (10, "Devices Aep Bluetooth Cod Services Audio"),
+    new IdName (11, "Devices Aep Bluetooth Cod Services Telephony"),
+    new IdName (12, "Devices Aep Bluetooth Cod Services Information"),
+} },
+
+
+ {"61478c08-b600-4a84-bbe4-e99c45f0a072",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Saturation Text"),
+} },
+
+ {"61872cf7-6b5e-4b4b-ac2d-59da84459248",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Media"),
+} },
+
+ {"62d2d9ab-8b64-498d-b865-402d4796f865",new HashSet<IdName>()
+             { 
+new IdName (3, "Location Empty String"),
+} },
+
+ {"6336b95e-c7a7-426d-86fd-7ae3d39c84b4",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo White Balance Text"),
+} },
+
+ {"635e9051-50a5-4ba2-b9db-4ed056c77296",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Full Name"),
+} },
+
+ {"63c25b20-96be-488f-8788-c09c407ad812",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address Street"),
+} },
+
+ {"641064ba-9329-47e6-8f36-5fa81aa461a0",new HashSet<IdName>()
+             {
+    new IdName (2, "OneNote Page Edit History"),
+    new IdName (3, "OneNote Tagged Notes"),
+    new IdName (4, "OneNote Linked Note Uri"),
+} },
+
+
+ 
+
+ {"6444048f-4c8b-11d1-8b70-080036b11a03",new HashSet<IdName>()
+             {
+    new IdName (3, "Image Horizontal Size"),
+    new IdName (4, "Image Vertical Size"),
+    new IdName (5, "Image Horizontal Resolution"),
+    new IdName (6, "Image Vertical Resolution"),
+    new IdName (7, "Image Bit Depth"),
+    new IdName (12, "Media Frame Count"),
+    new IdName (13, "Image Dimensions"),
+} },
+
+
+ {"64440490-4c8b-11d1-8b70-080036b11a03",new HashSet<IdName>()
+             {
+    new IdName (2, "Audio Format"),
+    new IdName (3, "Media Duration"),
+    new IdName (4, "Audio Encoding Bitrate"),
+    new IdName (5, "Audio Sample Rate"),
+    new IdName (6, "Audio Sample Size"),
+    new IdName (7, "Audio Channel Count"),
+    new IdName (8, "Audio Stream Number"),
+    new IdName (9, "Audio Stream Name"),
+    new IdName (10, "Audio Compression"),
+} },
+
+
+ {"64440491-4c8b-11d1-8b70-080036b11a03",new HashSet<IdName>()
+             {
+    new IdName (2, "Video Stream Name"),
+    new IdName (3, "Video Frame Width"),
+    new IdName (4, "Video Frame Height"),
+    new IdName (6, "Video Frame Rate"),
+    new IdName (8, "Video Encoding Bitrate"),
+    new IdName (9, "Video Sample Size"),
+    new IdName (10, "Video Compression"),
+    new IdName (11, "Video Stream Number"),
+    new IdName (42, "Video Horizontal Aspect Ratio"),
+    new IdName (43, "Video Total Bitrate"),
+    new IdName (44, "Video Four CC"),
+    new IdName (45, "Video Vertical Aspect Ratio"),
+    new IdName (46, "Video Transcoded For Sync"),
+    new IdName (98, "Video Is Stereo"),
+    new IdName (99, "Video Orientation"),
+    new IdName (100, "Video Is Spherical"),
+} },
+
+
+ {"64440492-4c8b-11d1-8b70-080036b11a03",new HashSet<IdName>()
+             {
+    new IdName (7, "Media Status"),
+    new IdName (9, "Rating"),
+    new IdName (11, "Copyright"),
+    new IdName (12, "Share User Rating"),
+    new IdName (13, "Media Class Primary Id"),
+    new IdName (14, "Media Class Secondary Id"),
+    new IdName (15, "Media DVDID"),
+    new IdName (16, "Media MCDI"),
+    new IdName (17, "Media Metadata Content Provider"),
+    new IdName (18, "Media Content Distributor"),
+    new IdName (19, "Music Composer"),
+    new IdName (20, "Video Director"),
+    new IdName (21, "Parental Rating"),
+    new IdName (22, "Media Producer"),
+    new IdName (23, "Media Writer"),
+    new IdName (24, "Media Collection Group Id"),
+    new IdName (25, "Media Collection Id"),
+    new IdName (26, "Media Content Id"),
+    new IdName (27, "Media Creator Application"),
+    new IdName (28, "Media Creator Application Version"),
+    new IdName (30, "Media Publisher"),
+    new IdName (31, "Music Period"),
+    new IdName (32, "Media Author Url"),
+    new IdName (33, "Media Promotion Url"),
+    new IdName (34, "Media User Web Url"),
+    new IdName (35, "Media Unique File Identifier"),
+    new IdName (36, "Media Encoded By"),
+    new IdName (37, "Media Encoding Settings"),
+    new IdName (38, "Media Protection Type"),
+    new IdName (39, "Media Provider Rating"),
+    new IdName (40, "Media Provider Style"),
+    new IdName (41, "Media User No Auto Info"),
+    new IdName (42, "Media Series Name"),
+    new IdName (47, "Media Thumbnail Large Path"),
+    new IdName (48, "Media Thumbnail Large Uri"),
+    new IdName (49, "Media ThumbnailSmallPath"),
+    new IdName (50, "Media Thumbnail Small Uri"),
+    new IdName (100, "Media Episode Number"),
+    new IdName (101, "Media Season Number"),
+} },
+
+
+ {"644d37b4-e1b3-4bad-b099-7e7c04966aca",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Email Address3"),
+} },
+
+ {"656a3bb3-ecc0-43fd-8477-4ae0404a96cd",new HashSet<IdName>()
+             {
+    new IdName (8192, "Devices Manufacturer"),
+    new IdName (8194, "Devices Model Name"),
+    new IdName (8195, "Devices Model Number"),
+    new IdName (8198, "Devices Presentation Url"),
+    new IdName (12288, "Devices Friendly Name"),
+    new IdName (12297, "Devices Ip Address"),
+    new IdName (16384, "Devices Service Address"),
+    new IdName (16385, "Devices Service Id"),
+} },
+
+
+ {"65a98875-3c80-40ab-abbc-efdaf77dbee2",new HashSet<IdName>()
+             { 
+new IdName (100, "Acquisition Id"),
+} },
+
+ {"660e04d6-81ab-4977-a09f-82313113ab26",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Fax Number"),
+} },
+
+ {"6614ef48-4efe-4424-9eda-c79f404edf3e",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Notifications Missed Call"),
+} },
+
+ {"668cdfa5-7a1b-4323-ae4b-e527393a1d81",new HashSet<IdName>()
+             { 
+new IdName (100, "Source Item"),
+} },
+
+ {"67df94de-0ca7-4d6f-b792-053a3e4f03cf",new HashSet<IdName>()
+             { 
+new IdName (100, "Flag Color"),
+} },
+
+ {"6845cc72-1b71-48c3-af86-b09171a19b14",new HashSet<IdName>()
+             { 
+new IdName (3, "Devices Dial Protocol Installed Applications"),
+} },
+
+ {"68dd6094-7216-40f1-a029-43fe7127043f",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Music"),
+} },
+
+ {"6a15e5a0-0a1e-4cd7-bb8c-d2f1b0c929bc",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Telephone"),
+} },
+
+ {"6af55d45-38db-4495-acb0-d4728a3b8314",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices AepContainer Supports Audio"),
+    new IdName (3, "Devices AepContainer Supports Video"),
+    new IdName (4, "Devices AepContainer Supports Images"),
+    new IdName (5, "Devices AepContainer Supported Uri Schemes"),
+    new IdName (6, "Devices AepContainer Dial Protocol Installed Applications"),
+    new IdName (7, "Devices AepContainer Supports Limited Discovery"),
+    new IdName (8, "Devices AepContainer Supports Positioning"),
+    new IdName (9, "Devices AepContainer Supports Networking"),
+    new IdName (10, "Devices AepContainer Supports Rendering"),
+    new IdName (11, "Devices AepContainer Supports Capturing"),
+    new IdName (12, "Devices AepContainer Supports Object Transfer"),
+    new IdName (13, "Devices AepContainer Supports Telephony"),
+    new IdName (14, "Devices AepContainer Supports Information"),
+} },
+
+
+ {"6afe7437-9bcd-49c7-80fe-4a5c65fa5874",new HashSet<IdName>()
+             { 
+new IdName (104, "Music Disc Number"),
+} },
+
+ {"6b223b6a-162e-4aa9-b39f-05d678fc6d77",new HashSet<IdName>()
+             { 
+new IdName (100, "Music Synchronized Lyrics"),
+} },
+
+ {"6b8b68f6-200b-47ea-8d25-d8050f57339f",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Flash Text"),
+} },
+
+ {"6b8da074-3b5c-43bc-886f-0a2cdce00b6f",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Name"),
+} },
+
+ {"6bdd1fc6-810f-11d0-bec7-08002be2092f",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Wia Device Type"),
+} },
+
+ {"6ccd0131-c397-4744-b2d8-d2c13f457026",new HashSet<IdName>()
+             { 
+new IdName (80, "Game Type"),
+} },
+
+ {"6d217f6d-3f6a-4825-b470-5f03ca2fbe9b",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Program Mode"),
+} },
+
+ {"6d24888f-4718-4bda-afed-ea0fb4386cd8",new HashSet<IdName>()
+             { 
+new IdName (100, "Offline Status"),
+} },
+
+ {"6d6d5d49-265d-4688-9f4e-1fdd33e7cc83",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Internet Sid"),
+} },
+
+ {"6d748de2-8d38-4cc3-ac60-f009b057c557",new HashSet<IdName>()
+             {
+    new IdName (2, "RecordedTV Episode Name"),
+    new IdName (3, "RecordedTV Program Description"),
+    new IdName (4, "RecordedTV Credits"),
+    new IdName (5, "RecordedTV Station Call Sign"),
+    new IdName (7, "RecordedTV Channe' Number"),
+    new IdName (10, "RecordedTV Video Quality"),
+    new IdName (12, "RecordedTV Is Closed Captioning Available"),
+    new IdName (13, "RecordedTV Is Repeat Broadcast"),
+    new IdName (14, "RecordedTV Is SAP"),
+    new IdName (15, "RecordedTV Date Content Expires"),
+    new IdName (16, "RecordedTV Is ATSC Content"),
+    new IdName (17, "RecordedTV Is DTV Content"),
+    new IdName (18, "RecordedTV Is HD Content"),
+} },
+
+
+ {"6e682923-7f7b-4f0c-a337-cfca296687bf",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address City"),
+} },
+
+ {"6ebe6946-2321-440a-90f0-c043efd32476",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Brightness Denominator"),
+} },
+
+ {"6fa20de6-d11c-4d9d-a154-64317628c12d",new HashSet<IdName>()
+             { 
+new IdName (100, "Expand oProperties"),
+} },
+
+ {"702926f4-44a6-43e1-ae71-45627116893b",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Track Numerator"),
+} },
+
+ {"7036dcfc-69ab-4316-b5ac-50de702447b0",new HashSet<IdName>()
+             {
+    new IdName (102, "Structured Query Before"),
+    new IdName (103, "Structured Query After"),
+    new IdName (104, "Structured Query File"),
+    new IdName (105, "Structured Query Custom Property Boolean"),
+    new IdName (106, "Structured Query Custom Property Integer"),
+    new IdName (107, "Structured Query Custom Property Floating Point"),
+    new IdName (108, "Structured Query Custom Property String"),
+    new IdName (109, "Structured Query Custom Property DateTime"),
+    new IdName (110, "Structured Query Has"),
+    new IdName (111, "Structured Query Is"),
+    new IdName (112, "Structured Query Null"),
+} },
+
+
+ {"705ccb0f-5a0d-41ea-b2ca-2c9b5cc7db41",new HashSet<IdName>()
+             { 
+new IdName (100, "Verb Restrictions"),
+} },
+
+ {"705d8364-7547-468c-8c88-84860bcbed4c",new HashSet<IdName>()
+             {
+    new IdName (2, "SAM Name"),
+    new IdName (3, "SAM Version"),
+    new IdName (4, "SAM Date Changed"),
+    new IdName (5, "SAM Password Last Set"),
+    new IdName (6, "SAM Date Account Expires"),
+    new IdName (7, "SAM Password Can Change"),
+    new IdName (8, "SAM Password Must Change"),
+    new IdName (9, "SAM Full Name"),
+    new IdName (10, "SAM Home Directory"),
+    new IdName (11, "SAM Home Directory Drive"),
+    new IdName (12, "SAM Script Path"),
+    new IdName (13, "SAM Profile Path"),
+    new IdName (14, "SAM Admin Comment"),
+    new IdName (15, "SAM Workstations"),
+    new IdName (16, "SAM User Comment"),
+    new IdName (17, "SAM Password"),
+    new IdName (18, "SAM Security Id"),
+    new IdName (19, "SAM User Account Control"),
+    new IdName (20, "SAM Logon Hours"),
+    new IdName (21, "SAM Country Code"),
+    new IdName (22, "SAM Code Page"),
+    new IdName (23, "SAM Password Expired"),
+    new IdName (24, "SAM User Picture"),
+    new IdName (25, "SAM Password Hint"),
+    new IdName (26, "SAM Domain"),
+    new IdName (31, "SAM Groups"),
+    new IdName (32, "SAM Type"),
+    new IdName (36, "SAM Interactive Login"),
+    new IdName (37, "SAM Network Login"),
+    new IdName (38, "SAM Batch Login"),
+    new IdName (39, "SAM Service Login"),
+    new IdName (40, "SAM Remote Interactive Login"),
+    new IdName (41, "SAM Deny Interactive Login"),
+    new IdName (42, "SAM Deny Network Login"),
+    new IdName (43, "SAM Deny Batch Login"),
+    new IdName (44, "SAM Deny Service Login"),
+    new IdName (45, "SAM Deny Remote Interactive Login"),
+    new IdName (46, "SAM Dont Show In Logon UI"),
+    new IdName (47, "SAM Shell Admin Object Props"),
+    new IdName (50, "SAM Password Is Empty"),
+    new IdName (102, "SAM Group Members"),
+    new IdName (103, "SAM Residual Id"),
+    new IdName (200, "LOGON LU Id"),
+    new IdName (201, "LOGON Authentication Package"),
+    new IdName (202, "LOGON TS Session"),
+    new IdName (203, "LOGON Logon Time"),
+    new IdName (204, "LOGON Logon Server"),
+    new IdName (205, "LOGON Dns Domain Name"),
+    new IdName (206, "LOGON UPN"),
+    new IdName (207, "LOGON Client Name"),
+    new IdName (208, "LOGON WinS tation Name"),
+    new IdName (209, "LOGON Status"),
+    new IdName (500, "PROFILE Path"),
+    new IdName (501, "PROFILE GUID"),
+} },
+
+
+ {"71724756-3e74-4432-9b59-e7b2f668a593",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices AepService Friendly Name"),
+    new IdName (3, "Devices AepService Service Class Id"),
+    new IdName (4, "Devices AepService Container Id"),
+} },
+
+
+ {"71b377d6-e570-425f-a170-809fae73e54e",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address State"),
+} },
+
+ {"720eb626-dbe4-4113-835c-9315e1e2ff77",new HashSet<IdName>()
+             {
+    new IdName (2, "Actions Action Name"),
+    new IdName (3, "Actions Activation Context"),
+} },
+
+
+ {"7268af55-1ce4-4f6e-a41f-b6e4ef10e4a9",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Profession"),
+} },
+
+ {"72fab781-acda-43e5-b155-b2434f85e678",new HashSet<IdName>()
+             { 
+new IdName (100, "Date Completed"),
+} },
+
+ {"72fc5ba4-24f9-4011-9f3f-add27afad818",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Reminder Time"),
+} },
+
+ {"730fb6dd-cf7c-426b-a03f-bd166cc9ee24",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address"),
+} },
+
+ {"73389854-0b42-4ea6-bc67-847d430899fd",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Require Template"),
+} },
+
+ {"733cb147-8b1f-4c48-9966-192fde353c75",new HashSet<IdName>()
+             { 
+new IdName (100, "Music Stack Thumbnail Cache Ids"),
+} },
+
+ {"738bf284-1d87-420b-92cf-5834bf6ef9ed",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Bias Numerator"),
+} },
+
+ {"744c8242-4df5-456c-ab9e-014efb9021e3",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Organizer Address"),
+} },
+
+ {"745baf0e-e5c1-4cfb-8a1b-d031a0a52393",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Digital Zoom Denominator"),
+} },
+
+ {"74a7de49-fa11-4d3d-a006-db7e08675916",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Provider Id"),
+} },
+
+ {"75ee72ae-7d5f-482f-9487-f1c46ca819c1",new HashSet<IdName>()
+             { 
+new IdName (100, "Camera Roll Deduplication Id"),
+} },
+
+ {"76c09943-7c33-49e3-9e7e-cdba872cfada",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Track"),
+} },
+
+ {"776b6b3b-1e3d-4b0c-9a0e-8fbaf2a8492a",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Lengt hNumerator"),
+} },
+
+ {"78342dcb-e358-4145-ae9a-6bfe4e0f9f51",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Altitude Denominator"),
+} },
+
+ {"78c34fc8-104a-4aca-9ea4-524d52996e57",new HashSet<IdName>()
+             {
+    new IdName (52, "Devices Discovery Method"),
+    new IdName (55, "Devices Connected"),
+    new IdName (56, "Devices Paired"),
+    new IdName (57, "Devices Icon"),
+    new IdName (70, "Devices Local Machine"),
+    new IdName (71, "Devices Metadata Path"),
+    new IdName (77, "Devices Launch Device Stage From Explorer"),
+    new IdName (81, "Devices Device Description1"),
+    new IdName (82, "Devices Device Description2"),
+    new IdName (83, "Devices NotWorking Properly"),
+    new IdName (84, "Devices Is Shared"),
+    new IdName (85, "Devices Is Network Connected"),
+    new IdName (86, "Devices Is Default"),
+    new IdName (90, "Devices Category Ids"),
+    new IdName (91, "Devices Category"),
+    new IdName (92, "Devices Category Plural"),
+    new IdName (94, "Devices Category Group"),
+    new IdName (256, "Devices Device Instance Id"),
+} },
+
+ 
+
+ {"79486778-4c6f-4dde-bc53-cd594311af99",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Local Weights"),
+} },
+
+ {"79d94e82-4d79-45aa-821a-74858b4e4ca6",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices AepService IoT Service Interfaces"),
+} },
+
+ {"7a55582b-bd8c-4475-b94c-b87a388a7899",new HashSet<IdName>()
+             { 
+new IdName (100, "Status Icons"),
+} },
+
+ {"7a7d76f4-b630-4bd7-95ff-37cc51a975c9",new HashSet<IdName>()
+             { 
+new IdName (2, "Link Target Extension"),
+} },
+
+ {"7abcf4f8-7c3f-4988-ac91-8d2c2e97eca5",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Bearing Denominator"),
+} },
+
+ {"7b9f6399-0a3f-4b12-89bd-4adc51c918af",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Address Post Office Box"),
+} },
+
+ {"7ba3535d-69aa-4525-a938-f3ec79485377",new HashSet<IdName>()
+             {
+    new IdName (2, "SAM Allowed Logon"),
+    new IdName (3, "SAM Dont Enumerate For Logon"),
+} },
+
+
+ {"7bd5533e-af15-44db-b8c8-bd6624e1d032",new HashSet<IdName>()
+             {
+    new IdName (2, "Sync Handler CollectionId"),
+    new IdName (3, "Sync Handler Id"),
+    new IdName (4, "Sync Event Description"),
+    new IdName (5, "Sync Progress"),
+    new IdName (6, "Sync Item Id"),
+    new IdName (7, "Sync Date Synchronized"),
+    new IdName (8, "Sync Handler Type"),
+    new IdName (9, "Sync Handler Type Label"),
+    new IdName (10, "Sync Status"),
+    new IdName (11, "Sync Conflict Count"),
+    new IdName (12, "Sync Error Count"),
+    new IdName (13, "Sync Comments"),
+    new IdName (14, "Sync Enabled"),
+    new IdName (15, "Sync Hidden"),
+    new IdName (16, "Sync Connected"),
+    new IdName (17, "Sync Link"),
+    new IdName (19, "Sync Context"),
+    new IdName (20, "Sync Event Level"),
+    new IdName (21, "Sync Event Flags"),
+    new IdName (22, "Sync Sync Results"),
+    new IdName (23, "Sync Progress Percentage"),
+    new IdName (24, "Sync State"),
+    new IdName (25, "Sync Item State"),
+    new IdName (26, "Sync Item Status Text"),
+    new IdName (27, "Sync Item Status Description"),
+    new IdName (28, "Sync Item Status Action"),
+    new IdName (29, "Sync Global Activity Message"),
+    new IdName (30, "Sync Last Synced Message"),
+} },
+
+
+ {"7d122d5a-ae5e-4335-8841-d71e7ce72f53",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Speed Denominator"),
+} },
+
+ {"7d683fc9-d155-45a8-bb1f-89d19bcb792f",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Display Name"),
+} },
+
+ {"7ddaaad1-ccc8-41ae-b750-b2cb8031aea2",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Latitude Numerator"),
+} },
+
+ {"7fd7259d-16b4-4135-9f97-7c96ecd2fa9e",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Message"),
+} },
+
+ {"7fe3aa27-2648-42f3-89b0-454e5cb150c3",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Program Mode Text"),
+} },
+
+ {"807b653a-9e91-43ef-8f97-11ce04ee20c5",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Suffix"),
+} },
+
+ {"80d81ea6-7473-4b0c-8216-efc11a2c4c8b",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Model Id"),
+} },
+
+ {"80f41eb8-afc4-4208-aa5f-cce21a627281",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Connected Service Identities"),
+} },
+
+ {"813f4124-34e6-4d17-ab3e-6b1f3c2247a1",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Maker Note Offset"),
+} },
+
+ {"821437d6-9eab-4765-a589-3b1cbbd22a61",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Photometric Interpretation Text"),
+} },
+
+ {"827edb4f-5b73-44a7-891d-fdffabea35ca",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Altitude"),
+} },
+
+ {"83914d1a-c270-48bf-b00d-1c4e451b0150",new HashSet<IdName>()
+             { 
+new IdName (100, "Default Group Order"),
+} },
+
+ {"83a6347e-6fe4-4f40-ba9c-c4865240d1f4",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Followup Icon Index"),
+} },
+
+ {"83da6326-97a6-4088-9453-a1923f573b29",new HashSet<IdName>()
+             { 
+new IdName (9, "Devices Is Software Installing"),
+} },
+
+
+ {"847c66de-b8d6-4af9-abc3-6f4f926bc039",new HashSet<IdName>()
+             { 
+new IdName (14, "Device Interface Printer Driver Directory"),
+} },
+
+ {"84d8f337-981d-44b3-9615-c7596dba17e3",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Email Addresses"),
+} },
+
+ {"8589e481-6040-473d-b171-7fa89c2708ed",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Company Main Telephone"),
+} },
+
+ {"8619a4b6-9f4d-4429-8c0f-b996ca59e335",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Security Flags"),
+} },
+
+ {"86407db8-9df7-48cd-b986-f999adc19731",new HashSet<IdName>()
+             { 
+new IdName (2, "Share Target Description"),
+} },
+
+
+ {"8727cfff-4868-4ec6-ad5b-81b98521d1ab",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Latitude"),
+} },
+
+ {"880f70a2-6082-47ac-8aab-a739d1a300c3",new HashSet<IdName>()
+             {
+    new IdName (151, "Devices Shared Tooltip"),
+    new IdName (152, "Devices Networked Tooltip"),
+    new IdName (153, "Devices Default Tooltip"),
+} },
+
+
+ {"8859a284-de7e-4642-99ba-d431d044b1ec",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Media Advanced"),
+} },
+
+ {"8943b373-388c-4395-b557-bc6dbaffafdb",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Audio Device Raw Processing Supported"),
+    new IdName (3, "Devices Audio Device Microphone Sensitivity In Dbfs"),
+    new IdName (4, "Devices Audio Device Microphone Signal To Noise Ratio In Db"),
+} },
+
+
+ {"8969b275-9475-4e00-a887-ff93b8b41e44",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Description"),
+} },
+
+ {"897b3694-fe9e-43e6-8066-260f590c0100",new HashSet<IdName>()
+             {
+    new IdName (2, "Contact JA Company Name Phonetic"),
+    new IdName (3, "Contact JA First Name Phonetic"),
+    new IdName (4, "Contact JA Last Name Phonetic"),
+} },
+
+
+ {"8a2f99f9-3c37-465d-a8d7-69777a246d0c",new HashSet<IdName>()
+             {
+    new IdName (2, "Link Feed Item Local Id"),
+    new IdName (5, "Link Target Url Host Name"),
+    new IdName (6, "Link Target Url Path"),
+} },
+
+
+ {"8af4961c-f526-43e5-aa81-db768219178d",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo SubjectDistanceNumerator"),
+} },
+
+ {"8afcc170-8a46-4b53-9eee-90bae7151e62",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Address Postal Code"),
+} },
+
+ {"8b26ea41-058f-43f6-aecc-4035681ce977",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address Post Office Box"),
+} },
+
+ {"8bf6b9f6-b4f5-482f-a2c2-44bdad2fcfa9",new HashSet<IdName>()
+             { 
+new IdName (51, "SAM Account Is Disabled For Logon UI"),
+} },
+
+ {"8c3b93a4-baed-1a83-9a32-102ee313f6eb",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Blob"),
+} },
+
+ {"8c7ed206-3f8a-4827-b3ab-ae9e1faefc6c",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Container Id"),
+    new IdName (4, "Devices In Local Machine Container"),
+} },
+
+
+ {"8d72aca1-0716-419a-9ac1-acb07b18dc32",new HashSet<IdName>()
+             { 
+new IdName (2, "File Attributes Display"),
+} },
+
+ {"8e531030-b960-4346-ae0d-66bc9a86fb94",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Direction"),
+} },
+
+ {"8e8ecf7c-b7b8-4eb8-a63f-0ee715c96f9e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Gain Control Numerator"),
+} },
+
+ {"8f167568-0aae-4322-8ed9-6055b7b0e398",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address Country"),
+} },
+
+ {"8f367200-c270-457c-b1d4-e07c5bcd90c7",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Last Name"),
+} },
+
+ {"8fdc6dea-b929-412b-ba90-397a257465fe",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Car Telephone"),
+} },
+
+ {"900a403b-097b-4b95-8ae2-071fdaeeb118",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Advanced"),
+} },
+
+ {"90197ca7-fd8f-4e8c-9da3-b57e1e609295",new HashSet<IdName>()
+             { 
+new IdName (100, "Rating Text"),
+} },
+
+ {"908696c7-8f87-44f2-80ed-a8c1c6894575",new HashSet<IdName>()
+             {
+    new IdName (2, "Library Locations Count"),
+    new IdName (4, "Library Locations List"),
+} },
+
+
+ {"9098f33c-9a7d-48a8-8de5-2e1227a64e91",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Proof In Progress"),
+} },
+
+ {"90e5e14e-648b-4826-b2aa-acaf790e3513",new HashSet<IdName>()
+             { 
+new IdName (10, "Is Encrypted"),
+} },
+
+ {"916d17ac-8a97-48af-85b7-867a88fad542",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Auto Complete"),
+} },
+
+ {"91eff6f3-2e27-42ca-933e-7c999fbe310b",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Fax Number"),
+} },
+
+ {"93112f89-c28b-492f-8a9d-4be2062cee8a",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Index Denominator"),
+} },
+
+ {"95beb1fc-326d-4644-b396-cd3ed90e6ddf",new HashSet<IdName>()
+             { 
+new IdName (100, "Journal Entry Type"),
+} },
+
+ {"95c656c1-2abf-4148-9ed3-9ec602e3b7cd",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address Postal Code"),
+} },
+
+ {"95e127b5-79cc-4e83-9c9e-8422187b3e0e",new HashSet<IdName>()
+             {
+    new IdName (2, "Device Interface Win Usb Usb Vendor Id"),
+    new IdName (3, "Device Interface Win Usb Usb Product Id"),
+    new IdName (4, "Device Interface Win Usb Usb Class"),
+    new IdName (5, "Device Interface Win Usb Usb Sub Class"),
+    new IdName (6, "Device Interface Win Usb Usb Protocol"),
+    new IdName (7, "Device Interface Win Usb Device Interface Classes"),
+} },
+
+
+ {"9660c283-fc3a-4a08-a096-eed3aac46da2",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Data Suppliers"),
+} },
+
+ {"967b5af8-995a-46ed-9e11-35b3c5b9782d",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Index"),
+} },
+
+ {"972e333e-ac7e-49f1-8adf-a70d07a9bcab",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Area Information"),
+} },
+
+ {"9744311e-7951-4b2e-b6f0-ecb293cac119",new HashSet<IdName>()
+             {
+    new IdName (1, "Devices Aep Bluetooth Issue Inquiry"),
+    new IdName (2, "Devices Aep Bluetooth Le Active Scanning"),
+    new IdName (3, "Devices Aep Bluetooth Le Scan Interval"),
+    new IdName (4, "Devices Aep Bluetooth Le Scan Window"),
+    new IdName (5, "Devices AepService Bluetooth Cache Mode"),
+    new IdName (6, "Devices AepService Bluetooth Target Device"),
+} },
+
+
+ {"97b0ad89-df49-49cc-834e-660974fd755b",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Label"),
+} },
+
+ {"98f920d1-51e2-4722-9069-3c4b5cff5165",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Barricade Page"),
+} },
+
+ {"98f98354-617a-46b8-8560-5b1b64bf1f89",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Address"),
+} },
+
+ {"995ef0b0-7eb3-4a8b-b9ce-068bb3f4af69",new HashSet<IdName>()
+             {
+    new IdName (1, "Devices Aep Bluetooth Le Appearance"),
+    new IdName (2, "Devices Aep Bluetooth Le Advertisement"),
+    new IdName (3, "Devices Aep Bluetooth Le Scan Response"),
+    new IdName (4, "Devices Aep Bluetooth Le Address Type"),
+    new IdName (5, "Devices Aep Bluetooth Le Appearance Category"),
+    new IdName (6, "Devices Aep Bluetooth Le Appearance Subcategory"),
+    new IdName (8, "Devices Aep Bluetooth Le Is Connectable"),
+} },
+
+
+ {"9973d2b5-bfd8-438a-ba94-5349b293181a",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Calendar"),
+} },
+
+ {"9a8ebb75-6458-4e82-bacb-35c0095b03bb",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Transcoded For Sync"),
+} },
+
+ {"9a93244d-a7ad-4ff8-9b99-45ee4cc09af6",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Assistant Telephone"),
+} },
+
+ {"9a9bc088-4f6d-469e-9919-e705412040f9",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Is Fwd Or Reply"),
+} },
+
+ {"9ab84393-2a0f-4b75-bb22-7279786977cb",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Bearing Ref"),
+} },
+
+ {"9ad5badb-cea7-4470-a03d-b84e51b9949e",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Anniversary"),
+} },
+
+ {"9aebae7a-9644-487d-a92c-657585ed751a",new HashSet<IdName>()
+             { 
+new IdName (100, "Media Subscription Content Id"),
+} },
+
+ {"9b174b33-40ff-11d2-a27e-00c04fc30871",new HashSet<IdName>()
+             {
+    new IdName (2, "Recycle Deleted From"),
+    new IdName (3, "Recycle Date Deleted"),
+} },
+
+
+ {"9b174b34-40ff-11d2-a27e-00c04fc30871",new HashSet<IdName>()
+             {
+    new IdName (4, "File Owner"),
+    new IdName (8, "New Menu Preferred Types"),
+    new IdName (10, "New Menu Allowed Types"),
+} },
+
+
+ {"9b174b35-40ff-11d2-a27e-00c04fc30871",new HashSet<IdName>()
+             {
+    new IdName (2, "Free Space"),
+    new IdName (3, "Capacity"),
+    new IdName (4, "Volume File System"),
+    new IdName (5, "Percent Full"),
+    new IdName (7, "Computer Decorated FreeSpace"),
+    new IdName (10, "Volume Is Root"),
+} },
+
+
+ {"9b34bbb9-949c-488d-9a6d-eeb47c847a2f",new HashSet<IdName>()
+             {
+    new IdName (2, "Wireless Profile Name"),
+    new IdName (4, "Wireless Security"),
+    new IdName (5, "Wireless Radio Type"),
+    new IdName (9, "Wireless Connection Mode"),
+} },
+
+
+ {"9bc2c99b-ac71-4127-9d1c-2596d0d7dcb7",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Distance Denominator"),
+} },
+
+ {"9c1fcf74-2d97-41ba-b4ae-cb2e3661a6e4",new HashSet<IdName>()
+             {
+    new IdName (5, "Priority"),
+    new IdName (7, "Communication Newsgroup Name"),
+    new IdName (8, "Message Has Attachments"),
+    new IdName (10, "SAM Account Name"),
+    new IdName (13, "Message Type"),
+    new IdName (17, "Message Received"),
+} },
+
+
+ {"9cb0c358-9d7a-46b1-b466-dcc6f1a3d93d",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Display Mobile Phone Numbers"),
+} },
+
+ {"9d1d7cc5-5c39-451c-86b3-928e2d18cc47",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Latitude"),
+} },
+
+ {"9d2408b6-3167-422b-82b0-f583b7a7cfe3",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Spouse Name"),
+} },
+
+ {"9e7d118f-b314-45a0-8cfb-d654b917c9e9",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Brightness Numerator"),
+} },
+
+
+ {"a00742a1-cd8c-4b37-95ab-70755587767a",new HashSet<IdName>()
+             { 
+new IdName (3, "Device Interface Printer Enumeration Flag"),
+} },
+
+ {"a015ed5d-aaea-4d58-8a86-3c586920ea0b",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Measure Mode"),
+} },
+
+ {"a06992b3-8caf-4ed7-a547-b259e32ac9fc",new HashSet<IdName>()
+             { 
+new IdName (100, "Search Store"),
+} },
+
+ {"a09f084e-ad41-489f-8076-aa5be3082bca",new HashSet<IdName>()
+             { 
+new IdName (100, "Simple Rating"),
+} },
+
+ {"a0be94c5-50ba-487b-bd35-0654be8881ed",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS DOP Denominator"),
+} },
+
+ {"a0e00ee1-f0c7-4d41-b8e7-26a7bd8d38b0",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Notifications Storage Full"),
+    new IdName (3, "Devices Notifications Storage Full Link Text"),
+} },
+
+
+ {"a0e74609-b84d-4f49-b860-462bd9971f98",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Length In Film"),
+} },
+
+ {"a11c005a-ff95-4785-8617-beaf92399c3c",new HashSet<IdName>()
+             { 
+new IdName (100, "HasLeafContainers"),
+} },
+
+ {"a1829ea2-27eb-459e-935d-b2fad7b07762",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Microphone Array Geometry"),
+} },
+
+ {"a19fb7a9-024b-4371-a8bf-4d29c3e4e9c9",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Connected Service Supported Actions"),
+} },
+
+ {"a26f4afc-7346-4299-be47-eb1ae613139f",new HashSet<IdName>()
+             {
+    new IdName (16, "Identity Key Provider Name"),
+    new IdName (17, "Identity Key Provider Context"),
+    new IdName (100, "Identity"),
+} },
+
+
+ {"a2e541c5-4440-4ba8-867e-75cfc06828cd",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Plane Y Resolution Numerator"),
+} },
+
+ {"a3250282-fb6d-48d5-9a89-dbcace75cccf",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Longitude Numerator"),
+} },
+
+ {"a35996ab-11cf-4935-8b61-a6761081ecdf",new HashSet<IdName>()
+             {
+    new IdName (3, "Devices Aep Model Name"),
+    new IdName (4, "Devices Aep Model Id"),
+    new IdName (5, "Devices Aep Manufacturer"),
+    new IdName (6, "Devices Aep Signal Strength"),
+    new IdName (7, "Devices Aep Is Connected"),
+    new IdName (9, "Devices Aep Is Present"),
+    new IdName (12, "Devices Aep Device Address"),
+    new IdName (16, "Devices Aep Is Paired"),
+    new IdName (17, "Devices Aep Category"),
+} },
+
+
+ {"a399aac7-c265-474e-b073-ffce57721716",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices AepService Bluetooth Service Guid"),
+} },
+
+ {"a3b29791-7713-4e1d-bb40-17db85f01831",new HashSet<IdName>()
+             { 
+new IdName (100, "Importance Text"),
+} },
+
+ {"a40294ef-d2b1-40ed-9512-dd3853b431f5",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Defer Image Prefetch"),
+} },
+
+ {"a4108708-09df-4377-9dfc-6d99986d5a67",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Is Me Identity"),
+} },
+
+ {"a45c254e-df1c-4efd-8020-67d146a850e0",new HashSet<IdName>()
+             {
+    new IdName (3, "Devices Hardware Ids"),
+    new IdName (4, "Devices Compatible Ids"),
+    new IdName (10, "Devices Class Guid"),
+    new IdName (13, "Devices Device Manufacturer"),
+    new IdName (17, "Devices Device Capabilities"),
+    new IdName (29, "Devices Device Characteristics"),
+    new IdName (37, "Devices Location Paths"),
+} },
+
+
+ {"a4790b72-7113-4348-97ea-292bbc1f6770",new HashSet<IdName>()
+             {
+    new IdName (5, "Visio Masters Keywords"),
+    new IdName (6, "Visio Masters Details"),
+} },
+
+
+ {"a4aaa5b7-1ad0-445f-811a-0f8f6e67f6b5",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Img Direction Ref"),
+} },
+
+ {"a5477f61-7a82-4eca-9dde-98b69b2479b3",new HashSet<IdName>()
+             { 
+new IdName (100, "Recorded TV Recording Time"),
+} },
+
+ {"a63b464f-2ace-4d83-87ae-abaf011cc6ac",new HashSet<IdName>()
+             { 
+new IdName (1720, "Volume BitLocker Can Change Passphrase By Proxy"),
+} },
+
+ {"a6744477-c237-475b-a075-54f34498292a",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Task Status Text"),
+} },
+
+ {"a6f360d2-55f9-48de-b909-620e090a647c",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Flagged Complete"),
+} },
+
+ {"a7b6f596-d678-4bc1-b05f-0203d27e8aa1",new HashSet<IdName>()
+             {
+    new IdName (101, "Contact Home Address1 Street"),
+    new IdName (102, "Contact Home Address1 Locality"),
+    new IdName (103, "Contact Home Address1 Region"),
+    new IdName (104, "Contact Home Address1 Country"),
+    new IdName (105, "Contact Home Address1 Postal Code"),
+    new IdName (106, "Contact Home Address2 Street"),
+    new IdName (107, "Contact Home Address2 Locality"),
+    new IdName (108, "Contact Home Address2 Region"),
+    new IdName (109, "Contact Home Address2 Country"),
+    new IdName (110, "Contact Home Address2 Postal Code"),
+    new IdName (111, "Contact Home Address3 Street"),
+    new IdName (112, "Contact Home Address3 Locality"),
+    new IdName (113, "Contact Home Address3 Region"),
+    new IdName (114, "Contact Home Address3 Country"),
+    new IdName (115, "Contact Home Address3 Postal Code"),
+    new IdName (116, "Contact Business Address1 Street"),
+    new IdName (117, "Contact Business Address1 Locality"),
+    new IdName (118, "Contact Business Address1 Region"),
+    new IdName (119, "Contact Business Address1 Country"),
+    new IdName (120, "Contact Business Address1 Postal Code"),
+    new IdName (121, "Contact Business Address2 Street"),
+    new IdName (122, "Contact Business Address2 Locality"),
+    new IdName (123, "Contact Business Address2 Region"),
+    new IdName (124, "Contact Business Address2 Country"),
+    new IdName (125, "Contact Business Address2 Postal Code"),
+    new IdName (126, "Contact Business Address3 Street"),
+    new IdName (127, "Contact Business Address3 Locality"),
+    new IdName (128, "Contact Business Address3 Region"),
+    new IdName (129, "Contact Business Address3 Country"),
+    new IdName (130, "Contact Business Address3 Postal Code"),
+    new IdName (131, "Contact Other Address1 Street"),
+    new IdName (132, "Contact Other Address1 Locality"),
+    new IdName (133, "Contact Other Address1 Region"),
+    new IdName (134, "Contact Other Address1 Country"),
+    new IdName (135, "Contact Other Address1 Postal Code"),
+    new IdName (136, "Contact Other Address2 Street"),
+    new IdName (137, "Contact Other Address2 Locality"),
+    new IdName (138, "Contact Other Address2 Region"),
+    new IdName (139, "Contact Other Address2 Country"),
+    new IdName (140, "Contact Other Address2 Postal Code"),
+    new IdName (141, "Contact Other Address3 Street"),
+    new IdName (142, "Contact Other Address3 Locality"),
+    new IdName (143, "Contact Other Address3 Region"),
+    new IdName (144, "Contact Other Address3 Country"),
+    new IdName (145, "Contact Other Address3 Postal Code"),
+} },
+
+ 
+
+ {"a7fe0840-1344-46f0-8d37-52ed712a4bf9",new HashSet<IdName>()
+             { 
+new IdName (100, "Parental Ratings Organization"),
+} },
+
+ {"a82d9ee7-ca67-4312-965e-226bcea85023",new HashSet<IdName>()
+             { 
+new IdName (100, "Message Flags"),
+} },
+
+ {"a8a74b92-361b-4e9a-b722-7c4a7330a312",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Provider Data"),
+} },
+
+ {"a8a7a412-1927-4a34-b1d4-45f67cc672fb",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Referrer Id"),
+} },
+
+ {"a93eae04-6804-4f24-ac81-09b266452118",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Distance"),
+} },
+
+ {"a94688b6-7d9f-4570-a648-e3dfc0ab2b3f",new HashSet<IdName>()
+             { 
+new IdName (100, "Offline Availability"),
+} },
+
+ {"a9ea193c-c511-498a-a06b-58e2776dcc28",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Orientation Text"),
+} },
+
+ {"aaa660f9-9865-458e-b484-01bc7fe3973e",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Organizer Name"),
+} },
+
+ {"aabaf6c9-e0c5-4719-8585-57b103e584fe",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Flash Manufacturer"),
+} },
+
+ {"aaf16bac-2b55-45e6-9f6d-415eb94910df",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact TTY TDD Telephone"),
+} },
+
+ {"aaf4ee25-bd3b-4dd7-bfc4-47f77bb00f6d",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Differential"),
+} },
+
+ {"ab205e50-04b7-461c-a18c-2f233836e627",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Bias Denominator"),
+} },
+
+ {"acc9ce3d-c213-4942-8b48-6d0820f21c6d",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Speed Numerator"),
+} },
+
+ {"ad763ac7-f1ed-4039-9fb4-b7b84ef33cef",new HashSet<IdName>()
+             { 
+new IdName (2, "Search Provider Attributes"),
+} },
+
+ {"aeac19e4-89ae-4508-b9b7-bb867abee2ed",new HashSet<IdName>()
+             {
+    new IdName (2, "DRM Is Protected"),
+    new IdName (3, "DRM Description"),
+    new IdName (4, "DRM Play Count"),
+    new IdName (5, "DRM Date Play Starts"),
+    new IdName (6, "DRM Date Play Expires"),
+    new IdName (7, "DRM Is Disabled"),
+} },
+
+
+ {"afc47170-14f5-498c-8f30-b0d19be449c6",new HashSet<IdName>()
+             { 
+new IdName (11, "DeviceInterface Printer Driver Name"),
+} },
+
+ {"afd97640-86a3-4210-b67c-289c41aabe55",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Safe Removal Required"),
+} },
+
+ {"b0b87314-fcf6-4feb-8dff-a50da6af561c",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address Country"),
+} },
+
+ {"b180ad60-ed3f-4d16-bd43-f5b4fcf325a9",new HashSet<IdName>()
+             {
+    new IdName (2, "Sync Conflict ItemS hort Location"),
+    new IdName (3, "Sync Conflict Item Full Location"),
+} },
+
+
+ {"b2f9b9d6-fec4-4dd5-94d7-8957488c807b",new HashSet<IdName>()
+             {
+    new IdName (2, "File Placeholder Status"),
+    new IdName (3, "Storage Provider File Identifier"),
+    new IdName (4, "Storage Provider File Version"),
+    new IdName (5, "Storage Provider File Checksum"),
+    new IdName (6, "Storage Provider File Version Waterline"),
+    new IdName (7, "Storage Provider Caller Version Information"),
+} },
+
+
+ {"b33af30b-f552-4584-936c-cb93e5cda29f",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Required Attendee Names"),
+} },
+
+ {"b5c84c9e-5927-46b5-a3cc-933c21b78469",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Connected Service Name"),
+} },
+
+
+ {"b769d0fe-bc33-421a-8ce6-45add82ec756",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Suppress Local Hero"),
+} },
+
+ {"b771b352-8692-42e6-ac33-cc7b062ad950",new HashSet<IdName>()
+             { 
+new IdName (100, "Game Win SPR Recommended"),
+} },
+
+ {"b7b4d61c-5a64-4187-a52e-b1539f359099",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Win Phone8 Camera Flags"),
+} },
+
+ {"b812f15d-c2d8-4bbf-bacd-79744346113f",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Tag View Aggregate"),
+} },
+
+ {"b96eff7b-35ca-4a35-8607-29e3a54c46ea",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Provider Name"),
+} },
+
+ {"b9b4b3fc-2b51-4a42-b5d8-324146afcf25",new HashSet<IdName>()
+             {
+    new IdName (2, "Link Target Parsing Path"),
+    new IdName (3, "Link Status"),
+    new IdName (5, "Link Comment"),
+    new IdName (6, "Item After"),
+    new IdName (8, "Link Target SFGAO Flags"),
+} },
+
+
+ {"ba3b1da9-86ee-4b5d-a2a4-a271a429f0cf",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Bearing Numerator"),
+} },
+
+ {"bb44403b-1399-4650-95eb-03c53a57c2cf",new HashSet<IdName>()
+             { 
+new IdName (60, "Game Int Update Status"),
+} },
+
+ {"bc4e71ce-17f9-48d5-bee9-021df0ea5409",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address Post Office Box"),
+} },
+
+ {"bccc8a3c-8cef-42e5-9b1c-c69079398bc7",new HashSet<IdName>()
+             { 
+new IdName (100, "Message To Do Title"),
+} },
+
+ {"bceee283-35df-4d53-826a-f36a3eefc6be",new HashSet<IdName>()
+             { 
+new IdName (100, "Search Container Hash"),
+} },
+
+ {"be1a72c6-9a1d-46b7-afe7-afaf8cef4999",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Task Status"),
+} },
+
+ {"be6e176c-4534-4d2c-ace5-31dedac1606b",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Longitude Denominator"),
+} },
+
+ {"bebe0920-7671-4c54-a3eb-49fddfc191ee",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Video"),
+} },
+
+ {"bf53d1c3-49e0-4f7f-8567-5a821d8ac542",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Callback Telephone"),
+} },
+
+ {"bf79c0ab-bb74-4cee-b070-470b5ae202ea",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Dnssd Service Name"),
+    new IdName (3, "Devices Dnssd Domain"),
+    new IdName (4, "Devices Dnssd Instance Name"),
+    new IdName (5, "Devices Dnssd Full Name"),
+    new IdName (6, "Devices Dnssd Text Attributes"),
+    new IdName (7, "Devices Dnssd Host Name"),
+    new IdName (8, "Devices Dnssd Weight"),
+    new IdName (9, "Devices Dnssd Priority"),
+    new IdName (10, "Devices Dnssd Ttl"),
+    new IdName (11, "Devices Dnssd Network Adapte rId"),
+    new IdName (12, "Devices Dnssd Port Number"),
+} },
+
+
+ {"bfee9149-e3e2-49a7-a862-c05988145cec",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Is Online"),
+} },
+
+ {"c06238b2-0bf9-4279-a723-25856715cb9d",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Gain Control Text"),
+} },
+
+ {"c0ac206a-827e-4650-95ae-77e2bb74fcc9",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Mailing Address"),
+} },
+
+ {"c107e191-a459-44c5-9ae6-b952ad4b906d",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Max Aperture Numerator"),
+} },
+
+ {"c2ea046e-033c-4e91-bd5b-d4942f6bbe49",new HashSet<IdName>()
+             {
+    new IdName (2, "Creator App Id"),
+    new IdName (3, "Creator Open With UI Options"),
+} },
+
+
+ {"c4322503-78ca-49c6-9acc-a68e2afd7b6b",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity User Name"),
+} },
+
+ {"c449d5cb-9ea4-4809-82e8-af9d59ded6d1",new HashSet<IdName>()
+             { 
+new IdName (100, "Music Is Compilation"),
+} },
+
+ {"c4c07f2b-8524-4e66-ae3a-a6235f103beb",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Notifications Low Battery"),
+} },
+
+ {"c4c4dbb2-b593-466b-bbda-d03d27d5e43a",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Longitude"),
+} },
+
+ {"c5043536-932e-219e-5fb9-1c2807d7b03e",new HashSet<IdName>()
+             {
+    new IdName (600, "Activity App Display Name"),
+    new IdName (601, "Activity App Image Uri"),
+    new IdName (602, "Activity Background Color"),
+    new IdName (603, "Activity Content Image Uri"),
+    new IdName (604, "Activity Content Uri"),
+    new IdName (605, "Activity Description"),
+    new IdName (606, "Activity Display Text"),
+    new IdName (607, "Activity Tilexml"),
+    new IdName (608, "Activity History Active Days"),
+    new IdName (609, "Activity History Active Duration"),
+    new IdName (610, "Activity History Active Hours"),
+    new IdName (611, "Activity History App Activity Id"),
+    new IdName (612, "Activity History App Id"),
+    new IdName (613, "Activity History Device Display Name"),
+    new IdName (614, "Activity History Device Id"),
+    new IdName (615, "Activity History Display Text"),
+    new IdName (616, "Activity History End Time"),
+    new IdName (617, "Activity History Id"),
+    new IdName (618, "Activity History Start Time"),
+    new IdName (619, "Activity History Type"),
+    new IdName (620, "Activity Activity Id"),
+} },
+
+
+ {"c53e42a9-db3c-4bc7-b0f3-83a524adf0ec",new HashSet<IdName>()
+             { 
+new IdName (1719, "Volume BitLocker Can Change Pin"),
+} },
+
+ {"c554493c-c1f7-40c1-a76c-ef8c0614003e",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Telex Number"),
+} },
+
+ {"c64a866e-41ae-4c8c-b3d5-dd6dbf70c9c1",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Group"),
+} },
+
+ {"c66d4b3c-e888-47cc-b99f-9dca3ee34dea",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Bearing"),
+} },
+
+ {"c6f039e7-f6a4-4185-ae48-07938262c274",new HashSet<IdName>()
+             { 
+new IdName (100, "Hide In Grep Search"),
+} },
+
+ {"c75faa05-96fd-49e7-9cb4-9f601082d553",new HashSet<IdName>()
+             { 
+new IdName (100, "End Date"),
+} },
+
+ {"c77724d4-601f-46c5-9b89-c53f93bceb77",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Max Aperture Denominator"),
+} },
+
+ {"c89a23d0-7d6d-4eb8-87d4-776a82d493e5",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Home Address State"),
+} },
+
+ {"c8d1920c-01f6-40c0-ac86-2f3a4ad00770",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Track Denominator"),
+} },
+
+ {"c8ea94f0-a9e3-4969-a94b-9c62a95324e0",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address City"),
+} },
+
+ {"c9944a21-a406-48fe-8225-aec7e24c211b",new HashSet<IdName>()
+             {
+    new IdName (2, "PropList Full Details"),
+    new IdName (3, "PropList Tile Info"),
+    new IdName (4, "PropList Info Tip"),
+    new IdName (5, "PropList Quick Tip"),
+    new IdName (6, "PropList Preview Title"),
+    new IdName (8, "PropList Preview Details"),
+    new IdName (9, "PropList Extended Tile Info"),
+    new IdName (10, "PropList File Operation Prompt"),
+    new IdName (11, "PropList Conflict Prompt"),
+    new IdName (12, "PropList Set Defaults For"),
+    new IdName (13, "PropList Content View Mode For Browse"),
+    new IdName (14, "PropList Content View Mode For Search"),
+    new IdName (16, "PropList Status Icons"),
+    new IdName (17, "Info Tip Text"),
+    new IdName (18, "PropList Status Icons Display Flag"),
+    new IdName (500, "Layout Pattern Content View Mode For Browse"),
+    new IdName (501, "Layout Pattern Content View Mode For Search"),
+    new IdName (502, "Layout Pattern Place Holder"),
+    new IdName (503, "Layout Pattern Tiles View Mode"),
+    new IdName (504, "Layout Pattern Group"),
+    new IdName (510, "PropList Details Pane Null Select"),
+    new IdName (511, "PropList Details Pane Null Select Title"),
+} },
+
+
+
+ 
+ {"c9b88dba-04db-4887-a200-cf0d3afe1146",new HashSet<IdName>()
+             { 
+new IdName (99, "Game Update Status"),
+} },
+
+ {"c9c141a9-1b4c-4f17-a9d1-f298538cadb8",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Aep Service Service Id"),
+    new IdName (5, "Devices Aep Service Protocol Id"),
+    new IdName (6, "Devices Aep Service Aep Id"),
+    new IdName (7, "Devices Aep Service Parent Aep Is Paired"),
+} },
+
+
+ {"c9c34f84-2241-4401-b607-bd20ed75ae7f",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Header Item"),
+} },
+
+ {"cbf38310-4a17-4310-a1eb-247f0b67593b",new HashSet<IdName>()
+             {
+    new IdName (2, "Device Interface Hid Usage Page"),
+    new IdName (3, "Device Interface Hid Usage Id"),
+    new IdName (4, "Device Interface Hid Is Read Only"),
+    new IdName (5, "Device Interface Hid Vendor Id"),
+    new IdName (6, "Device Interface Hid Product Id"),
+    new IdName (7, "Device Interface Hid Version Number"),
+} } ,
+
+
+ {"cc158e89-6581-4311-9637-a8da9002f118",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Require Install"),
+} },
+
+ {"cc301630-b192-4c22-b372-9f4c6d338e07",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup General"),
+} },
+
+ {"cc6f4f24-6083-4bd4-8754-674d0de87ab8",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Email Name"),
+} },
+
+ {"cd102c9c-5540-4a88-a6f6-64e4981c8cd1",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Assistant Name"),
+} },
+
+ {"cd9ed458-08ce-418f-a70e-f912c7bb9c5c",new HashSet<IdName>()
+             { 
+new IdName (103, "Message Message Class"),
+} },
+
+ {"cdbfc167-337e-41d8-af7c-8c09205429c7",new HashSet<IdName>()
+             { 
+new IdName (100, "Application Defined Properties"),
+} },
+
+ {"cdedcf30-8919-44df-8f4c-4eb2ffdb8d89",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Index Numerator"),
+} },
+
+ {"ce50c159-2fb8-41fd-be68-d3e042e274bc",new HashSet<IdName>()
+             {
+    new IdName (2, "Sync Handler Name"),
+    new IdName (3, "Sync Item Name"),
+    new IdName (4, "Sync Conflict Description"),
+    new IdName (6, "Sync Conflict First Location"),
+    new IdName (7, "Sync Conflict Second Location"),
+    new IdName (10, "Sync Conflict Unresolvable"),
+} },
+
+
+ {"cea820b9-ce61-4885-a128-005d9087c192",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Latitude Ref"),
+} },
+
+ {"cebf9b37-26ae-466b-9fe9-c7550c4b0ce8",new HashSet<IdName>()
+             { 
+new IdName (100, "Transfer Path"),
+} },
+
+ {"cf5751fd-f4b3-443d-b31c-9a34740759ec",new HashSet<IdName>()
+             { 
+new IdName (100, "Search Scope"),
+} },
+
+ {"cfa31b45-525d-4998-bb44-3f7d81542fa4",new HashSet<IdName>()
+             { 
+new IdName (100, "Media Dlna Profile Id"),
+} },
+
+ {"cfc08d97-c6f7-4484-89dd-ebef4356fe76",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Plane X Resolution"),
+} },
+
+ {"d042d2a1-927e-40b5-a503-6edbd42a517e",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Phone Numbers Canonical"),
+} },
+
+ {"d08dd4c0-3a9e-462e-8290-7b636b2576b9",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Interface Paths"),
+    new IdName (3, "Devices Function Paths"),
+    new IdName (10, "Devices Primary Category"),
+    new IdName (257, "Devices Status 1"),
+    new IdName (258, "Devices Status 2"),
+    new IdName (259, "Devices Status"),
+} },
+
+
+ {"d0a04f0a-462a-48a4-bb2f-3706e88dbd7d",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Authors"),
+} },
+
+ {"d0c7f054-3f72-4725-8527-129a577cb269",new HashSet<IdName>()
+             { 
+new IdName (100, "Sensitivity Text"),
+} },
+
+ {"d0dab0ba-368a-4050-a882-6c010fd19a4f",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Content"),
+} },
+
+ {"d21a7148-d32c-4624-8900-277210f79c0f",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Compressed Bits Per Pixel Numerator"),
+} },
+
+ {"d35f743a-eb2e-47f2-a286-844132cb1427",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo EXIF Version"),
+} },
+
+ {"d37d52c6-261c-4303-82b3-08b926ac6f12",new HashSet<IdName>()
+             { 
+new IdName (100, "Task Billing Information"),
+} },
+
+ {"d4729704-8ef1-43ef-9024-2bd381187fd5",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Children"),
+} },
+
+ {"d4bf61b3-442e-4ada-882d-fa7b70c832d9",new HashSet<IdName>()
+             { 
+new IdName (6, "Devices Aep Point Of Service Connection Types"),
+} },
+
+ {"d4d0aa16-9948-41a4-aa85-d97ff9646993",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Participants"),
+} },
+
+ {"d55bae5a-3892-417a-a649-c6ac5aaaeab3",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Optional Attendee Addresses"),
+} },
+
+ {"d5cdd502-2e9c-101b-9397-08002b2cf9ae",new HashSet<IdName>()
+             {
+    new IdName (1, "Codepage"),
+    new IdName (2, "Category"),
+    new IdName (3, "Document Presentation Format"),
+    new IdName (4, "Document ByteC ount"),
+    new IdName (5, "Document Line Count"),
+    new IdName (6, "Document Paragraph Count"),
+    new IdName (7, "Document Slide Count"),
+    new IdName (8, "Document Note Count"),
+    new IdName (9, "Document Hidden Slide Count"),
+    new IdName (10, "Document Multimedia Clip Count"),
+    new IdName (11, "Scale"),
+    new IdName (12, "Headingpair"),
+    new IdName (13, "Document Parts"),
+    new IdName (14, "Document Manager"),
+    new IdName (15, "Company"),
+    new IdName (16, "Document Links Dirty"),
+    new IdName (26, "Content Type"),
+    new IdName (27, "Content Status"),
+    new IdName (28, "Language"),
+    new IdName (29, "Document Version"),
+} },
+
+
+ {"d6304e01-f8f5-4f45-8b15-d024a6296789",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Pager Telephone"),
+} },
+
+ {"d68dbd8a-3374-4b81-9972-3ec30682db3d",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact IM Address"),
+} },
+
+ {"d6942081-d53b-443d-ad47-5e059d9cd27a",new HashSet<IdName>()
+             {
+    new IdName (2, "Shell SFGAOFlagsStrings"),
+    new IdName (3, "Link TargetSFGAOFlagsStrings"),
+} },
+
+
+ {"d6b5b883-18bd-4b4d-b2ec-9e38affeda82",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices SmartCards ReaderKind"),
+} },
+
+ {"d6cf9145-d365-471b-bcb8-f0b4a96b891c",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts ActiveStatus"),
+} },
+
+ {"d7313ff1-a77a-401c-8c99-3dbdd68add36",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Name Prefix"),
+} },
+
+ {"d76e7ba8-dfa6-48e7-9670-d62dfb07206b",new HashSet<IdName>()
+             {
+    new IdName (2, "Connected Search Contract Id"),
+    new IdName (3, "Connected Search App Min Version"),
+    new IdName (4, "Connected Search App Installed State"),
+} },
+
+
+ {"d7750ee0-c6a4-48ec-b53e-b87b52e6d073",new HashSet<IdName>()
+             { 
+new IdName (100, "Image Parsing Name"),
+} },
+
+ {"d7b61c70-6323-49cd-a5fc-c84277162c97",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Flash Energy Denominator"),
+} },
+
+ {"d98be98b-b86b-4095-bf52-9d23b2e0a752",new HashSet<IdName>()
+             { 
+new IdName (100, "Priority Text"),
+} },
+
+ {"d9c22960-532c-4bc6-9876-7b12b52593d7",new HashSet<IdName>()
+             { 
+new IdName (2, "Protocol Name"),
+} },
+
+ {"da520e51-f4e9-4739-ac82-02e0a95c9030",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Qualified User Name"),
+} },
+
+ {"da5d0862-6e76-4e1b-babd-70021bd25494",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Speed"),
+} },
+
+
+ {"dc54fd2e-189d-4871-aa01-08c2f57a4abc",new HashSet<IdName>()
+             { 
+new IdName (100, "Flag Status Text"),
+} },
+
+ {"dc5877c7-225f-45f7-bac7-e81334b6130a",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Img Direction Numerator"),
+} },
+
+ {"dc8f80bd-af1e-4289-85b6-3dfc1b493992",new HashSet<IdName>()
+             {
+    new IdName (100, "Message Conversation Id"),
+    new IdName (101, "Message Conversation Index"),
+} },
+
+
+ {"dccb10af-b4e2-4b88-95f9-031b4d5ab490",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Focal Plane X Resolution Numerator"),
+} },
+
+ {"dce33a78-aa18-4b3d-b1df-a6621ac8bdd2",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Bypass View Action"),
+} },
+
+ {"dd141766-313a-4a30-90f0-056a7c968437",new HashSet<IdName>()
+             {
+    new IdName (2, "Print Status Document Count"),
+    new IdName (3, "Print Status Error Status"),
+    new IdName (4, "Print Status Location"),
+    new IdName (5, "Print Status Comment"),
+    new IdName (6, "Print Status Preferences"),
+    new IdName (7, "Print Status Warning Status"),
+    new IdName (8, "Print Status Info Status"),
+    new IdName (9, "Scan Status Profile"),
+} },
+
+
+ {"ddd1460f-c0bf-4553-8ce4-10433c908fb0",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address Street"),
+} },
+
+ {"de00de32-547e-4981-ad4b-542f2e9007d8",new HashSet<IdName>()
+             { 
+new IdName (100, "PropGroup Camera"),
+} },
+
+ {"de35258c-c695-4cbc-b982-38b0ad24ced0",new HashSet<IdName>()
+             { 
+new IdName (2, "Shell Omit From View"),
+} },
+
+ {"de41cc29-6971-4290-b472-f59f2e2f31e2",new HashSet<IdName>()
+             { 
+new IdName (100, "Media Date Released"),
+} },
+
+ {"de5ef3c7-46e1-484e-9999-62c5308394c1",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address Post Office Box"),
+} },
+
+ {"de621b8f-e125-43a3-a32d-5665446d632a",new HashSet<IdName>()
+             { 
+new IdName (25, "Security Encryption Owners Display"),
+} },
+
+ {"de9e220b-41d4-4690-8b6b-3d89e231eef1",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Family Name"),
+} },
+
+ {"dea7c82c-1d89-4a66-9427-a4e3debabcb1",new HashSet<IdName>()
+             { 
+new IdName (100, "Journal Contacts"),
+} },
+
+ {"debda43a-37b3-4383-91e7-4498da2995ab",new HashSet<IdName>()
+             {
+    new IdName (5, "WNET Local Name"),
+    new IdName (6, "WNET Remote Name"),
+    new IdName (7, "WNET Comment"),
+    new IdName (8, "WNET Provider"),
+} },
+
+
+ {"deeb2db5-0696-4ce0-94fe-a01f77a45fb5",new HashSet<IdName>()
+             { 
+new IdName (102, "Music Artist Sort Override"),
+} },
+
+ {"df975fd3-250a-4004-858f-34e29a3e37aa",new HashSet<IdName>()
+             { 
+new IdName (100, "Prop Group Contact"),
+} },
+
+ {"dfb9a04d-362f-4ca3-b30b-0254b17b5b84",new HashSet<IdName>()
+             { 
+new IdName (100, "Parsing Bind Context"),
+} },
+
+ {"e08805c8-e395-40df-80d2-54f0d6c43154",new HashSet<IdName>()
+             { 
+new IdName (100, "Document Document ID"),
+} },
+
+ {"e1277516-2b5f-4869-89b1-2e585bd38b7a",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Len sModel"),
+} },
+
+ {"e13d8975-81c7-4948-ae3f-37cae11e8ff7",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Shutter Speed Denominator"),
+} },
+
+ {"e1a9a38b-6685-46bd-875e-570dc7ad7320",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Aperture Denominator"),
+} },
+
+ {"e1ad4953-a752-443c-93bf-80c7525566c2",new HashSet<IdName>()
+             {
+    new IdName (2, "Connected Search Type"),
+    new IdName (3, "Connected Search Rendering Template"),
+    new IdName (4, "Connected Search Fallback Template"),
+    new IdName (5, "Connected Search Telemetry Id"),
+    new IdName (6, "Connected Search Impression Id"),
+    new IdName (7, "Connected Search Is Visibility Tracked"),
+    new IdName (8, "Connected Search Telemetry Data"),
+    new IdName (9, "Connected Search Application Search Scope"),
+    new IdName (10, "Connected Search Parent Id"),
+    new IdName (11, "Connected Search Child Count"),
+    new IdName (12, "Connected Search Top Level Id"),
+    new IdName (13, "Connected Search Is Visible By Default"),
+    new IdName (14, "Connected Search Is Activatable"),
+    new IdName (15, "Connected Search Suggestion Context"),
+    new IdName (16, "Connected Search Region Id"),
+    new IdName (17, "Connected Search Item Source"),
+    new IdName (18, "Connected Search Activation Command"),
+    new IdName (19, "Connected Search Is History Item"),
+    new IdName (20, "Connected Search Is App Available"),
+    new IdName (21, "Connected Search History Title"),
+    new IdName (22, "Connected Search History Description"),
+    new IdName (23, "Connected Search History Glyph"),
+    new IdName (27, "Connected Search Requires Consent"),
+    new IdName (28, "Connected Search Copy Text"),
+    new IdName (29, "Connected Search Add Open In Browser Command"),
+    new IdName (30, "Connected Search Image Url"),
+    new IdName (31, "Connected Search Image Prefetch Stage"),
+    new IdName (32, "Connected Search Is Local Item"),
+} },
+
+
+ 
+ {"e1d4a09e-d758-4cd1-b6ec-34a8b5a73f80",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Address Postal Code"),
+} },
+
+ {"e2d40928-632c-4280-a202-e0c2ad1ea0f4",new HashSet<IdName>()
+             {
+    new IdName (2, "Connected Search Qs Code"),
+    new IdName (3, "Connected Search Jump List"),
+    new IdName (4, "Connected Search Voice Command Examples"),
+} },
+
+
+ {"e32596b0-1163-4e02-867a-12132db4ba06",new HashSet<IdName>()
+             { 
+new IdName (2, "IE FeedItem Local Id"),
+} },
+
+ {"e3690a87-0fa8-4a2a-9a9f-fce8827055ac",new HashSet<IdName>()
+             { 
+new IdName (100, "Prop Group Image"),
+} },
+
+ {"e3a7d2c1-80fc-4b40-8f34-30ea111bdc2e",new HashSet<IdName>()
+             { 
+new IdName (100, "Prop Group File System"),
+} },
+
+
+ {"e4f10a3c-49e6-405d-8288-a23bd4eeaa6c",new HashSet<IdName>()
+             { 
+new IdName (100, "File Extension"),
+} },
+
+ {"e53d799d-0f3f-466e-b2ff-74634a3cb7a4",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address Country"),
+} },
+
+ {"e5473742-4611-4aaf-9c49-a3417748cbc8",new HashSet<IdName>()
+             { 
+new IdName (100, "Invalid Path Value"),
+} },
+
+ {"e55fc3b0-2b60-4220-918e-b21e8bf16016",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Unique Id"),
+} },
+
+ {"e6822fee-8c17-4d62-823c-8e9cfcbd1d5c",new HashSet<IdName>()
+             { 
+new IdName (100, "Audio Is Variable Bit Rate"),
+} },
+
+ {"e6c3d9ad-7b32-4efe-a167-0a868ffdf3af",new HashSet<IdName>()
+             { 
+new IdName (100, "Game WinSPR Minimum"),
+} },
+
+ {"e6ddcaf7-29c5-4f0a-9a68-d19412ec7090",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Lens Manufacturer"),
+} },
+
+ {"e77e90df-6271-4f5b-834f-2dd1f245dda4",new HashSet<IdName>()
+             {
+    new IdName (2, "Storage Provider UI Status"),
+    new IdName (3, "Storage Provider State"),
+    new IdName (4, "Storage Provider Transfer Progress"),
+} },
+
+
+ {"e7b33238-6584-4170-a5c0-ac25efd9da56",new HashSet<IdName>()
+             { 
+new IdName (100, "Prop Group Recorded TV"),
+} },
+
+ {"e7c3fb29-caa7-4f47-8c8b-be59b330d4c5",new HashSet<IdName>()
+             {
+    new IdName (2, "Devices Aep Container Id"),
+    new IdName (3, "Devices Aep Can Pair"),
+} },
+
+
+ {"e8309b6e-084c-49b4-b1fc-90a80331b638",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo PeopleNames"),
+} },
+
+ {"e88dcce0-b7b3-11d1-a9f0-00aa0060fa31",new HashSet<IdName>()
+             {
+    new IdName (2, "Zip Folder Encrypted"),
+    new IdName (3, "Zip Folder Method"),
+    new IdName (4, "Zip Folder Ratio"),
+    new IdName (5, "Zip Folder CRC32"),
+    new IdName (6, "Zip Folder Compressed Size"),
+} },
+
+
+ {"e92a2496-223b-4463-a4e3-30eabba79d80",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo FNumber Denominator"),
+} },
+
+ {"e9641eff-af25-4db7-947b-4128929f8ef5",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Suggestion Detail Text"),
+} },
+
+ {"e9edd392-0b4c-4cf2-82c0-b0d139666245",new HashSet<IdName>()
+             {
+    new IdName (102, "Structured Query Virtual Bcc"),
+    new IdName (103, "Structured Query Virtual Cc"),
+    new IdName (104, "Structured Query Virtual From"),
+    new IdName (105, "Structured Query Virtual To"),
+    new IdName (106, "Structured Query Virtual Organizer"),
+    new IdName (107, "Structured Query Virtual Required Attendees"),
+    new IdName (108, "Structured Query Virtual Optional Attendees"),
+    new IdName (109, "Structured Query Virtual Resources"),
+    new IdName (110, "Structured Query Virtual Date Created"),
+    new IdName (111, "Structured Query Virtual Phone"),
+    new IdName (112, "Structured Query Virtual Message Size"),
+    new IdName (113, "Structured Query Virtual About"),
+    new IdName (114, "Structured Query Virtual Is Read"),
+    new IdName (115, "Structured Query Virtual Journal Duration"),
+    new IdName (116, "Structured Query Virtual Is Encrypted"),
+    new IdName (117, "Structured Query Virtual Type"),
+    new IdName (118, "Structured Query Virtual Artist"),
+} },
+
+
+ {"ea810849-87ff-4b54-abd6-5b71adf466f8",new HashSet<IdName>()
+             { 
+new IdName (1, "Dui Control Resource"),
+} },
+
+ {"ec0b4191-ab0b-4c66-90b6-c6637cdebbab",new HashSet<IdName>()
+             { 
+new IdName (100, "Communication Policy Tag"),
+} },
+
+ {"ecf4b6f6-d5a6-433c-bb92-4076650fc890",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Dest Latitude Numerator"),
+} },
+
+ {"ecf7f4c9-544f-4d6d-9d98-8ad79adaf453",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Speed Ref"),
+} },
+
+ {"ed4df2d3-8695-450b-856f-f5c1c53acb66",new HashSet<IdName>()
+             { 
+new IdName (100, "GPS Des tDistance Ref"),
+} },
+
+ {"ee31306c-fb9b-4d62-8621-3575d972a9f9",new HashSet<IdName>()
+             { 
+new IdName (1718, "Volume BitLocker Requires Admin"),
+} },
+
+ {"ee3d3d8a-5381-4cfa-b13b-aaf66b5f4ec9",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo White Balance"),
+} },
+
+ {"eec7b761-6f94-41b1-949f-c729720dd13c",new HashSet<IdName>()
+             { 
+new IdName (12, "Device Interface Printer Port Name"),
+} },
+
+ {"ef1167eb-cbfc-4341-a568-a7c91a68982c",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices WiFi Interface Guid"),
+} },
+
+ {"ef884c5b-2bfe-41bb-aae5-76eedf4f9902",new HashSet<IdName>()
+             {
+    new IdName (100, "Is Shared"),
+    new IdName (200, "Shared With"),
+    new IdName (300, "Sharing Status"),
+    new IdName (400, "Share Scope"),
+} },
+
+
+ {"f04bef95-c585-4197-a2b7-df46fdc9ee6d",new HashSet<IdName>()
+             { 
+new IdName (100, "Kind Text"),
+} },
+
+ {"f0f7984d-222e-4ad2-82ab-1dd8ea40e57e",new HashSet<IdName>()
+             { 
+new IdName (300, "Title Sort Override"),
+} },
+
+ {"f1176dfe-7138-4640-8b4c-ae375dc70a6d",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Primary Address State"),
+} },
+
+ {"f18dedf3-337f-42c0-9e03-cee08708a8c3",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Logon Status String"),
+} },
+
+ {"f1a24aa7-9ca7-40f6-89ec-97def9ffe8db",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact File As Name"),
+} },
+
+ {"f1fdb4af-f78c-466c-bb05-56e92db0b8ec",new HashSet<IdName>()
+             { 
+new IdName (103, "Music Album Artist Sort Override"),
+} },
+
+ {"f21d9941-81f0-471a-adee-4e74b49217ed",new HashSet<IdName>()
+             { 
+new IdName (100, "Provider Item Id"),
+} },
+
+ {"f2275480-f782-4291-bd94-f13693513aec",new HashSet<IdName>()
+             { 
+new IdName (0, "Prop List XP Details Panel"),
+} },
+
+ {"f23f425c-71a1-4fa8-922f-678ea4a60408",new HashSet<IdName>()
+             { 
+new IdName (100, "Is Attachment"),
+} },
+
+ {"f271c659-7e5e-471f-ba25-7f77b286f836",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Business Email Addresses"),
+} },
+
+ {"f27abe3a-7111-4dda-8cb2-29222ae23566",new HashSet<IdName>()
+             { 
+new IdName (2, "Connected Search Disambiguation Id"),
+} },
+
+
+ {"f334115e-da1b-4509-9b3d-119504dc7abb",new HashSet<IdName>()
+             { 
+new IdName (100, "Document Contributor"),
+} },
+
+ {"f3713ada-90e3-4e11-aae5-fdc17685b9be",new HashSet<IdName>()
+             { 
+new IdName (100, "Prop Group GPS"),
+} },
+
+ {"f3aecac4-5b8d-436a-ad0c-64ab194fdaf3",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Collection Name"),
+} },
+
+ {"f3c9b698-be85-47ce-888f-83874d9abcb4",new HashSet<IdName>()
+             {
+    new IdName (2, "App Contract Pinned"),
+    new IdName (3, "App Contract Hidden"),
+    new IdName (4, "App Contract Pinned Order"),
+    new IdName (5, "App Contract Relevance"),
+    new IdName (6, "App Contract Category"),
+    new IdName (7, "App Contract Supported File Types"),
+} },
+
+
+ {"f3d8f40d-50cb-44a2-9718-40cb9119495d",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Initials"),
+} },
+
+ {"f50d2f5d-dda0-48d4-8d2b-e83729fb69a4",new HashSet<IdName>()
+             { 
+new IdName (100, "Item Query Condition"),
+} },
+
+ {"f6272d18-cecc-40b1-b26a-3911717aa7bd",new HashSet<IdName>()
+             { 
+new IdName (100, "Calendar Location"),
+} },
+
+ {"f628fd8c-7ba8-465a-a65b-c5aa79263a9e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Metering Mode Text"),
+} },
+
+ {"f7db74b4-4287-4103-afba-f1b13dcd75cf",new HashSet<IdName>()
+             { 
+new IdName (100,  "Item Date"),
+} },
+
+ {"f8245476-2ec6-44be-b2f7-82ec2537fa2e",new HashSet<IdName>()
+             {
+    new IdName (100, "Condition"),
+    new IdName (101, "Condition Key"),
+} },
+
+
+ {"f85bf840-a925-4bc2-b0c4-8e36b598679e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Digital Zoom"),
+} },
+
+ {"f8d3f6ac-4874-42cb-be59-ab454b30716a",new HashSet<IdName>()
+             { 
+new IdName (100, "Sensitivity"),
+} },
+
+ {"f8fa7fa3-d12b-4785-8a4e-691a94f7a3e7",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Email Address"),
+} },
+
+ {"fa303353-b659-4052-85e9-bcac79549b84",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Maker Note"),
+} },
+
+ {"fa304789-00c7-4d80-904a-1e4dcc7265aa",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Gain Control"),
+} },
+
+ {"fb1de864-e06d-47f4-82a6-8a0aef44493c",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Audio Device Speech Processing Supported"),
+} },
+
+ {"fb3842cd-9e2a-4f83-8fcc-4b0761139ae9",new HashSet<IdName>()
+             { 
+new IdName (2, "Device Interface Proximity Supports Nfc"),
+} },
+
+ {"fc6976db-8349-4970-ae97-b3c5316a08f0",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Sharpness"),
+} },
+
+ {"fc9f7306-ff8f-4d49-9fb6-3ffe5c0951ec",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Department"),
+} },
+
+ {"fcad3d3d-0858-400f-aaa3-2f66cce2a6bc",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Flash Energy Numerator"),
+} },
+
+ {"fcc16823-baed-4f24-9b32-a0982117f7fa",new HashSet<IdName>()
+             { 
+new IdName (100, "Identity Primary Email Address"),
+} },
+
+ {"fceff153-e839-4cf3-a9e7-ea22832094b8",new HashSet<IdName>()
+             {
+    new IdName (100, "File Offline Availability Status"),
+    new IdName (101, "Folder Kind"),
+    new IdName (103, "Sync Transfer Status"),
+    new IdName (104, "Transfer Position"),
+    new IdName (105, "Transfer Size"),
+    new IdName (106, "Transfer Order"),
+    new IdName (107, "Last Sync Error"),
+    new IdName (108, "Storage Provider Id"),
+    new IdName (109, "Storage Provider Error"),
+    new IdName (110, "Storage Provider Status"),
+    new IdName (111, "Storage Provider Share Statuses"),
+    new IdName (112, "Storage Provider File Remote Uri"),
+    new IdName (113, "Cached File Updater Content Id For Stream"),
+    new IdName (114, "Cached File Updater Content Id For Conflict Resolution"),
+    new IdName (115, "Remote Conflicting File"),
+    new IdName (116, "Storage Provider Thumbnail Dimensions"),
+    new IdName (117, "Storage Provider Sharing Status"),
+    new IdName (118, "Storage Provider Descendant Sharing Status"),
+    new IdName (119, "Storage Provider Fully Qualified Id"),
+    new IdName (120, "Storage Provider Custom States"),
+    new IdName (121, "Item Custom State State List"),
+    new IdName (122, "Item Custom State Values"),
+    new IdName (123, "Item Custom State Icon References"),
+    new IdName (124, "Storage Provider Aggregated Custom States"),
+    new IdName (125, "Storage Provider Network Connected"),
+    new IdName (126, "Storage Provider Warning Error State"),
+    new IdName (127, "Storage Provider Protection Mode"),
+} },
+
+
+ {"fcfb52aa-c1e5-4cd8-88bc-f80fd7390f20",new HashSet<IdName>()
+             { 
+new IdName (100, "Not User Content"),
+} },
+
+ {"fd122953-fa93-4ef7-92c3-04c946b2f7c8",new HashSet<IdName>()
+             { 
+new IdName (100, "Music Display Artist"),
+} },
+
+ {"fd9d9fc7-38ec-436d-8fc6-ec39bad301e6",new HashSet<IdName>()
+             {
+    new IdName (100, "Computer Processor"),
+    new IdName (101, "Computer Memory"),
+} },
+
+
+ {"fdf84370-031a-4add-9e91-0d775f1c6605",new HashSet<IdName>()
+             { 
+new IdName (100, "Mileage Information"),
+} },
+
+ {"fe83bb35-4d1a-42e2-916b-06f3e1af719e",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Flash Model"),
+} },
+
+ {"fe9e4c12-aacb-4aa3-966d-91a29e6128b5",new HashSet<IdName>()
+             {
+    new IdName (3, "Printer Default"),
+    new IdName (4, "Printer Location"),
+    new IdName (5, "Printer Model"),
+    new IdName (6, "Printer Queue Size"),
+    new IdName (7, "Printer Status"),
+} },
+
+
+ {"fec690b7-5f30-4646-ae47-4caafba884a3",new HashSet<IdName>()
+             { 
+new IdName (100, "Photo Exposure Program Text"),
+} },
+
+ {"fec7952b-4bf0-4c03-b6e1-2796818b7ca9",new HashSet<IdName>()
+             { 
+new IdName (100, "Fonts Version"),
+} },
+
+ {"ff1167eb-cbfc-4341-a568-a7c91a68982c",new HashSet<IdName>()
+             { 
+new IdName (2, "Devices Wwan Interface Guid"),
+} },
+
+ {"ff962609-b7d6-4999-862d-95180d529aea",new HashSet<IdName>()
+             { 
+new IdName (100, "Contact Other Address Street"),
+} },
+
+ {"ffae9db7-1c8d-43ff-818c-84403aa3732d",new HashSet<IdName>()
+             { 
+new IdName (100, "Source Package Family Name"),
+} },
+
+
+
+
+
+        };
+
+
+
         public static string GetDescriptionFromGuidAndKey(string guid, int key)
         {
             var desc = "(Description not available)";
 
-            switch (guid)
+            if (PropertyStoreInfo.ContainsKey(guid.ToLowerInvariant()))
             {
-                case "46588ae2-4cbc-4338-bbfc-139326986dce":
-                    switch (key)
-                    {
-                        case 4:
-                            desc = "SID";
-                            break;
-                    }
-                    break;
-                case "dabd30ed-0043-4789-a7f8-d013a4736622":
-                    switch (key)
-                    {
-                        case 100:
-                            desc = "Folder Path (Narrow)";
-                            break;
-                    }
-                    break;
-                case "28636aa6-953d-11d2-b5d6-00c04fd918d0":
-                    switch (key)
-                    {
-                        case 24:
-                            desc = "Parsing Name";
-                            break;
-                        case 9:
-                            desc = "Perceived Type";
-                            break;
-                        case 2:
-                            desc = "Description ID";
-                            break;
-                        case 12:
-                            desc = "File count";
-                            break;
-                        case 0:
-                            desc = "Find Data";
-                            break;
-                        case 33:
-                            desc = "Is Send To Target";
-                            break;
-                        case 8:
-                            desc = "Folder Path (Narrow)";
-                            break;
-                        case 11:
-                            desc = "Item Type";
-                            break;
-                        case 6:
-                            desc = "Namespace CLSID";
-                            break;
-                        case 5:
-                            desc = "Computer name";
-                            break;
-                        case 25:
-                            desc = "SFGAO Flags";
-                            break;
-                        case 29:
-                            desc = "Contained items";
-                            break;
-                        case 14:
-                            desc = "Total File Size";
-                            break;
-                        case 30:
-                            desc = "Parsing Path";
-                            break;
-                    }
-                    break;
+                var psi = PropertyStoreInfo[guid.ToLowerInvariant()];
 
-                case "9f4c2855-9f79-4b39-a8d0-e1d42de1d5f3":
-                    switch (key)
-                    {
-                        case 8:
-                            desc = "AppUserModel Exclude From Show In New Install";
-                            break;
-                        case 5:
-                            desc = "AppUserModel ID";
-                            break;
-                        case 6:
-                            desc = "AppUserModel Is DestList Separator";
-                            break;
-                        case 9:
-                            desc = "AppUserModel Prevent Pinning";
-                            break;
-                        case 2:
-                            desc = "AppUserModel RelaunchCommand";
-                            break;
-                        case 4:
-                            desc = "AppUserModel Relaunch Display Name Resource";
-                            break;
-                        case 3:
-                            desc = "AppUserModel Relaunch Icon Resource";
-                            break;
-                    }
-                    break;
+                var d = psi.SingleOrDefault(t => t.Id == key);
 
-                case "446d16b1-8dad-4870-a748-402ea43d788c":
-                    switch (key)
-                    {
-                        case 100:
-                            desc = "Thumbnail Cache Id";
-                            break;
-                    }
-                    break;
-
-                case "fb8d2d7b-90d1-4e34-bf60-6eac09922bbf":
-                    switch (key)
-                    {
-                        case 2:
-                            desc = "WinX Hash";
-                            break;
-                    }
-                    break;
-
-                case "f29f85e0-4ff9-1068-ab91-08002b27b3d9":
-                    switch (key)
-                    {
-                        case 18:
-                            desc = "Application Name";
-                            break;
-                        case 4:
-                            desc = "Author";
-                            break;
-                        case 6:
-                            desc = "Comment";
-                            break;
-                        case 5:
-                            desc = "Keywords";
-                            break;
-                        case 3:
-                            desc = "Subject";
-                            break;
-                        case 17:
-                            desc = "Thumbnail";
-                            break;
-                        case 27:
-                            desc = "Thumbnail Stream";
-                            break;
-                        case 2:
-                            desc = "Title";
-                            break;
-                        case 16:
-                            desc = "Document Character Count";
-                            break;
-                        case 12:
-                            desc = "Document Date Created";
-                            break;
-                        case 11:
-                            desc = "Document Date Printed";
-                            break;
-                        case 13:
-                            desc = "Document Date Saved";
-                            break;
-                        case 8:
-                            desc = "Document Last Author";
-                            break;
-                        case 14:
-                            desc = "Document Page Count";
-                            break;
-                        case 9:
-                            desc = "Document Revision Number";
-                            break;
-                        case 19:
-                            desc = "Document Security";
-                            break;
-                        case 7:
-                            desc = "Document Template";
-                            break;
-                        case 10:
-                            desc = "Document Total Editing Time";
-                            break;
-                        case 15:
-                            desc = "Document Word Count";
-                            break;
-                    }
-                    break;
-
-                case "841e4f90-ff59-4d16-8947-e81bbffab36d":
-                    switch (key)
-                    {
-                        case 16:
-                            desc = "Software Date Last Used";
-                            break;
-
-                        case 2:
-                            desc = "Publisher Display Name";
-                            break;
-                    }
-                    break;
-
-                case "86d40b4d-9069-443c-819a-2a54090dccec":
-                    switch (key)
-                    {
-                        case 2:
-                            desc = "Tile Small Image Location";
-                            break;
-                        case 4:
-                            desc = "Tile Background Color";
-                            break;
-                        case 5:
-                            desc = "Tile Foreground Color";
-                            break;
-                        case 11:
-                            desc = "Tile Display Name";
-                            break;
-                        case 12:
-                            desc = "Tile Image Location";
-                            break;
-                        case 14:
-                            desc = "Tile Unknown Flags";
-                            break;
-                    }
-
-                    break;
-                    
-                case "b725f130-47ef-101a-a5f1-02608c9eebac":
-                    switch (key)
-                    {
-                        case 16:
-                            desc = "Date Accessed";
-                            break;
-                        case 15:
-                            desc = "Date Created";
-                            break;
-                        case 14:
-                            desc = "Date Modified";
-                            break;
-                        case 18:
-                            desc = "File Allocation Size";
-                            break;
-                        case 13:
-                            desc = "File Attributes";
-                            break;
-                        case 21:
-                            desc = "File Reference Number";
-                            break;
-                        case 2:
-                            desc = "Item Folder Name Display";
-                            break;
-                        case 10:
-                            desc = "Item Name Display";
-                            break;
-                        case 4:
-                            desc = "Item Type Text";
-                            break;
-                        case 12:
-                            desc = "Size";
-                            break;
-                        case 19:
-                            desc = "Search Contents";
-                            break;
-                    }
-                    break;
-                case "e3e0584c-b788-4a5a-bb20-7f5a44c9acdd":
-                    switch (key)
-                    {
-                        case 6:
-                            desc = "Item Folder Path Display";
-                            break;
-                        case 7:
-                            desc = "Item Path Display";
-                            break;
-                        case 10:
-                            desc = "Is Read";
-                            break;
-                        case 11:
-                            desc = "Importance";
-                            break;
-                        case 21:
-                            desc = "Message AttachmentNames";
-                            break;
-                        case 2:
-                            desc = "Message BccAddress";
-                            break;
-                        case 3:
-                            desc = "Message BccName";
-                            break;
-                        case 4:
-                            desc = "Message CcAddress";
-                            break;
-                        case 5:
-                            desc = "Message CcName";
-                            break;
-                        case 13:
-                            desc = "Message FromAddress";
-                            break;
-                        case 14:
-                            desc = "Message FromName";
-                            break;
-                        case 20:
-                            desc = "Message DateReceived";
-                            break;
-                        case 16:
-                            desc = "Message ToAddress";
-                            break;
-                        case 17:
-                            desc = "Message ToName";
-                            break;
-                        case 18:
-                            desc = "Contact WebPage";
-                            break;
-                    }
-                    break;
+                if (d != null)
+                {
+                    desc = d.Name;
+                }
             }
 
             return desc;
@@ -599,1327 +4148,8 @@ namespace ExtensionBlocks
 
         public static string GetFolderNameFromGuid(string guid)
         {
-            var tempValue = guid.ToLowerInvariant();
+            return GuidMapping.GuidMapping.GetDescriptionFromGuid(guid);
 
-            switch (tempValue)
-            {
-                case "416651e4-9c3c-11d9-8bde-f66bad1e3f3a":
-                    return "Nokia Phone Browser";
-                case "24ad3ad4-a569-4530-98e1-ab02f9417aa8":
-                    return "Pictures";
-                case "f86fa3ab-70d2-4fc7-9c99-fcbf05467f3a":
-                    return "Videos";
-                case "3dfdf296-dbec-4fb4-81d1-6a3438bcf4de":
-                    return "Music";
-                case "141d98ad-3e07-4c44-a578-4dca078286a4":
-                    return "Time and Date";
-                case "7940acf8-60ba-4213-a7c3-f3b400ee266d":
-                    return "Set up a workspace task";
-                case "040873cb-404a-49fe-a254-a9bb9cefaea5":
-                    return "Programs and Features";
-                case "4de175b5-44ab-4397-9e01-38e9de4f0fb1":
-                    return "AutoPlay";
-                case "088e3905-0323-4b02-9826-5d99428e115f":
-                    return "Desktop";
-                case "91ba8e01-f854-4418-a108-e63323ddae60":
-                    return "Optional features";
-                case "047ddc7e-f9c2-11dd-a093-79d855d89593":
-                    return "Kaspersky Suite";
-
-                case "d3162b92-9365-467a-956b-92703aca08af":
-                    return "Documents";
-
-                case "4564b25e-30cd-4787-82ba-39e73a750b14":
-                    return "Recent Items Instance Folder";
-
-                case "5b934b42-522b-4c34-bbfe-37a3ef7b9c90":
-                    return "This Device Folder";
-
-                case "679f85cb-0220-4080-b29b-5540cc05aab6":
-                    return "Home Folder";
-
-                case "85bbd920-42a0-1069-a2e4-08002b30309d":
-                    return "Briefcase";
-
-                case "ecdb0924-4208-451e-8ee0-373c0956de16":
-                    return "Work Folders";
-
-                case "45c6afa5-2c13-402f-bc5d-45cc8172ef6b":
-                    return "Toshiba Bluetooth Stack";
-
-                case "fc9fb64a-1eb2-4ccf-af5e-1a497a9b5c2d":
-                    return "My sharing folders";
-
-                case "5fa947b5-650a-4374-8a9a-5efa4f126834":
-                    return "OpenDrive";
-
-                case "a5110426-177d-4e08-ab3f-785f10b4439c":
-                    return "Sony Ericsson File Manager";
-
-                case "1cf1260c-4dd0-4ebb-811f-33c572699fde":
-                    return "Music";
-
-                case "0b2baaeb-0042-4dca-aa4d-3ee8648d03e5":
-                    return "Pictures Library";
-
-                case "36011842-DCCC-40fe-aa3d-6177ea401788":
-                    return "Documents Search Results";
-
-                case "3f2a72a7-99fa-4ddb-a5a8-c604edf61d6b":
-                    return "Music Library";
-
-                case "4dcafe13-e6a7-4c28-BE02-ca8c2126280d":
-                    return "Pictures Search Results";
-
-                case "5c4f28b5-f869-4e84-8e60-f11db97c5cc7":
-                    return "Generic (All folder items)";
-
-                case "631958a6-ad0f-4035-a745-28ac066dc6ed":
-                    return "Videos Library";
-
-                case "2227a280-3aea-1069-a2de-08002b30309d":
-                    return "Printers";
-
-                case "71689ac1-cc88-45d0-8a22-2943c3e7dfb3":
-                    return "Music Search Results";
-
-                case "7fde1a1e-8b31-49a5-93b8-6be14cfa4943":
-                    return "Generic Search Results";
-
-                case "80213e82-bcfd-4c4f-8817-bb27601267a9":
-                    return "Compressed Folder (zip folder)";
-
-                case "b28aa736-876b-46da-b3a8-84c5e30ba492":
-                    return "Web sites";
-
-                case "018d5c66-4533-4307-9b53-224de2ed1fe6":
-                    return "OneDrive";
-
-                case "94d6ddcc-4a68-4175-A374-bd584a510b78":
-                    return "Music";
-
-                case "ea25fbd7-3bf7-409e-b97f-3352240903f4":
-                    return " Videos Search Results";
-
-                case "fbb3477e-c9e4-4b3b-a2ba-d3f5d3cd46f9":
-                    return " Documents Library";
-
-                case "5f4eab9a-6833-4f61-899d-31cf46979d49":
-                    return "Generic library";
-
-                case "c4d98f09-6124-4fe0-9942-826416082da9":
-                    return "Users libraries";
-
-                case "da3f6866-35fe-4229-821a-26553a67fc18":
-                    return "General (Generic) library";
-
-                case "7d49d726-3c21-4f05-99aa-fdc2c9474656":
-                    return "Documents folder";
-
-                case "b3690e58-e961-423b-b687-386ebfd83239":
-                    return "Pictures folder";
-
-                case "5fa96407-7e77-483c-ac93-691d05850de8":
-                    return "Videos folder";
-
-                case "c1f8339f-f312-4c97-b1c6-ecdf5910c5c0":
-                    return "Pictures library";
-
-                case "292108be-88ab-4f33-9a26-7748e62e37ad":
-                    return "Videos library";
-
-                case "978e0ed7-92d6-4cec-9b59-3135b9c49ccf":
-                    return "Music library";
-
-                case "3f98a740-839c-4af7-8c36-5badfb33d5fd":
-                    return "Documents library";
-
-                case "b689b0d0-76d3-4cbb-87f7-585d0e0ce070":
-                    return "Games folder";
-
-                case "94d6ddcc-4a68-4175-a374-bd584a510b78":
-                    return "music folder";
-
-                case "de2b70ec-9bf7-4a93-bd3d-243f7881d492":
-                    return "Contacts";
-
-                case "3add1653-eb32-4cb0-bbd7-dfa0abb5acca":
-                    return "Pictures";
-
-                case "a0953c92-50dc-43bf-be83-3742fed03c9c":
-                    return "Videos";
-
-                case "8e74d236-7f35-4720-b138-1fed0b85ea75":
-                    return "OneDrive";
-
-                case "374de290-123f-4565-9164-39c4925e467b":
-                    return "Downloads";
-
-                case "645ff040-5081-101b-9f08-00aa002f954e":
-                    return "Recycle bin";
-
-                case "20d04fe0-3aea-1069-a2d8-08002b30309d":
-                    return "My Computer";
-
-                case "59031a47-3f72-44a7-89c5-5595fe6b30ee":
-                    return "Shared Documents Folder (Users Files)";
-
-                case "031e4825-7b94-4dc3-b131-e946b44c8dd5":
-                    return "User Libraries";
-
-                case "f0d63f85-37ec-4097-b30d-61b4a8917118":
-                    return "Photo Stream";
-
-                case "00c6d95f-329c-409a-81d7-c46c66ea7f33":
-
-                    return "Default Location";
-
-                case "0142e4d0-fb7a-11dc-ba4a-000ffe7ab428":
-
-                    return "Biometric Devices(Biometrics)";
-
-                case "025a5937-a6be-4686-a844-36fe4bec8b6d":
-
-                    return "Power Options";
-
-                case "04731b67-d933-450a-90e6-4acd2e9408fe":
-
-                    return "Search Folder";
-
-                case "05d7b0f4-2121-4eff-bf6b-ed3f69b894d9":
-
-                    return "Taskbar (NotificationAreaIcons)";
-
-                case "0afaced1-e828-11d1-9187-b532f1e9575d":
-
-                    return "Folder Shortcut";
-
-                case "0cd7a5c0-9f37-11ce-ae65-08002b2e1262":
-
-                    return "Cabinet File";
-
-                case "0df44eaa-ff21-4412-828e-260a8728e7f1":
-
-                    return "Taskbar and StartMenu";
-
-                case "11016101-e366-4d22-bc06-4ada335c892b":
-
-                    return "Internet Explorer History and Feeds Shell Data Source for Windows Search";
-
-                case "1206f5f1-0569-412c-8fec-3204630dfb70":
-
-                    return "Credential Manager";
-
-                case "13e7f612-f261-4391-bea2-39df4f3fa311":
-
-                    return "Windows Desktop Search";
-
-                case "15eae92e-f17a-4431-9f28-805e482dafd4":
-
-                    return "Install New Programs ";
-
-                case "1723d66a-7a12-443e-88c7-05e1bfe79983":
-
-                    return "Previous Versions Delegate Folder";
-
-                case "17cd9488-1228-4b2f-88ce-4298e93e0966":
-
-                    return "Default Programs";
-
-                case "1a9ba3a0-143a-11cf-8350-444553540000":
-
-                    return "Shell Favorite Folder";
-
-                case "1d2680c9-0e2a-469d-b787-065558bc7d43":
-
-                    return "Fusion Cache";
-
-                case "1f3427c8-5c10-4210-aa03-2ee45287d668":
-
-                    return "User Pinned";
-
-                case "1f43a58c-ea28-43e6-9ec4-34574a16ebb7":
-
-                    return "Windows Desktop Search MAPI Namespace Extension Class";
-
-                case "1f4de370-d627-11d1-ba4f-00a0c91eedba":
-
-                    return "Search Results - Computers (Computer Search Results Folder, Network Computers)";
-
-                case "1fa9085f-25a2-489b-85d4-86326eedcd87":
-
-                    return "Manage Wireless Networks";
-
-                case "208d2c60-3aea-1069-a2d7-08002b30309d":
-
-                    return "My Network Places";
-
-                case "21ec2020-3aea-1069-a2dd-08002b30309d":
-
-                    return "Control Panel";
-
-                case "22877a6d-37a1-461a-91b0-dbda5aaebc99":
-
-                    return "Recent Places";
-
-                case "241d7c96-f8bf-4f85-b01f-e2b043341a4b":
-
-                    return "Workspaces Center(Remote Application and Desktop Connections)";
-
-                case "2559a1f0-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Search";
-
-                case "2559a1f1-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Help and Support";
-
-                case "2559a1f2-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Windows Security";
-
-                case "2559a1f3-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Run...";
-
-                case "2559a1f4-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Internet";
-
-                case "2559a1f5-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "E-mail";
-
-                case "2559a1f6-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "OEM link";
-
-                case "2559a1f7-21d7-11d4-bdaf-00c04f60b9f0":
-
-                    return "Set Program Access and Defaults";
-
-                case "267cf8a9-f4e3-41e6-95b1-af881be130ff":
-
-                    return "Location Folder";
-
-                case "26ee0668-a00a-44d7-9371-beb064c98683":
-
-                    return "Control Panel";
-
-                case "2728520d-1ec8-4c68-a551-316b684c4ea7":
-
-                    return "Network Setup Wizard";
-
-                case "28803f59-3a75-4058-995f-4ee5503b023c":
-
-                    return "Bluetooth Devices";
-
-                case "289978ac-a101-4341-a817-21eba7fd046d":
-
-                    return "Sync Center Conflict Folder";
-
-                case "289af617-1cc3-42a6-926c-e6a863f0e3ba":
-
-                    return "DLNA Media Servers Data Source";
-
-                case "2965e715-eb66-4719-b53f-1672673bbefa":
-
-                    return "Results Folder";
-
-                case "2e9e59c0-b437-4981-a647-9c34b9b90891":
-
-                    return "Sync Setup Folder";
-
-                case "2f6ce85c-f9ee-43ca-90c7-8a9bd53a2467":
-
-                    return "File History Data Source";
-
-                case "3080f90d-d7ad-11d9-bd98-0000947b0257":
-
-                    return "Show Desktop";
-
-                case "3080f90e-d7ad-11d9-bd98-0000947b0257":
-
-                    return "Window Switcher";
-
-                case "323ca680-c24d-4099-b94d-446dd2d7249e":
-
-                    return "Common Places";
-
-                case "328b0346-7eaf-4bbe-a479-7cb88a095f5b":
-
-                    return "Layout Folder";
-
-                case "335a31dd-f04b-4d76-a925-d6b47cf360df":
-
-                    return "Backup and Restore Center";
-
-                case "35786d3c-b075-49b9-88dd-029876e11c01":
-
-                    return "Portable Devices";
-
-                case "36eef7db-88ad-4e81-ad49-0e313f0c35f8":
-
-                    return "Windows Update";
-
-                case "38a98528-6cbf-4ca9-8dc0-b1e1d10f7b1b":
-
-                    return "Connect To";
-
-                case "3c5c43a3-9ce9-4a9b-9699-2ac0cf6cc4bf":
-
-                    return "Configure Wireless Network";
-
-                case "3f6bc534-dfa1-4ab4-ae54-ef25a74e0107":
-
-                    return "System Restore";
-
-                case "0907616e-f5e6-48d8-9d61-a91c3d28106d":
-
-                    return "Hyper-V Remote File Browsing";
-
-                case "27e2e392-a111-48e0-ab0c-e17705a05f85":
-                    return "WPD Content Type Folder";
-
-                case "0c15d503-d017-47ce-9016-7b3f978721cc":
-
-                    return "Portable Device Values";
-
-                case "46137b78-0ec3-426d-8b89-ff7c3a458b5e":
-                    return "Network Neighborhood";
-
-                case "4026492f-2f69-46b8-b9bf-5654fc07e423":
-
-                    return "Windows Firewall";
-
-                case "418c8b64-5463-461d-88e0-75e2afa3c6fa":
-
-                    return "Explorer Browser Results Folder";
-
-                case "4234d49b-0245-4df3-b780-3893943456e1":
-
-                    return "Applications";
-
-                case "4336a54d-038b-4685-ab02-99bb52d3fb8b":
-
-                    return "Samples";
-
-                case "437ff9c0-a07f-4fa0-af80-84b6c6440a16":
-
-                    return "Command Folder";
-
-                case "450d8fba-ad25-11d0-98a8-0800361b1103":
-
-                    return "My Documents";
-
-                case "fdd39ad0-238f-46af-adb4-6c85480369c7":
-                    return "Documents";
-
-                case "48e7caab-b918-4e58-a94d-505519c795dc":
-
-                    return "Start Menu Folder";
-
-                case "5399e694-6ce5-4d6c-8fce-1d8870fdcba0":
-
-                    return "Control Panel command object for Start menu and desktop";
-
-                case "b4bfcc3a-db2c-424c-b029-7fe99a87c641":
-                    return "Desktop";
-
-                case "a8cdff1c-4878-43be-b5fd-f8091c1c60d0":
-                    return "Documents";
-
-                case "58e3c745-d971-4081-9034-86e34b30836a":
-
-                    return "Speech Recognition Options";
-
-                case "5ea4f148-308c-46d7-98a9-49041b1dd468":
-
-                    return "Mobility Center Control Panel";
-
-                case "60632754-c523-4b62-b45c-4172da012619":
-
-                    return "User Accounts";
-
-                case "63da6ec0-2e98-11cf-8d82-444553540000":
-
-                    return "Microsoft FTP Folder";
-
-                case "640167b4-59b0-47a6-b335-a6b3c0695aea":
-
-                    return "Portable Media Devices";
-
-                case "64693913-1c21-4f30-a98f-4e52906d3b56":
-
-                    return "App Instance Folder";
-
-                case "67718415-c450-4f3c-bf8a-b487642dc39b":
-
-                    return "Windows Features";
-
-                case "6785bfac-9d2d-4be5-b7e2-59937e8fb80a":
-
-                    return "Other Users Folder";
-
-                case "67ca7650-96e6-4fdd-bb43-a8e774f73a57":
-
-                    return "Home Group Control Panel (Home Group)";
-
-                case "692f0339-cbaa-47e6-b5b5-3b84db604e87":
-
-                    return "Extensions Manager Folder";
-
-                case "6dfd7c5c-2451-11d3-a299-00c04f8ef6af":
-
-                    return "Folder Options";
-
-                case "7007acc7-3202-11d1-aad2-00805fc1270e":
-
-                    return "Network Connections";
-
-                case "708e1662-b832-42a8-bbe1-0a77121e3908":
-
-                    return "Tree property value folder";
-
-                case "71d99464-3b6b-475c-b241-e15883207529":
-
-                    return "Sync Results Folder";
-
-                case "72b36e70-8700-42d6-a7f7-c9ab3323ee51":
-
-                    return "Search Connector Folder";
-
-                case "78f3955e-3b90-4184-bd14-5397c15f1efc":
-
-                    return "Performance Information and Tools";
-
-                case "7a9d77bd-5403-11d2-8785-2e0420524153":
-
-                    return "User Accounts (Users and Passwords)";
-
-                case "7b81be6a-ce2b-4676-a29e-eb907a5126c5":
-
-                    return "Programs and Features";
-
-                case "7bd29e00-76c1-11cf-9dd0-00a0c9034933":
-
-                    return "Temporary Internet Files";
-
-
-                case "7bd29e01-76c1-11cf-9dd0-00a0c9034933":
-
-                    return "Temporary Internet Files";
-
-                case "7be9d83c-a729-4d97-b5a7-1b7313c39e0a":
-
-                    return "Programs Folder";
-
-                case "8060b2e3-c9d7-4a5d-8c6b-ce8eba111328":
-
-                    return "Proximity CPL";
-
-                case "8343457c-8703-410f-ba8b-8b026e431743":
-
-                    return "Feedback Tool";
-
-                case "863aa9fd-42df-457b-8e4d-0de1b8015c60":
-
-                    return "Remote Printers";
-
-                case "865e5e76-ad83-4dca-a109-50dc2113ce9a":
-
-                    return "Programs Folder and Fast Items";
-
-                case "871c5380-42a0-1069-a2ea-08002b30309d":
-
-                    return "Internet Explorer (Homepage)";
-
-                case "87630419-6216-4ff8-a1f0-143562d16d5c":
-
-                    return "Mobile Broadband Profile Settings Editor";
-
-                case "877ca5ac-cb41-4842-9c69-9136e42d47e2":
-
-                    return "File Backup Index";
-
-                case "88c6c381-2e85-11d0-94de-444553540000":
-
-                    return "ActiveX Cache Folder";
-
-                case "896664f7-12e1-490f-8782-c0835afd98fc":
-
-                    return "Libraries delegate folder that appears in Users Files Folder";
-
-                case "89d83576-6bd1-4c86-9454-beb04e94c819":
-
-                    return "MAPI Folder";
-
-                case "8e908fc9-becc-40f6-915b-f4ca0e70d03d":
-
-                    return "Network and Sharing Center";
-
-                case "8fd8b88d-30e1-4f25-ac2b-553d3d65f0ea":
-
-                    return "DXP";
-
-                case "9113a02d-00a3-46b9-bc5f-9c04daddd5d7":
-
-                    return "Enhanced Storage Data Source";
-
-                case "93412589-74d4-4e4e-ad0e-e0cb621440fd":
-
-                    return "Font Settings";
-
-                case "9343812e-1c37-4a49-a12e-4b2d810d956b":
-
-                    return "Search Home";
-
-                case "96437431-5a90-4658-a77c-25478734f03e":
-
-                    return "Server Manager";
-
-                case "96ae8d84-a250-4520-95a5-a47a7e3c548b":
-
-                    return "Parental Controls";
-
-
-                case "98d99750-0b8a-4c59-9151-589053683d73":
-
-                    return "Windows Search Service Media Center Namespace Extension Handler";
-
-                case "98f275b4-4fff-11e0-89e2-7b86dfd72085":
-
-                    return "Start Menu Launcher Provider Folder";
-
-                case "992cffa0-f557-101a-88ec-00dd010ccc48":
-
-                    return "Network Connections";
-
-                case "9a096bb5-9dc3-4d1c-8526-c3cbf991ea4e":
-
-                    return "Internet Explorer RSS Feeds Folder";
-
-                case "9c60de1e-e5fc-40f4-a487-460851a8d915":
-
-                    return "Auto Play";
-
-                case "9c73f5e5-7ae7-4e32-a8e8-8d23b85255bf":
-
-                    return "Sync Center Folder";
-
-                case "9db7a13c-f208-4981-8353-73cc61ae2783":
-
-                    return "Previous Versions";
-
-                case "9f433b7c-5f96-4ce1-ac28-aeaa1cc04d7c":
-
-                    return "Security Center";
-
-                case "9fe63afd-59cf-4419-9775-abcc3849f861":
-
-                    return "System Recovery";
-
-                case "a00ee528-ebd9-48b8-944a-8942113d46ac":
-
-                    return "Start Menu Commanding Provider Folder";
-
-                case "a3c3d402-e56c-4033-95f7-4885e80b0111":
-
-                    return "Previous Versions Results Delegate Folder";
-
-                case "a5a3563a-5755-4a6f-854e-afa3230b199f":
-
-                    return "Library Folder";
-
-                case "a5e46e3a-8849-11d1-9d8c-00c04fc99d61":
-
-                    return "Microsoft Browser Architecture";
-
-                case "a6482830-08eb-41e2-84c1-73920c2badb9":
-
-                    return "Removable Storage Devices";
-
-                case "a8a91a66-3a7d-4424-8d24-04e180695c7a":
-
-                    return "Device Center(Devices and Printers)";
-
-                case "aee2420f-d50e-405c-8784-363c582bf45a":
-
-                    return "Device Pairing Folder";
-
-                case "afdb1f70-2a4c-11d2-9039-00c04f8eeb3e":
-
-                    return "Offline Files Folder";
-
-                case "b155bdf8-02f0-451e-9a26-ae317cfd7779":
-
-                    return "Delegate folder that appears in Computer";
-
-                case "b2952b16-0e07-4e5a-b993-58c52cb94cae":
-
-                    return "DB Folder";
-
-                case "b4fb3f98-c1ea-428d-a78a-d1f5659cba93":
-
-                    return "Other Users Folder";
-
-                case "b98a2bea-7d42-4558-8bd1-832f41bac6fd":
-
-                    return "Backup And Restore (Backup and Restore Center)";
-
-                case "bb06c0e4-d293-4f75-8a90-cb05b6477eee":
-
-                    return "System";
-
-                case "bb64f8a7-bee7-4e1a-ab8d-7d8273f7fdb6":
-
-                    return "Action Center";
-
-                case "bc476f4c-d9d7-4100-8d4e-e043f6dec409":
-
-                    return "Microsoft Browser Architecture";
-
-                case "bc48b32f-5910-47f5-8570-5074a8a5636a":
-
-                    return "Sync Results Delegate Folder";
-
-                case "bd7a2e7b-21cb-41b2-a086-b309680c6b7e":
-
-                    return "Client Side Cache Folder";
-
-                case "bd84b380-8ca2-1069-ab1d-08000948f534":
-
-                    return "Microsoft Windows Font Folder";
-
-                case "bdeadf00-c265-11d0-bced-00a0c90ab50f":
-
-                    return "Web Folders";
-
-                case "be122a0e-4503-11da-8bde-f66bad1e3f3a":
-
-                    return "Windows Anytime Upgrade";
-
-                case "bf782cc9-5a52-4a17-806c-2a894ffeeac5":
-
-                    return "Language Settings";
-
-                case "c291a080-b400-4e34-ae3f-3d2b9637d56c":
-
-                    return "UNCFAT IShellFolder Class";
-
-                case "c2b136e2-d50e-405c-8784-363c582bf43e":
-
-                    return "Device Center Initialization";
-
-                case "c555438b-3c23-4769-a71f-b6d3d9b6053a":
-
-                    return "Display";
-
-                case "ab4f43ca-adcd-4384-b9af-3cecea7d6544":
-                    return "Sitios Web";
-
-                case "c57a6066-66a3-4d91-9eb9-41532179f0a5":
-
-                    return "Application Suggested Locations";
-
-                case "c58c4893-3be0-4b45-abb5-a63e4b8c8651":
-
-                    return "Troubleshooting";
-
-                case "cb1b7f8c-c50a-4176-b604-9e24dee8d4d1":
-
-                    return "Welcome Center";
-
-                case "d2035edf-75cb-4ef1-95a7-410d9ee17170":
-
-                    return "DLNA Content Directory Data Source";
-
-                case "d20ea4e1-3957-11d2-a40b-0c5020524152":
-
-                    return "Fonts";
-
-                case "d20ea4e1-3957-11d2-a40b-0c5020524153":
-
-                    return "Administrative Tools";
-
-                case "d34a6ca6-62c2-4c34-8a7c-14709c1ad938":
-
-                    return "Common Places FS Folder";
-
-                case "491e922f-5643-4af4-a7eb-4e7a138d8174":
-                    return "Videos";
-
-                case "d426cfd0-87fc-4906-98d9-a23f5d515d61":
-
-                    return "Windows Search Service Outlook Express Protocol Handler";
-
-                case "5e8fc967-829a-475c-93ea-51fce6d9ffce":
-                    return "RealPlayer Cloud";
-
-                case "d4480a50-ba28-11d1-8e75-00c04fa31a86":
-
-                    return "Add Network Place";
-
-                case "d450a8a1-9568-45c7-9c0e-b4f9fb4537bd":
-
-                    return "Installed Updates";
-
-                case "d555645e-d4f8-4c29-a827-d93c859c4f2a":
-
-                    return "Ease of Access";
-
-                case "d5b1944e-db4e-482e-b3f1-db05827f0978":
-
-                    return "Softex OmniPass Encrypted Folder";
-
-                case "d6277990-4c6a-11cf-8d87-00aa0060f5bf":
-
-                    return "Scheduled Tasks";
-
-                case "d8559eb9-20c0-410e-beda-7ed416aecc2a":
-
-                    return "Windows Defender";
-
-                case "d9ef8727-cac2-4e60-809e-86f80a666c91":
-
-                    return "Secure Startup (BitLocker Drive Encryption)";
-
-                case "daf95313-e44d-46af-be1b-cbacea2c3065":
-
-                    return "Start Menu Provider Folder";
-
-                case "dffacdc5-679f-4156-8947-c5c76bc0b67f":
-
-                    return "Delegate folder that appears in Users Files Folder";
-
-                case "e17d4fc0-5564-11d1-83f2-00a0c90dc849":
-
-                    return "Search Results Folder";
-
-                case "e211b736-43fd-11d1-9efb-0000f8757fcd":
-
-                    return "Scanners and Cameras";
-
-                case "e345f35f-9397-435c-8f95-4e922c26259e":
-
-                    return "Start Menu Path Complete Provider Folder";
-
-                case "e413d040-6788-4c22-957e-175d1c513a34":
-
-                    return "Sync Center Conflict Delegate Folder";
-
-                case "e773f1af-3a65-4866-857d-846fc9c4598a":
-
-                    return "Shell Storage Folder Viewer";
-
-                case "e7de9b1a-7533-4556-9484-b26fb486475e":
-
-                    return "Network Map";
-
-                case "e7e4bc40-e76a-11ce-a9bb-00aa004ae837":
-
-                    return "Shell DocObject Viewer";
-
-                case "e88dcce0-b7b3-11d1-a9f0-00aa0060fa31":
-
-                    return "Compressed Folder";
-
-                case "e95a4861-d57a-4be1-ad0f-35267e261739":
-
-                    return "Windows Side Show";
-
-                case "a990ae9f-a03b-4e80-94bc-9912d7504104":
-                    return "Pictures";
-
-                case "e9950154-c418-419e-a90a-20c5287ae24b":
-
-                    return "Sensors";
-
-                case "ed228fdf-9ea8-4870-83b1-96b02cfe0d52":
-
-                    return "My Games";
-
-                case "ed50fc29-b964-48a9-afb3-15ebb9b97f36":
-
-                    return "PrintHood delegate folder";
-
-                case "ed7ba470-8e54-465e-825c-99712043e01c":
-                    return "All Tasks";
-
-                case "ed834ed6-4b5a-4bfe-8f11-a626dcb6a921":
-                    return "Personalization Control Panel";
-
-                case "edc978d6-4d53-4b2f-a265-5805674be568":
-                    return "Stream Backed Folder";
-
-                case "f02c1a0d-be21-4350-88b0-7367fc96ef3c":
-                    return "Computers and Devices";
-
-                case "f1390a9a-a3f4-4e5d-9c5f-98f3bd8d935c":
-                    return "Sync Setup Delegate Folder";
-
-                case "f3f5824c-ad58-4728-af59-a1ebe3392799":
-                    return "Sticky Notes Namespace Extension for Windows Desktop Search";
-
-                case "f5175861-2688-11d0-9c5e-00aa00a45957":
-                    return "Subscription Folder";
-
-                case "f6b6e965-e9b2-444b-9286-10c9152edbc5":
-                    return "History Vault";
-
-                case "f8c2ab3b-17bc-41da-9758-339d7dbf2d88":
-                    return "Previous Versions Results Folder";
-
-                case "f90c627b-7280-45db-bc26-cce7bdd620a4":
-                    return "All Tasks";
-
-                case "f942c606-0914-47ab-be56-1321b8035096":
-                    return "Storage Spaces";
-
-                case "fb0c9c8a-6c50-11d1-9f1d-0000f8757fcd":
-                    return "Scanners & Cameras";
-
-                case "fe1290f0-cfbd-11cf-a330-00aa00c16e65":
-                    return "Directory";
-
-                case "ff393560-c2a7-11cf-bff4-444553540000":
-                    return "History";
-
-                case "008ca0b1-55b4-4c56-b8a8-4de4b299d3be":
-                    return "Account Pictures";
-
-                case "de61d971-5ebc-4f02-a3a9-6c82895e5c04":
-                    return "Get Programs";
-
-                case "724ef170-a42d-4fef-9f26-b60e846fba4f":
-                    return "Administrative tools";
-
-                case "a3918781-e5f2-4890-b3d9-a7e54332328c":
-                    return "Application Shortcuts";
-
-                case "1e87508d-89c2-42f0-8a7e-645a0f50ca58":
-                    return "Applications";
-
-                case "a305ce99-f527-492b-8b1a-7e76fa98d6e4":
-                    return "Installed updates";
-
-                case "ab5fb87b-7ce2-4f83-915d-550846c9537b":
-                    return "Camera Roll";
-
-                case "00bcfc5a-ed94-4e48-96a1-3f6217f21990":
-                    return "RoamingTiles";
-
-                case "0139d44e-6afe-49f2-8690-3dafcae6ffb8":
-                    return "Programs";
-
-                case "0482af6c-08f1-4c34-8c90-e17ec98b1e17":
-                    return "Public Account Pictures";
-
-                case "054fae61-4dd8-4787-80b6-090220c4b700":
-                    return "GameExplorer";
-
-                case "0762d272-c50a-4bb0-a382-697dcd729b80":
-                    return "Users";
-
-                case "0ac0837c-bbf8-452a-850d-79d08e667ca7":
-                    return "Computer";
-
-                case "0d4c3db6-03a3-462f-a0e6-08924c41b5d4":
-                    return "History";
-
-                case "0f214138-b1d3-4a90-bba9-27cbc0c5389a":
-                    return "Sync Setup";
-
-                case "15ca69b3-30ee-49c1-ace1-6b5ec372afb5":
-                    return "Sample Playlists";
-
-                case "1777f761-68ad-4d8a-87bd-30b759fa33dd":
-                    return "Favorites";
-
-                case "18989b1d-99b5-455b-841c-ab7c74e4ddfc":
-                    return "Videos";
-
-                case "190337d1-b8ca-4121-a639-6d472d16972a":
-                    return "Search Results";
-
-                case "1a6fdba2-f42d-4358-a798-b74d745926c5":
-                    return "Recorded TV";
-
-                case "1ac14e77-02e7-4e5d-b744-2eb1ae5198b7":
-                    return "System32";
-
-                case "1b3ea5dc-b587-4786-b4ef-bd1dc332aeae":
-                    return "Libraries";
-
-                case "2112ab0a-c86a-4ffe-a368-0de96e47012e":
-                    return "Music";
-
-                case "2400183a-6185-49fb-a2d8-4a392a602ba3":
-                    return "Public Videos";
-
-                case "24d89e24-2f19-4534-9dde-6a6671fbb8fe":
-                    return "Documents";
-
-                case "289a9a43-be44-4057-a41b-587a76d7e7f9":
-                    return "Sync Results";
-
-                case "2a00375e-224c-49de-b8d1-440df7ef3ddc":
-                    return "None";
-
-                case "2b0f765d-c0e9-4171-908e-08a611b84ff6":
-                    return "Cookies";
-
-                case "2c36c0aa-5812-4b87-bfd0-4cd0dfb19b39":
-                    return "Original Images";
-
-                case "3214fab5-9757-4298-bb61-92a9deaa44ff":
-                    return "Public Music";
-
-                case "339719b5-8c47-4894-94c2-d8f77add44a6":
-                    return "Pictures";
-
-                case "33e28130-4e1e-4676-835a-98395c3bc3bb":
-                    return "Pictures";
-
-                case "352481e8-33be-4251-ba85-6007caedcf9d":
-                    return "Temporary Internet Files";
-
-                case "3d644c9b-1fb8-4f30-9b45-f670235f79c0":
-                    return "Public Downloads";
-
-                case "3eb685db-65f9-4cf6-a03a-e3ef65729f3d":
-                    return "Roaming";
-
-                case "43668bf8-c14e-49b2-97c9-747784d784b7":
-                    return "Sync Center";
-
-                case "48daf80b-e6cf-4f4e-b800-0e69d84ee384":
-                    return "Libraries";
-
-                case "4bd8d571-6d19-48d3-be97-422220080e43":
-                    return "Music";
-
-                case "4bfefb45-347d-4006-a5be-ac0cb0567192":
-                    return "Conflicts";
-
-                case "4c5c32ff-bb9d-43b0-b5b4-2d72e54eaaa4":
-                    return "Saved Games";
-
-                case "4d9f7874-4e0c-4904-967b-40b0d20c3e4b":
-                    return "The Internet";
-
-                case "52528a6b-b9e3-4add-b60d-588c2dba842d":
-                    return "Homegroup";
-
-                case "52a4f021-7b75-48a9-9f6b-4b87a210bc8f":
-                    return "Quick Launch";
-
-                case "56784854-c6cb-462b-8169-88e350acb882":
-                    return "Contacts";
-
-                case "5cd7aee2-2219-4a67-b85d-6c9ce15660cb":
-                    return "Programs";
-
-                case "5ce4a5e9-e4eb-479d-b89f-130c02886155":
-                    return "DeviceMetadataStore";
-
-                case "5e6c858f-0e22-4760-9afe-ea3317b67173":
-                    return "The user's username (%USERNAME%)";
-
-                case "625b53c3-ab48-4ec1-ba1f-a1ef4146fc19":
-                    return "Start Menu";
-
-                case "62ab5d82-fdc1-4dc3-a9dd-070d1d495d97":
-                    return "ProgramData";
-
-                case "6365d5a7-0f0d-45e5-87f6-0da56b6a4f7d":
-                    return "Common Files";
-
-                case "69d2cf90-fc33-4fb7-9a0c-ebb0f0fcb43c":
-                    return "Slide Shows";
-
-                case "6d809377-6af0-444b-8957-a3773f02200e":
-                    return "Program Files";
-
-                case "6f0cd92b-2e97-45d1-88ff-b0d186b8dedd":
-                    return "Network Connections";
-
-                case "767e6811-49cb-4273-87c2-20f355e1085b":
-                    return "Camera Roll";
-
-                case "76fc4e2d-d6ad-4519-a663-37bd56068185":
-                    return "Printers";
-
-                case "7b0db17d-9cd2-4a93-9733-46cc89022e7c":
-                    return "Documents";
-
-                case "7b396e54-9ec5-4300-be0a-2482ebae1a26":
-                    return "Gadgets";
-
-                case "7c5a40ef-a0fb-4bfc-874a-c0f2e0b9fa8e":
-                    return "Program Files";
-
-                case "7d1d3a04-debb-4115-95cf-2f29da2920da":
-                    return "Searches";
-
-                case "7e636bfe-dfa9-4d5e-b456-d7b39851d8a9":
-                    return "Templates";
-
-                case "82a5ea35-d9cd-47c5-9629-e15d2f714e6e":
-                    return "Startup";
-
-                case "82a74aeb-aeb4-465c-a014-d097ee346d63":
-                    return "Control Panel";
-
-                case "859ead94-2e85-48ad-a71a-0969cb56a6cd":
-                    return "Sample Videos";
-
-                case "8983036c-27c0-404b-8f08-102d10dcfd74":
-                    return "SendTo";
-
-                case "8ad10c31-2adb-4296-a8f7-e4701232c972":
-                    return "Resources";
-
-                case "905e63b6-c1bf-494e-b29c-65b732d3d21a":
-                    return "Program Files";
-
-                case "9274bd8d-cfd1-41c3-b35e-b13f55a758f4":
-                    return "Printer Shortcuts";
-
-                case "98ec0e18-2098-4d44-8644-66979315a281":
-                    return "Microsoft Office Outlook";
-
-                case "9b74b6a3-0dfd-4f11-9e78-5f7800f2e772":
-                    return "The user's username (%USERNAME%)";
-
-                case "9e3995ab-1f9c-4f13-b827-48b24b6c7174":
-                    return "User Pinned";
-
-                case "e31ea727-12ed-4702-820c-4b6445f28e1a":
-                    return "Dropbox";
-
-                case "9e52ab10-f80d-49df-acb8-4330f5687855":
-                    return "Temporary Burn Folder";
-
-                case "a302545d-deff-464b-abe8-61c8648d939b":
-                    return "Libraries";
-
-                case "a4115719-d62e-491d-aa7c-e74b8be3b067":
-                    return "Start Menu";
-
-                case "a520a1a4-1780-4ff6-bd18-167343c5af16":
-                    return "LocalLow";
-
-                case "a52bba46-e9e1-435f-b3d9-28daa648c0f6":
-                    return "OneDrive";
-
-                case "a63293e8-664e-48db-a079-df759e0509f7":
-                    return "Templates";
-
-                case "a75d362e-50fc-4fb7-ac2c-a8beaa314493":
-                    return "Gadgets";
-
-                case "a77f5d77-2e2b-44c3-a6a2-aba601054a51":
-                    return "Programs";
-
-                case "aaa8d5a5-f1d6-4259-baa8-78e7ef60835e":
-                    return "RoamedTileImages";
-
-                case "ae50c081-ebd2-438a-8655-8a092e34987a":
-                    return "Recent Items";
-
-                case "0c39a5cf-1a7a-40c8-ba74-8900e6df5fcd":
-                    return "Recent Items";
-
-                case "b250c668-f57d-4ee1-a63c-290ee7d1aa1f":
-                    return "Sample Music";
-
-                case "b6ebfb86-6907-413c-9af7-4fc2abf07cc5":
-                    return "Public Pictures";
-
-                case "b7534046-3ecb-4c18-be4e-64cd4cb7d6ac":
-                    return "Recycle Bin";
-
-                case "b7bede81-df94-4682-a7d8-57a52620b86f":
-                    return "Screenshots";
-
-                case "b94237e7-57ac-4347-9151-b08c6c32d1f7":
-                    return "Templates";
-
-                case "b97d20bb-f46a-4c97-ba10-5e3608430854":
-                    return "Startup";
-
-                case "bcb5256f-79f6-4cee-b725-dc34e402fd46":
-                    return "ImplicitAppShortcuts";
-
-                case "bcbd3057-ca5c-4622-b42d-bc56db0ae516":
-                    return "Programs";
-
-                case "bfb9d5e0-c6a9-404c-b2b2-ae6db6af4968":
-                    return "Links";
-
-                case "c1bae2d0-10df-4334-bedd-7aa20b227a9d":
-                    return "OEM Links";
-
-                case "c4900540-2379-4c75-844b-64e6faf8716b":
-                    return "Sample Pictures";
-
-                case "c4aa340d-f20f-4863-afef-f87ef2e6ba25":
-                    return "Public Desktop";
-
-                case "c5abbf53-e17f-4121-8900-86626fc2c973":
-                    return "Network Shortcuts";
-
-                case "c870044b-f49e-4126-a9c3-b52a1ff411e8":
-                    return "Ringtones";
-
-                case "cac52c1a-b53d-4edc-92d7-6b2e8ac19434":
-                    return "Games";
-
-                case "d0384e7d-bac3-4797-8f14-cba229b392b5":
-                    return "Administrative Tools";
-
-                case "d20beec4-5ca8-4905-ae3b-bf251ea09b53":
-                    return "Network";
-
-                case "d65231b0-b2f1-4857-a4ce-a8e7c6ea7d27":
-                    return "System32";
-
-                case "d9dc8a3b-b784-432e-a781-5a1130a75963":
-                    return "History";
-
-                case "de92c1c7-837f-4f69-a3bb-86e631204a23":
-                    return "Playlists";
-
-                case "de974d24-d9c6-4d3e-bf91-f4455120b917":
-                    return "Common Files";
-
-                case "debf2536-e1a8-4c59-b6a2-414586476aea":
-                    return "GameExplorer";
-
-                case "df7266ac-9274-4867-8d55-3bd661de872d":
-                    return "Programs and Features";
-
-                case "dfdf76a2-c82a-4d63-906a-5644ac457385":
-                    return "Public";
-
-                case "e555ab60-153b-4d17-9f04-a5fe99fc15ec":
-                    return "Ringtones";
-
-                case "ed4824af-dce4-45a8-81e2-fc7965083634":
-                    return "Public Documents";
-
-                case "ee32e446-31ca-4aba-814f-a5ebd2fd6d5e":
-                    return "Offline Files";
-
-                case "f1b32785-6fba-4fcf-9d55-7b8e7f157091":
-                    return "Local";
-
-                case "f38bf404-1d43-42f2-9305-67de0b28fc23":
-                    return "Windows";
-
-                case "f3ce0f7c-4901-4acc-8648-d5d44b04ef8f":
-                    return "The user's full name";
-
-                case "f7f1ed05-9f6d-47a2-aaae-29d317c6f066":
-                    return "Common Files";
-
-                case "fd228cb7-ae11-4ae3-864c-16f3910ab8fe":
-                    return "Fonts";
-
-                case "00f2886f-cd64-4fc9-8ec5-30ef6cdbe8c3":
-                    return "Scanners and Cameras";
-
-                case "087da31b-0dd3-4537-8e23-64a18591f88b":
-                    return "Windows Security Center";
-
-                case "259ef4b1-e6c9-4176-b574-481532c9bce8":
-                    return "Game Controllers";
-
-                case "37efd44d-ef8d-41b1-940d-96973a50e9e0":
-                    return "Desktop Gadgets";
-
-                case "3e7efb4c-faf1-453d-89eb-56026875ef90":
-                    return "Windows Marketplace";
-
-                case "40419485-c444-4567-851a-2dd7bfa1684d":
-                    return "Phone and Modem";
-
-                case "5224f545-a443-4859-ba23-7b5a95bdc8ef":
-                    return "People Near Me";
-
-                case "62d8ed13-c9d0-4ce8-a914-47dd628fb1b0":
-                    return "Regional and Language Options";
-
-                case "6c8eec18-8d75-41b2-a177-8831d59d2d50":
-                    return "Mouse";
-
-                case "725be8f7-668e-4c7b-8f90-46bdb0936430":
-                    return "Keyboard";
-
-                case "74246bfc-4c96-11d0-abef-0020af6b0b7a":
-                    return "Device Manager";
-
-                case "78cb147a-98ea-4aa6-b0df-c8681f69341c":
-                    return "Windows CardSpace";
-
-                case "7a979262-40ce-46ff-aeee-7884ac3b6136":
-                    return "Add Hardware";
-
-                case "80f3f1d5-feca-45f3-bc32-752c152e456e":
-                    return "Tablet PC Settings";
-
-                case "87d66a43-7b11-4a28-9811-c86ee395acf7":
-                    return "Indexing Options";
-
-                case "a0275511-0e86-4eca-97c2-ecd8f1221d08":
-                    return "Infrared";
-
-                case "a304259d-52b8-4526-8b1a-a1d6cecc8243":
-                    return "iSCSI Initiator";
-
-                case "b2c761c6-29bc-4f19-9251-e6195265baf1":
-                    return "Color Management";
-
-                case "82ba0782-5b7a-4569-b5d7-ec83085f08cc":
-                    return "TopViews";
-
-                case "bdbe736f-34f5-4829-abe8-b550e65146c4":
-                    return "TopViews";
-
-                case "b5947d7f-b489-4fde-9e77-23780cc610d1":
-                    return "Virtual Machines";
-
-                case "d17d1d6d-cc3f-4815-8fe3-607e7d5d10b3":
-                    return "Text to Speech";
-
-                case "d24f75aa-4f2b-4d07-a3c4-469b3d9030c4":
-                    return "Offline Files";
-
-                case "e2e7934b-dce5-43c4-9576-7fe4f75e7480":
-                    return "Date and Time";
-
-                case "f2ddfc82-8f12-4cdd-b7dc-d4fe1425aa4d":
-                    return "";
-
-                case "f82df8f7-8b9f-442e-a48c-818ea735ff9b":
-                    return "Sound";
-
-                case "fcfeecae-ee1b-4849-ae50-685dcf7717ec":
-                    return "Problem Reports and Solutions";
-
-                case "5fcd4425-ca3a-48f4-a57c-b8a75c32acb1":
-                    return "Hewlett-Packard Recovery (Protect.dll)";
-
-                default:
-
-                    var ignore = new List<string>();
-                    ignore.Add("20000000-0000-0000-0000-000000000000");
-                    ignore.Add("00000000-0000-0000-0000-000001000000");
-                    ignore.Add("00000000-0000-0000-0000-000000000000");
-
-                    return $"Unmapped GUID: {guid}";
-            }
         }
 
         public static DateTimeOffset? ExtractDateTimeOffsetFromBytes(byte[] rawBytes)
