@@ -81,8 +81,13 @@
     <Compile Include="Beef0019.cs" />
     <Compile Include="Beef001a.cs" />
     <Compile Include="Beef001b.cs" />
+    <Compile Include="Beef001d.cs" />
+    <Compile Include="Beef001e.cs" />
     <Compile Include="Beef0021.cs" />
     <Compile Include="Beef0025.cs" />
+    <Compile Include="Beef0026.cs" />
+    <Compile Include="Beef0027.cs" />
+    <Compile Include="Beef0029.cs" />
     <Compile Include="BeefBase.cs" />
     <Compile Include="BeefPlaceHolder.cs" />
     <Compile Include="BeefUnknown.cs" />

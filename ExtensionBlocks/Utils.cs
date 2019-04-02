@@ -4006,6 +4006,18 @@ new IdName (100, "Source Package Family Name"),
                     break;
 
 
+                case 0xbeef001d:
+                    var beef001d = new Beef001d(rawBytes);
+                    block = beef001d;
+
+                    break;
+
+                case 0xbeef001e:
+                    var beef001e = new Beef001e(rawBytes);
+                    block = beef001e;
+
+                    break;
+
                 case 0xbeef0021:
                     var beef0021 = new Beef0021(rawBytes);
                     block = beef0021;
@@ -4015,6 +4027,24 @@ new IdName (100, "Source Package Family Name"),
                 case 0xbeef0025:
                     var beef0025 = new Beef0025(rawBytes);
                     block = beef0025;
+
+                    break;
+
+                case 0xbeef0026:
+                    var beef0026 = new Beef0026(rawBytes);
+                    block = beef0026;
+
+                    break;
+
+                case 0xbeef0027:
+                    var beef0027 = new Beef0027(rawBytes);
+                    block = beef0027;
+
+                    break;
+
+                case 0xbeef0029:
+                    var beef0029 = new Beef0029(rawBytes);
+                    block = beef0029;
 
                     break;
 
