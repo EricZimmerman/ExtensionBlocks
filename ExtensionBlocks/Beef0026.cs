@@ -15,7 +15,7 @@ namespace ExtensionBlocks
             }
 
 
-            if (rawBytes[8] == 0x11 || rawBytes[8] == 0x10 || rawBytes[8] == 0x34 || rawBytes[8] == 0x31)
+            if (rawBytes[8] == 0x11 || rawBytes[8] == 0x10|| rawBytes[8] == 0x12 || rawBytes[8] == 0x34 || rawBytes[8] == 0x31)
             {
                 var ft1 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12)).ToUniversalTime();
 
