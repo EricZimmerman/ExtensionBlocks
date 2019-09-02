@@ -76,6 +76,31 @@ namespace ExtensionBlocks
             }
         }
 
+        public enum ShellBagTypes
+        {
+            Directory,
+            ZipFileContents,
+            Variable,
+            DriveLetter,
+            Archive,
+            FtpUri,
+            Unknown,
+            History,
+            User,
+            NotAssigned,
+            MtpDevice,
+            MtpFolder,
+            MtpStorage,
+            Network,
+            Guid,
+            ControlPanelCategory,
+            File,
+            HyperVResource,
+            OpticalMedia,
+            Backup,
+            ParseError
+        }
+
         private static Dictionary<string, HashSet<IdName>> PropertyStoreInfo = new Dictionary<string, HashSet<IdName>>()
         {
             //updated list provided by david.via@FireEye.com on 03/27/2019!

@@ -28,9 +28,9 @@ namespace ExtensionBlocks
 
             Array.Copy(rawBytes, index, rawguid1, 0, 16);
 
-            var rawguid = ShellBagUtils.ExtractGuidFromShellItem(rawguid1);
+            var rawguid = Utils.ExtractGuidFromShellItem(rawguid1);
 
-            var foldername = ShellBagUtils.GetFolderNameFromGuid(rawguid);
+            var foldername = Utils.GetFolderNameFromGuid(rawguid);
 
             GUIDName = foldername;
 
@@ -102,7 +102,7 @@ namespace ExtensionBlocks
 
             var sig = BitConverter.ToUInt32(rawBytes, index + 4);
 
-            var block = ShellBagUtils.GetExtensionBlockFromBytes(sig, rawBytes.Skip(index).Take(extSize).ToArray());
+            var block = Utils.GetExtensionBlockFromBytes(sig, rawBytes.Skip(index).Take(extSize).ToArray());
 
             ExtensionBlocks.Add(block);
             index += extSize;
@@ -111,7 +111,7 @@ namespace ExtensionBlocks
 
              sig = BitConverter.ToUInt32(rawBytes, index + 4);
 
-             block = ShellBagUtils.GetExtensionBlockFromBytes(sig, rawBytes.Skip(index).Take(extSize).ToArray());
+             block = Utils.GetExtensionBlockFromBytes(sig, rawBytes.Skip(index).Take(extSize).ToArray());
 
             ExtensionBlocks.Add(block);
             index += extSize;
@@ -122,7 +122,7 @@ namespace ExtensionBlocks
 
             while (extSize > 0)
             {
-                var sb = new ShellBagTypes.ShellBag0X31(-1, -1, rawBytes.Skip(index).Take(extSize).ToArray(), "Inside Beef000e block");
+                var sb = new ShellBag0X31(-1, -1, rawBytes.Skip(index).Take(extSize).ToArray(), "Inside Beef000e block");
 
                 Bags.Add(sb);
 
