@@ -15,10 +15,11 @@ namespace ExtensionBlocks.Test
         [Test]
         public void foobar()
         {
-            var fooBytes = File.ReadAllBytes(@"C:\Temp\prop.bin");
+            var fooBytes = File.ReadAllBytes(@"C:\Temp\foo.bin");
 
-            var foo = new PropertyStore(fooBytes);
-            Debug.WriteLine(foo);
+
+            var aa = Utils.GetExtensionBlockFromBytes(0xbeef0026, fooBytes);
+
         }
 
 

@@ -10,14 +10,19 @@
     <Copyright>Eric Zimmerman</Copyright>
     <PackageProjectUrl>https://github.com/EricZimmerman/ExtensionBlocks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EricZimmerman/ExtensionBlocks</RepositoryUrl>
-    <AssemblyVersion>1.1.0.0</AssemblyVersion>
-    <FileVersion>1.1.0.0</FileVersion>
-    <Version>1.1.0.0</Version>
-    <PackageLicenseExpression />
+    <AssemblyVersion>1.1.0.1</AssemblyVersion>
+    <FileVersion>1.1.0.1</FileVersion>
+    <Version>1.1.0.1</Version>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+    <DebugType>embedded</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GuidMapping" Version="1.0.0" />
+    <PackageReference Include="GuidMapping" Version="1.0.0.3" />
   </ItemGroup>
 
 

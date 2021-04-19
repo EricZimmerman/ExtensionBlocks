@@ -36,6 +36,13 @@ namespace ExtensionBlocks
             }
 
             var shellPropertySheetListSize = BitConverter.ToUInt16(rawBytes, 8);
+
+            if (shellPropertySheetListSize > rawBytes.Length - 8)
+            {
+                //not enough data for there to be a property store, so bail
+                return;
+            }
+
             var propBytes = rawBytes.Skip(8).Take(shellPropertySheetListSize).ToArray();
             PropertyStore = new PropertyStore(propBytes);
 
