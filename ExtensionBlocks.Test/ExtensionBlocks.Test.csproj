@@ -3,12 +3,14 @@
     <TargetFrameworks>net461;net5.0</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Properties\**" />
+    <EmbeddedResource Remove="Properties\**" />
+    <None Remove="Properties\**" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\ExtensionBlocks\ExtensionBlocks.csproj" />
   </ItemGroup>
     <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.13.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
   </ItemGroup>
-    <ItemGroup>
-      <Folder Include="Properties\" />
-    </ItemGroup>
 </Project>
