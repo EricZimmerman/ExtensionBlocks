@@ -4232,7 +4232,7 @@ new IdName (100, "Source Package Family Name"),
             try
             {
                 var dt = new DateTime(year, month, day, hour, minute, seconds, DateTimeKind.Utc);
-                var dtoffset = new DateTimeOffset(dt, TimeZone.CurrentTimeZone.GetUtcOffset(dt));
+                var dtoffset = new DateTimeOffset(dt, TimeZoneInfo.Utc.BaseUtcOffset);
 
                 thedate = dtoffset;
             }
