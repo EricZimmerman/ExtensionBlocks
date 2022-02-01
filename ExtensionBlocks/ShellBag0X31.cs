@@ -48,7 +48,7 @@ namespace ExtensionBlocks
 
             if (beefPos == 0)
             {
-                var hackName = Encoding.GetEncoding(1255).GetString(rawBytes, index, rawBytes.Length - index);
+                var hackName = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index);
 
                 var segs = hackName.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -86,7 +86,7 @@ namespace ExtensionBlocks
             }
             else
             {
-                shortName = Encoding.GetEncoding(1252).GetString(tempBytes);
+                shortName = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(tempBytes);
             }
 
             ShortName = shortName;
