@@ -27,7 +27,7 @@ namespace ExtensionBlocks
                 //cut up shellPropertySheetList into byte arrays based on length, then process each one
                 var serializedSize = BitConverter.ToInt32(rawBytes, shellPropertyIndex);
 
-                if (serializedSize == 0)
+                if (serializedSize == 0 || (uint)serializedSize >= rawBytes.Length)
                 {
                     break; // we are out of lists
                 }
