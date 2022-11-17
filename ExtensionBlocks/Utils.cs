@@ -4100,52 +4100,58 @@ new IdName (100, "Source Package Family Name"),
 
         public static List<string> GetStringsFromMultistring(byte[] rawBytes)
         {
-            var outstrings = new List<string>();
+               var outstrings = new List<string>();
 
             //drop last 2 bytes
             rawBytes = rawBytes.Take(rawBytes.Length - 2).ToArray();
 
             var bytestring = BitConverter.ToString(rawBytes);
 
-            if (bytestring.EndsWith("-00-00-00") == false)
+            if (bytestring.StartsWith("00-00-00-") == false)
             {
-                bytestring = bytestring + "-00";
-            }
-
-            var index = 0;
-
-            try
-            {
-                var regexObj = new Regex("00-00-", RegexOptions.IgnoreCase);
-                var matchResults = regexObj.Match(bytestring);
-                while (matchResults.Success)
+                if (bytestring.EndsWith("-00-00-00") == false)
                 {
-                    // matched text: matchResults.Value
-                    // match start: matchResults.Index
+                    bytestring = bytestring + "-00";
+                }
 
-                    var instancePosition = (matchResults.Index + 3)/3;
+                var index = 0;
 
-                    if (instancePosition + 2 < rawBytes.Length)
+                try
+                {
+                    var regexObj = new Regex("00-00-", RegexOptions.IgnoreCase);
+                    var matchResults = regexObj.Match(bytestring);
+                    while (matchResults.Success)
                     {
-                        outstrings.Add(
-                            ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, instancePosition - index)));
+                        // matched text: matchResults.Value
+                        // match start: matchResults.Index
 
-                        index += instancePosition + 2;
+                        var instancePosition = (matchResults.Index + 3) / 3;
+
+                        if (instancePosition + 2 < rawBytes.Length)
+                        {
+                            outstrings.Add(
+                                ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, instancePosition - index)));
+
+                            index += instancePosition + 2;
+                        }
+
+                        // match length: matchResults.Length
+                        matchResults = matchResults.NextMatch();
                     }
-
-                    // match length: matchResults.Length
-                    matchResults = matchResults.NextMatch();
+                    if (index + 4 <= rawBytes.Length)
+                    {
+                        outstrings.Add(ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index)));
+                    }
                 }
-                if (index + 4 <= rawBytes.Length)
+                catch (ArgumentException)
                 {
-                    outstrings.Add(ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index)));
+                    throw;
                 }
             }
-            catch (ArgumentException)
+            else
             {
-                throw;
+                outstrings.Add(string.Empty);
             }
-
             return outstrings;
         }
 
