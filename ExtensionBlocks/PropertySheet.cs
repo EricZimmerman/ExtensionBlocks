@@ -302,7 +302,7 @@ namespace ExtensionBlocks
                     //cut up shellPropertySheetList into byte arrays based on length, then process each one
                     var sheetSize = BitConverter.ToInt32(contents, sheetindex);
 
-                    if (sheetSize == 0)
+                    if (sheetSize == 0 || (uint)sheetSize >= contents.Length)
                     {
                         break; // we are out of lists
                     }
