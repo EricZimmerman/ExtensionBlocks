@@ -11,6 +11,6 @@
     <ProjectReference Include="..\ExtensionBlocks\ExtensionBlocks.csproj" />
   </ItemGroup>
     <ItemGroup>
-    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
   </ItemGroup>
 </Project>
