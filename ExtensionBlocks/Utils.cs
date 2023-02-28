@@ -4048,6 +4048,12 @@ new IdName (100, "Source Package Family Name"),
                     block = beef0021;
 
                     break;
+                case 0xbeef0024:
+                    var beef0024 = new Beef0024(rawBytes);
+                    block = beef0024;
+
+                    break;
+                
 
                 case 0xbeef0025:
                     var beef0025 = new Beef0025(rawBytes);

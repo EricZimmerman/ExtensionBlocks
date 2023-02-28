@@ -10,7 +10,7 @@
     <Copyright>Eric Zimmerman</Copyright>
     <PackageProjectUrl>https://github.com/EricZimmerman/ExtensionBlocks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/EricZimmerman/ExtensionBlocks</RepositoryUrl>
-    <Version>1.3.2.1</Version>
+    <Version>1.3.2.2</Version>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 

@@ -15,10 +15,10 @@ namespace ExtensionBlocks.Test
         [Test]
         public void foobar()
         {
-            var fooBytes = File.ReadAllBytes(@"C:\Temp\foo.bin");
+            var fooBytes = File.ReadAllBytes(@"C:\Temp\beef0024.bin");
 
 
-            var aa = Utils.GetExtensionBlockFromBytes(0xbeef0026, fooBytes);
+            var aa = Utils.GetExtensionBlockFromBytes(0xbeef0024, fooBytes);
 
         }
 
