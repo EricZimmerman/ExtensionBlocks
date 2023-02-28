@@ -72,7 +72,7 @@ namespace ExtensionBlocks
             var stringpieces =
                 Utils.GetStringsFromMultistring(stringBytes);
 
-            if (stringpieces.Count > 1)
+            if (stringpieces.Count == 1)
             {
                 LongName = stringpieces[0];
             }
