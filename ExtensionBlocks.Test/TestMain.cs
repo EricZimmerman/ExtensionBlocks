@@ -29,7 +29,7 @@ namespace ExtensionBlocks.Test
 
             var aaa = Utils.GetDescriptionFromGuidAndKey("de35258c-c695-4cbc-b982-38b0ad24ced0", 2);
 
-            Assert.AreEqual(aaa,"Shell Omit From View");
+            Assert.Equals(aaa,"Shell Omit From View");
 
 
 //            {"de35258c-c695-4cbc-b982-38b0ad24ced0",new HashSet<IdName>()
