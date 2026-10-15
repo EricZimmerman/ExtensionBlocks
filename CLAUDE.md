@@ -8,7 +8,7 @@ A `netstandard2.0` NuGet library that parses the `0xbeefXXXX` extension blocks f
 
 ## Commands
 
-The SDK is pinned in `global.json` (.NET 10). The library targets `netstandard2.0` (default C# 7.3, so avoid newer syntax there); tests target `net10.0` and use NUnit 4.
+The SDK is pinned in `global.json` (.NET 10). The library targets `netstandard2.0` (default C# 7.3, so avoid newer syntax there); tests target `net10.0` and use NUnit 5.
 
 ```bash
 dotnet build                                          # builds ExtensionBlocks.slnx
