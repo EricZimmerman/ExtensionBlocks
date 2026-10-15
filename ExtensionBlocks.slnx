@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+  </Configurations>
+  <Project Path="ExtensionBlocks.Test/ExtensionBlocks.Test.csproj" />
+  <Project Path="ExtensionBlocks/ExtensionBlocks.csproj" />
+</Solution>

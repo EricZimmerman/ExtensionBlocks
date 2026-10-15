@@ -83,7 +83,7 @@ namespace ExtensionBlocks
 
             index += 16;
 
-
+            len1 = 0;
             while (rawBytes[index + len1] != 0x00)
             {
                 len1 += 1;

@@ -444,7 +444,7 @@ namespace ExtensionBlocks
                         case 0x0002:
                             //VT_I2 (0x0002) Either the specified type, or the type of the element or contained field MUST be a 2-byte signed int
 
-                            PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), BitConverter.ToUInt16(propertyValue.Value, propertyIndex).ToString(CultureInfo.InvariantCulture));
+                            PropertyNames.Add(propertyId.ToString(CultureInfo.InvariantCulture), BitConverter.ToInt16(propertyValue.Value, propertyIndex).ToString(CultureInfo.InvariantCulture));
 
                             break;
 

@@ -3888,10 +3888,8 @@ new IdName (100, "Source Package Family Name"),
         {
             var desc = "(Description not available)";
 
-            if (PropertyStoreInfo.ContainsKey(guid.ToLowerInvariant()))
+            if (PropertyStoreInfo.TryGetValue(guid.ToLowerInvariant(), out var psi))
             {
-                var psi = PropertyStoreInfo[guid.ToLowerInvariant()];
-
                 var d = psi.SingleOrDefault(t => t.Id == key);
 
                 if (d != null)
@@ -4104,6 +4102,8 @@ new IdName (100, "Source Package Family Name"),
             return b.Split(new[] {'\0'}, 9, StringSplitOptions.RemoveEmptyEntries);
         } // lengthDoubleNull
 
+        private static readonly Regex DoubleNullRegex = new Regex("00-00-", RegexOptions.Compiled);
+
         public static List<string> GetStringsFromMultistring(byte[] rawBytes)
         {
                var outstrings = new List<string>();
@@ -4122,36 +4122,28 @@ new IdName (100, "Source Package Family Name"),
 
                 var index = 0;
 
-                try
+                var matchResults = DoubleNullRegex.Match(bytestring);
+                while (matchResults.Success)
                 {
-                    var regexObj = new Regex("00-00-", RegexOptions.IgnoreCase);
-                    var matchResults = regexObj.Match(bytestring);
-                    while (matchResults.Success)
+                    // matched text: matchResults.Value
+                    // match start: matchResults.Index
+
+                    var instancePosition = (matchResults.Index + 3) / 3;
+
+                    if (instancePosition + 2 < rawBytes.Length)
                     {
-                        // matched text: matchResults.Value
-                        // match start: matchResults.Index
+                        outstrings.Add(
+                            ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, instancePosition - index)));
 
-                        var instancePosition = (matchResults.Index + 3) / 3;
-
-                        if (instancePosition + 2 < rawBytes.Length)
-                        {
-                            outstrings.Add(
-                                ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, instancePosition - index)));
-
-                            index += instancePosition + 2;
-                        }
-
-                        // match length: matchResults.Length
-                        matchResults = matchResults.NextMatch();
+                        index += instancePosition + 2;
                     }
-                    if (index + 4 <= rawBytes.Length)
-                    {
-                        outstrings.Add(ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index)));
-                    }
+
+                    // match length: matchResults.Length
+                    matchResults = matchResults.NextMatch();
                 }
-                catch (ArgumentException)
+                if (index + 4 <= rawBytes.Length)
                 {
-                    throw;
+                    outstrings.Add(ReplaceNulls(Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index)));
                 }
             }
             else
@@ -4188,29 +4180,13 @@ new IdName (100, "Source Package Family Name"),
 
         public static string ExtractGuidFromShellItem(byte[] rawguid)
         {
-            var part1 = new byte[4];
-            var part2 = new byte[2];
-            var part3 = new byte[2];
-            var part4 = new byte[2];
-            var part5 = new byte[6];
+            // Guid(byte[]) uses the same mixed-endian layout as shell items, and "D" is lowercase
+            if (rawguid.Length > 16)
+            {
+                Array.Resize(ref rawguid, 16);
+            }
 
-            Array.Copy(rawguid, 0, part1, 0, 4);
-            Array.Copy(rawguid, 4, part2, 0, 2);
-            Array.Copy(rawguid, 6, part3, 0, 2);
-            Array.Copy(rawguid, 8, part4, 0, 2);
-            Array.Copy(rawguid, 10, part5, 0, 6);
-
-            Array.Reverse(part1);
-            Array.Reverse(part2);
-            Array.Reverse(part3);
-
-            var p1 = BitConverter.ToString(part1).Replace("-", "");
-            var p2 = BitConverter.ToString(part2).Replace("-", "");
-            var p3 = BitConverter.ToString(part3).Replace("-", "");
-            var p4 = BitConverter.ToString(part4).Replace("-", "");
-            var p5 = BitConverter.ToString(part5).Replace("-", "");
-
-            return $"{p1}-{p2}-{p3}-{p4}-{p5}".ToLowerInvariant();
+            return new Guid(rawguid).ToString("D");
         }
 
         public static string GetFolderNameFromGuid(string guid)
@@ -4221,41 +4197,27 @@ new IdName (100, "Source Package Family Name"),
 
         public static DateTimeOffset? ExtractDateTimeOffsetFromBytes(byte[] rawBytes)
         {
-            DateTimeOffset? thedate = null;
-
+            // MS-DOS date and time: date is yyyyyyym mmmddddd, time is hhhhhmmm mmmsssss (seconds / 2)
             var somedate = BitConverter.ToUInt16(rawBytes, 0);
 
-            var day = (somedate & 0x1f);
+            var day = somedate & 0x1f;
             var month = (somedate & 0x1e0) >> 5;
             var year = ((somedate & 0xfe00) >> 9) + 1980;
 
             var sometime = BitConverter.ToUInt16(rawBytes, 2);
 
-            var someTimeBinary = Convert.ToString(sometime, 2).PadLeft(16, '0');
+            var hour = (sometime & 0xf800) >> 11;
+            var minute = (sometime & 0x7e0) >> 5;
+            var seconds = (sometime & 0x1f) * 2;
 
-            var chunkt1 = someTimeBinary.Substring(0, 5);
-            var chunkt2 = someTimeBinary.Substring(5, 6);
-            var chunkt3 = someTimeBinary.Substring(11, 5);
-
-            var hour = (int) Convert.ToUInt32(chunkt1, 2);
-            var minute = (int) Convert.ToUInt32(chunkt2, 2);
-            var seconds = (int) Convert.ToUInt32(chunkt3, 2)*2;
-
-            try
+            // Unset (all zero) and corrupt values are common, so validate rather than catch
+            if (month < 1 || month > 12 || day < 1 || day > DateTime.DaysInMonth(year, month) ||
+                hour > 23 || minute > 59 || seconds > 59)
             {
-                var dt = new DateTime(year, month, day, hour, minute, seconds, DateTimeKind.Utc);
-                var dtoffset = new DateTimeOffset(dt, TimeZoneInfo.Utc.BaseUtcOffset);
-
-                thedate = dtoffset;
-            }
-            catch (Exception)
-            {
-                
-                    return null;
-                
+                return null;
             }
 
-            return thedate;
+            return new DateTimeOffset(year, month, day, hour, minute, seconds, TimeSpan.Zero);
         }
     }
 }

@@ -16,16 +16,17 @@ namespace ExtensionBlocks
             var len = 0;
             var index = 10;
 
+            // Step a whole UTF-16 code unit at a time so a 0x00 high byte followed by a 0x00 low byte isn't taken as the terminator
             while ((rawBytes[index + len] != 0x0 || rawBytes[index + len + 1] != 0x0))
             {
-                len += 1;
+                len += 2;
             }
 
-            var uname = Encoding.Unicode.GetString(rawBytes, index, len + 1);
+            var uname = Encoding.Unicode.GetString(rawBytes, index, len);
 
             FileDocumentTypeString = uname;
 
-            index += len + 3; // move past string and end of string marker
+            index += len + 2; // move past string and end of string marker
 
             //is index 24?
 

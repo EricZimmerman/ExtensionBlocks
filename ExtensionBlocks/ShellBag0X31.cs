@@ -103,6 +103,11 @@ namespace ExtensionBlocks
                 var subshellitemdatasize = BitConverter.ToInt16(rawBytes, index);
                 //index += 2;
 
+                if (subshellitemdatasize < 0)
+                {
+                    break; // corrupt size; nothing below would advance index
+                }
+
                 if (subshellitemdatasize == 0)
                 {
                     index += 2; //some kind of separator
