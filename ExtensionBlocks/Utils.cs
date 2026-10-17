@@ -21,6 +21,19 @@ namespace ExtensionBlocks
         /// </summary>
         public static TimeZoneInfo TimeZone { get; set; } = TimeZoneInfo.Utc;
 
+        [ThreadStatic] private static int? _codePage;
+
+        /// <summary>
+        ///     The code page of the ANSI strings in shell items (1252 by default). Set for the items being read on this
+        ///     thread: ShellItemFactory.Create(bytes, codepage) sets it while it reads an item (Lnk reads LNK files from
+        ///     systems with other code pages)
+        /// </summary>
+        public static int CodePage
+        {
+            get => _codePage ?? 1252;
+            set => _codePage = value;
+        }
+
         //the last format made, and what it was made from (the format set, or the culture): shell items' ToString() asks for
         //it for every time, and a regular expression each time made parsing property sheets twice as slow
         private static Tuple<string, string> _formatCache;
@@ -4339,26 +4352,41 @@ new IdName (100, "Source Package Family Name"),
         }
 
         /// <summary>
-        ///     The name of a network location shell item (0x41-0x47): its location, and its description in parentheses when
-        ///     flag 0x80 says it has one (flags at 4, 0x80: a description; location, description, comments as ANSI strings
-        ///     from 5). The strings were split without the flags, so an item without a description showed the first
-        ///     character of the Unicode copy of its name, and the 2 or 4 byte trailer was guessed
+        ///     A network location shell item (0x41-0x47, libyal's format): flags at 4 (0x80: it has a description), then its
+        ///     location, description and comments as ANSI strings from 5. The location is the item's value (as Lnk had it,
+        ///     checked against LnkParse3); the description (such as Microsoft Network) is shown in its details. Before
+        ///     2026.10.3 the strings were split without the flags, so an item without a description showed the first
+        ///     character of the Unicode copy of its name as one, and the 2 or 4 byte trailer was guessed
         /// </summary>
+        /// <summary>The location and its description in parentheses (what 0x41-0x47 items' values were in 2026.10.3-4)</summary>
         public static string GetNetworkLocationValue(byte[] rawBytes, int codepage = 1252)
+        {
+            var previous = CodePage;
+            CodePage = codepage;
+            try
+            {
+                var (location, description) = GetNetworkLocation(rawBytes);
+                return description == null ? location : $"{location} ({description})";
+            }
+            finally
+            {
+                CodePage = previous;
+            }
+        }
+
+        public static (string Location, string Description) GetNetworkLocation(byte[] rawBytes)
         {
             if (rawBytes.Length <= 5)
             {
-                return "(None)";
+                return ("(None)", null);
             }
 
-            var parts = CodePagesEncodingProvider.Instance.GetEncoding(codepage).GetString(rawBytes, 5, rawBytes.Length - 5).Split('\0');
+            var parts = CodePagesEncodingProvider.Instance.GetEncoding(CodePage).GetString(rawBytes, 5, rawBytes.Length - 5).Split('\0');
 
-            var name = parts[0];
             var description = (rawBytes[4] & 0x80) != 0 && parts.Length > 1 && parts[1].Length > 0 ? parts[1] : null;
 
-            return description == null ? name : $"{name} ({description})";
+            return (parts[0], description);
         }
-
         /// <summary>The signature of the 0xbeef0004 extension block as it is stored</summary>
         internal static readonly byte[] Beef0004Signature = { 0x04, 0x00, 0xef, 0xbe };
 

@@ -123,7 +123,7 @@ namespace ExtensionBlocks
                 }
                 else
                 {
-                    shortName = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(bytes, internalIndex, strLen).Trim('\0');
+                    shortName = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(bytes, internalIndex, strLen).Trim('\0');
 
                     internalIndex += strLen;
                 }

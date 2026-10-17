@@ -25,7 +25,7 @@ namespace ExtensionBlocks
 
             BagPath = bagPath;
 
-            var driveLetter = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, 3, 2);
+            var driveLetter = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, 3, 2);
 
             Value = driveLetter;
 

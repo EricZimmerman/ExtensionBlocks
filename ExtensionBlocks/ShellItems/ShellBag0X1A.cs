@@ -43,7 +43,7 @@ namespace ExtensionBlocks
                     Timestamp = null;
                 }
 
-                var s = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index,rawBytes.Length - index).Split('\0').First();
+                var s = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index,rawBytes.Length - index).Split('\0').First();
 
                 Value = s;
                 return;
@@ -51,7 +51,7 @@ namespace ExtensionBlocks
 
             index = 0xb8;
 
-            var outlier = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index).Trim('\0');
+            var outlier = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, rawBytes.Length - index).Trim('\0');
 
             Value = outlier;
         }

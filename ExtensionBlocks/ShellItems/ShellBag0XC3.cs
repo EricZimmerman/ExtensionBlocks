@@ -55,7 +55,7 @@ namespace ExtensionBlocks
             }
             if (sepLocation == -1)
             {
-                var stringsRaw2 = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index);
+                var stringsRaw2 = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, rawBytes.Length - index);
                 var strings2 = stringsRaw2.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 
                 Value = strings2[0];
@@ -69,7 +69,7 @@ namespace ExtensionBlocks
             }
 
 
-            var stringRaw = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, sepLocation - 5 - 1);
+            var stringRaw = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, sepLocation - 5 - 1);
             var strings = stringRaw.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 
             index = sepLocation;

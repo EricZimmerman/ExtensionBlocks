@@ -35,7 +35,7 @@ namespace ExtensionBlocks
                     len += 1;
                 }
 
-                Value = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, len);
+                Value = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, len);
                 return;
             }
 

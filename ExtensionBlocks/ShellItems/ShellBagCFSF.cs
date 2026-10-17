@@ -75,7 +75,7 @@ namespace ExtensionBlocks
 
             index += len;
 
-            var primaryName = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(tempBytes);
+            var primaryName = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(tempBytes);
 
             while (rawBytes[index] == 0x0)
             {

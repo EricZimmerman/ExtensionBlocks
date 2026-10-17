@@ -37,7 +37,7 @@ namespace ExtensionBlocks
 
             index = 0x18;
 
-                var s = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index).Split('\0').First();
+                var s = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, rawBytes.Length - index).Split('\0').First();
 
                 Value = s;
 

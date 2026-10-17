@@ -44,7 +44,7 @@ namespace ExtensionBlocks
             {
                 index = 13;
 
-                var dl = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, 3);
+                var dl = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, 3);
 
                 FriendlyName = "Users property view: Drive letter";
                 ShellBagType = Utils.ShellBagTypes.DriveLetter;

@@ -44,9 +44,9 @@ namespace ExtensionBlocks.Test
             Assert.That(bag.Value, Is.Not.Empty);
         }
 
-        [TestCase((byte) 0x82, "Aldec_lyon (Microsoft Network)", TestName = "Network location with a description")]
-        [TestCase((byte) 0x02, "Aldec_lyon", TestName = "Network location without a description")]
-        public void NetworkLocation(byte flags, string expected)
+        [TestCase((byte) 0x82, "Microsoft Network", TestName = "Network location with a description")]
+        [TestCase((byte) 0x02, null, TestName = "Network location without a description")]
+        public void NetworkLocation(byte flags, string description)
         {
             var strings = flags == 0x82
                 ? Ansi("Aldec_lyon").Concat(Ansi("Microsoft Network")).ToArray()
@@ -56,7 +56,9 @@ namespace ExtensionBlocks.Test
             var bag = ShellItemFactory.Create(item);
 
             Assert.That(bag, Is.TypeOf<ShellBag0X41>());
-            Assert.That(bag.Value, Is.EqualTo(expected), "the description only when flag 0x80 says there is one, whatever the trailer");
+            //the location is the value (as Lnk and LnkParse3 have it); the description only when flag 0x80 says there is one
+            Assert.That(bag.Value, Is.EqualTo("Aldec_lyon"));
+            Assert.That(((ShellBag0X41) bag).Description, Is.EqualTo(description));
         }
 
         [Test]
@@ -181,6 +183,72 @@ namespace ExtensionBlocks.Test
 
             Assert.That(text, Does.Not.Contain("Child Bags"));
             Assert.That(text, Does.Not.Contain("Has been explored"));
+        }
+
+        [Test]
+        public void ZipContentsNameAndFolder()
+        {
+            //the second name is the folder in the zip file the item is in: VIA/10_Audio/ was a path that isn't one
+            var item = new byte[84 + 8 + 4 * 2 + 9 * 2 + 4];
+            BitConverter.GetBytes((ushort) item.Length).CopyTo(item, 0);
+            Encoding.Unicode.GetBytes("N/A").CopyTo(item, 0x24);
+            BitConverter.GetBytes((ushort) 3).CopyTo(item, 84);
+            BitConverter.GetBytes((ushort) 9).CopyTo(item, 88);
+            Encoding.Unicode.GetBytes("VIA\0").CopyTo(item, 92);
+            Encoding.Unicode.GetBytes("10_Audio/\0").CopyTo(item, 100);
+
+            var bag = (ShellBagZipContents) ShellItemFactory.Create(item);
+
+            Assert.That(bag.Value, Is.EqualTo("VIA"));
+            Assert.That(bag.ParentFolder, Is.EqualTo("10_Audio/"));
+        }
+
+        private static byte[] Beef0004(string longName)
+        {
+            var block = new List<byte>();
+            block.AddRange(BitConverter.GetBytes((ushort) 3));
+            block.AddRange(BitConverter.GetBytes(0xbeef0004));
+            block.AddRange(new byte[4 + 4 + 2 + 2]);
+            block.AddRange(Unicode(longName));
+            block.AddRange(BitConverter.GetBytes((ushort) 0x14));
+            block.InsertRange(0, BitConverter.GetBytes((ushort) (block.Count + 2)));
+            return block.ToArray();
+        }
+
+        [Test]
+        public void FileEntryOf3A()
+        {
+            //0x3A file entries (in LNK files and MRU values) are read as 0x31 items; ShellBags' 0x3A items have no 0xbeef0004
+            var item = Item(new byte[] {0x3a, 0x00}, new byte[4 + 4 + 2], Ansi("PLISTE~1.LNK"), Beef0004("plist Editor Pro.lnk"), new byte[2]);
+
+            var bag = (ShellBag0X3A) ShellItemFactory.Create(item);
+
+            Assert.That(bag.ShortName, Is.EqualTo("PLISTE~1.LNK"));
+            Assert.That(bag.Value, Is.EqualTo("plist Editor Pro.lnk"));
+        }
+
+        [Test]
+        public void CodePageForAnsiNames()
+        {
+            //Lnk reads LNK files from systems with other code pages (Shift-JIS here)
+            var name = Encoding.GetEncoding(932).GetBytes("テスト.TXT");
+            var item = Item(new byte[] {0x32, 0x00}, new byte[4 + 4 + 2], name, new byte[] {0}, Beef0004("テスト.TXT"), new byte[2]);
+
+            var shiftJis = (ShellBag0X32) ShellItemFactory.Create(item, -1, -1, string.Empty, 932);
+            Assert.That(shiftJis.ShortName, Is.EqualTo("テスト.TXT"));
+            Assert.That(Utils.CodePage, Is.EqualTo(1252), "the code page is back as it was");
+
+            var ansi = (ShellBag0X32) ShellItemFactory.Create(item);
+            Assert.That(ansi.ShortName, Is.Not.EqualTo("テスト.TXT"));
+        }
+
+        [Test]
+        public void VolumeAndZipAliases()
+        {
+            //0x22 is a volume item read as 0x23 when it has a drive letter, 0xAA zip contents when it is one; else unknown
+            Assert.That(ShellItemFactory.Create(Item(new byte[] {0x22}, Encoding.ASCII.GetBytes("C:\\\0"), new byte[16])).Value, Is.EqualTo("C:"));
+            Assert.That(ShellItemFactory.Create(Item(new byte[] {0x22, 0x00, 0xb8}, new byte[20])), Is.TypeOf<ShellBagUnknown>());
+            Assert.That(ShellItemFactory.Create(Item(new byte[] {0xaa, 0x03, 0x58, 0x00}, new byte[20])), Is.TypeOf<ShellBagUnknown>());
         }
     }
 }

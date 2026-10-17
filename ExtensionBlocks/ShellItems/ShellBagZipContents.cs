@@ -104,7 +104,9 @@ namespace ExtensionBlocks
                     var folderName2 = Encoding.Unicode.GetString(rawBytes, index, nameSize2 * 2);
                     index += nameSize2 * 2;
 
-                    Value = $"{Value}/{folderName2}";
+                    //the folder in the zip file that has the item (VIA/10_Audio/ was VIA, in 10_Audio/): not part of
+                    //its name, which paths are made of (as Lnk had it)
+                    ParentFolder = folderName2;
 
                     index += 2; // skip end of unicode string
                 }
@@ -149,9 +151,18 @@ namespace ExtensionBlocks
 
         public string LastAccessTimeString { get; }
 
+        /// <summary>The folder in the zip file the item is in (its second name), when there is one</summary>
+        public string ParentFolder { get; }
+
         public override string ToString()
         {
             var sb = new StringBuilder();
+
+            if (ParentFolder?.Length > 0)
+            {
+                sb.AppendLine($"Folder in the zip file: {ParentFolder}");
+                sb.AppendLine();
+            }
 
 //            if (LastAccessTime.HasValue)
 //            {

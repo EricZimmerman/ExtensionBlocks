@@ -32,7 +32,7 @@ namespace ExtensionBlocks
                 len += 1;
             }
 
-            var val = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, 3, len);
+            var val = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, 3, len);
 
             Value = val;
 
@@ -51,7 +51,7 @@ namespace ExtensionBlocks
 
             index += 1;
 
-            var strings = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index - 4);
+            var strings = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, rawBytes.Length - index - 4);
             var segs = strings.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
 
             Description = string.Empty;

@@ -37,7 +37,7 @@ namespace ExtensionBlocks
             {
                 case 0x94606aeb:
 
-                    var unknown = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, 0x14, 0x40);
+                    var unknown = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, 0x14, 0x40);
 
                     Value = unknown;
 
@@ -142,8 +142,15 @@ namespace ExtensionBlocks
             }
         }
 
-        //    public PropertyStore PropertyStore { get;  set; }
+        /// <summary>The first property store (Lnk's 0x00 item had one); an empty one when there is none</summary>
+        public PropertyStore PropertyStore => PropertyStores?.FirstOrDefault() ?? new PropertyStore();
         public List<PropertyStore> PropertyStores { get; set; }
+
+        /// <summary>
+        ///     For a property view: the extension blocks of the shell items in its Delegate ID List (property 32), deepest
+        ///     last. They are those items', not this one's (its own are in ExtensionBlocks)
+        /// </summary>
+        public List<IExtensionBlock> DelegateExtensionBlocks { get; } = new List<IExtensionBlock>();
 
         /// <summary>
         ///     last modified time of BagPath
@@ -245,7 +252,7 @@ namespace ExtensionBlocks
                 len1 += 1;
             }
 
-            var s1 = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, len1);
+            var s1 = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, len1);
 
             ShortName = s1;
 
@@ -377,7 +384,7 @@ namespace ExtensionBlocks
                 //not a property view: strings
                 index = 0xc;
 
-                var strs = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index).Split('\0');
+                var strs = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, rawBytes.Length - index).Split('\0');
 
                 var p2 = string.Join(",", strs.Skip(1).ToList());
 
@@ -399,10 +406,26 @@ namespace ExtensionBlocks
 
                 PropertyStores.Add(propStore);
 
-                //Lnk also adds the extension blocks of the shell items in the Delegate ID List (property 32) to this item.
-                //They are those items' (a path: Users, Public, Pictures), not this one's, and ShellBags takes an item's
-                //times and MFT entry from its first 0xbeef0004 block, so they are not: the items, with their blocks, are
-                //in the property sheet's ExtraData
+                //the extension blocks of the shell items in the Delegate ID List (property 32): those items' (a path:
+                //Users, Public, Pictures), not this one's, so they are kept apart. ShellBags takes an item's times and MFT
+                //entry from its first 0xbeef0004 block, which would be the first folder's; LECmd and JLECmd take the
+                //target's MFT entry from the last one, the deepest item's (Lnk added them to the item's blocks)
+                if (propStore.Sheets.Any(t => t.PropertyNames.ContainsKey("32")))
+                {
+                    foreach (var extOffset in Utils.FindExtensionBlockSignatures(propBytes))
+                    {
+                        var binaryOffset = extOffset - 4;
+                        if (binaryOffset < 0)
+                        {
+                            continue;
+                        }
+
+                        var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
+                        var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();
+
+                        DelegateExtensionBlocks.Add(Utils.GetExtensionBlockFromBytesOrError(0, exBytes));
+                    }
+                }
             }
             else
             {

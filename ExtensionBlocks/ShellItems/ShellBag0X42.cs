@@ -24,12 +24,24 @@ namespace ExtensionBlocks
 
             BagPath = bagPath;
 
-            Value = Utils.GetNetworkLocationValue(rawBytes);
+            var location = Utils.GetNetworkLocation(rawBytes);
+            Value = location.Location;
+            Description = location.Description;
         }
+
+        /// <summary>The network provider (such as Microsoft Network), when the item has one</summary>
+
+        public string Description { get; }
+
 
         public override string ToString()
         {
             var sb = new StringBuilder();
+            if (Description != null)
+            {
+                sb.AppendLine($"Description: {Description}");
+            }
+            
 
             sb.AppendLine(base.ToString());
 

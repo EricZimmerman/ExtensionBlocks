@@ -23,6 +23,26 @@ namespace ExtensionBlocks
         /// <param name="bagPath">The key it is in (empty elsewhere)</param>
         public static IShellBag Create(byte[] rawBytes, int slot = -1, int mruPosition = -1, string bagPath = "")
         {
+            return CreateItem(rawBytes, slot, mruPosition, bagPath);
+        }
+
+        /// <summary>As Create, with the item's ANSI strings read with codepage (Utils.CodePage while it is read)</summary>
+        public static IShellBag Create(byte[] rawBytes, int slot, int mruPosition, string bagPath, int codepage)
+        {
+            var previous = Utils.CodePage;
+            Utils.CodePage = codepage;
+            try
+            {
+                return CreateItem(rawBytes, slot, mruPosition, bagPath);
+            }
+            finally
+            {
+                Utils.CodePage = previous;
+            }
+        }
+
+        private static IShellBag CreateItem(byte[] rawBytes, int slot, int mruPosition, string bagPath)
+        {
             if (rawBytes == null || rawBytes.Length < 3)
             {
                 throw new Exception($"A shell item has at least 3 bytes, not {rawBytes?.Length ?? 0}");
@@ -76,6 +96,33 @@ namespace ExtensionBlocks
 
             if (type == null)
             {
+                //types with no class of their own that Lnk reads with another type's
+                switch (rawBytes[2])
+                {
+                    case 0x22 when rawBytes.Length > 4 && char.IsLetter((char) rawBytes[3]) && rawBytes[4] == ':':
+                        //a volume item as 0x23 (a drive letter), when it has one (ShellBags has damaged data with 0x22)
+                        return new ShellBag0X23(slot, mruPosition, rawBytes, bagPath);
+                    case 0x77:
+                        return new ShellBag0X74(slot, mruPosition, rawBytes, bagPath);
+                    case 0xaa:
+                    case 0xae:
+                        //zip contents in LNK files; ShellBags' 0xAA items are something else (still unknown)
+                        try
+                        {
+                            var zip = new ShellBagZipContents(slot, mruPosition, rawBytes, bagPath);
+                            if (zip.Value != null && zip.Value.Contains("Unable to determine value") == false)
+                            {
+                                return zip;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            //not zip contents
+                        }
+
+                        break;
+                }
+
                 return new ShellBagUnknown(slot, mruPosition, rawBytes, bagPath);
             }
 

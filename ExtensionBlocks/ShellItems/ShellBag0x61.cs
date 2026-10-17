@@ -79,7 +79,7 @@ namespace ExtensionBlocks
                 var strSize = BitConverter.ToUInt32(rawBytes, index);
                 index += 4;
 
-                var str = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, (int) strSize);
+                var str = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, (int) strSize);
 
                 Value = str.Replace("\0", "");
 
@@ -90,7 +90,7 @@ namespace ExtensionBlocks
 
                 if (strSize > 0)
                 {
-                    str = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, (int) strSize);
+                    str = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, (int) strSize);
 
                     UserName = str.Replace("\0", "");
                     ;
@@ -103,7 +103,7 @@ namespace ExtensionBlocks
 
                 if (strSize > 0)
                 {
-                    str = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, (int) strSize);
+                    str = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, (int) strSize);
                     index += (int) strSize;
                 }
 
@@ -114,7 +114,7 @@ namespace ExtensionBlocks
                     len1 += 1;
                 }
 
-                URI = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, len1);
+                URI = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, len1);
 
 
                 index += len1 + 1;
