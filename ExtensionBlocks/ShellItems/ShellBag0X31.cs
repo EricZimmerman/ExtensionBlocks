@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,7 +44,8 @@ namespace ExtensionBlocks
             var len = 0;
 
 
-            var beefPos = BitConverter.ToString(rawBytes).IndexOf("04-00-EF-BE", StringComparison.InvariantCulture) / 3;
+            //where the 0xbeef0004 block's signature is (0 when it isn't there), found in the bytes (it was found in a hex string of them)
+            var beefPos = Math.Max(0, Utils.IndexOf(rawBytes, Utils.Beef0004Signature));
 
             if (beefPos == 0)
             {
@@ -103,11 +104,6 @@ namespace ExtensionBlocks
                 var subshellitemdatasize = BitConverter.ToInt16(rawBytes, index);
                 //index += 2;
 
-                if (subshellitemdatasize < 0)
-                {
-                    break; // corrupt size; nothing below would advance index
-                }
-
                 if (subshellitemdatasize == 0)
                 {
                     index += 2; //some kind of separator
@@ -128,6 +124,11 @@ namespace ExtensionBlocks
                         chunks.Add(shellBuff);
                         index += subshellitemdatasize;
                     }
+                    else if (subshellitemdatasize < 0)
+                    {
+                        //not a size (damaged data): the index would not move
+                        break;
+                    }
                 }
             }
 
@@ -140,21 +141,28 @@ namespace ExtensionBlocks
                 var signature = BitConverter.ToUInt32(bytes, 0x04);
 
                 //TODO does this need to check if its a 0xbeef?? regex?
-                var block = Utils.GetExtensionBlockFromBytes(signature, bytes);
+                var block = Utils.GetExtensionBlockFromBytesOrError(signature, bytes);
 
-                if (block.Signature.ToString("X").StartsWith("BEEF00"))
+                if (block.Signature.ToString("X").StartsWith("BEEF00", StringComparison.Ordinal))
                 {
                     ExtensionBlocks.Add(block);
                 }
 
 
                 var beef0004 = block as Beef0004;
-                if (beef0004 != null)
+                if (beef0004 != null && beef0004.LongName.Length > 0)
                 {
                     Value = beef0004.LongName;
                 }
 
-                
+                var beef0005 = block as Beef0005;
+                if (beef0005 != null)
+                {
+                    foreach (var internalBag in beef0005.InternalBags)
+                    {
+                        ExtensionBlocks.Add(new BeefPlaceHolder(null));
+                    }
+                }
 
                 index += extsize;
             }
@@ -174,7 +182,90 @@ namespace ExtensionBlocks
 
         public string ShortName { get; }
 
-        
+        public override ShellBagView GetShellBagView()
+        {
+            var beef4 = ExtensionBlocks.FirstOrDefault(u => u is Beef0004);
+            ulong? entry = null;
+            int? seq = null;
+            DateTimeOffset? la = null;
+            DateTimeOffset? co = null;
+            if (beef4 != null)
+            {
+                var b4 = (Beef0004) beef4;
+                if (b4.MFTInformation.MFTEntryNumber.HasValue)
+                {
+                    entry = b4.MFTInformation.MFTEntryNumber.Value;
+                }
+
+                if (b4.MFTInformation.MFTSequenceNumber.HasValue)
+                {
+                    seq = b4.MFTInformation.MFTSequenceNumber.Value;
+                }
+                la = b4.LastAccessTime;
+                co = b4.CreatedOnTime;
+            }
+
+
+            if (MruPosition == 0 && LastWriteTime.HasValue)
+            {
+                LastInteracted = LastWriteTime.Value;
+            }
+
+
+            var misc = "";
+
+            if (entry > 0 && seq > 0)
+            {
+                misc = "NTFS file system";
+            }
+
+            if (entry > 0 && seq == null)
+            {
+                misc = "FAT file system";
+
+                if (la.HasValue)
+                {
+                    if (la.Value.Minute == 0 && la.Value.Second == 0 && la.Value.Millisecond == 0)
+                    {
+                        misc = "FAT file system";
+                    }
+                    else
+                    {
+                        misc = "exFAT file system";
+                    }
+                }
+            }
+
+            if (entry == null && seq == null)
+            {
+                misc = "Network/special item";
+            }
+
+
+            return new ShellBagView
+            {
+                BagPath = BagPath,
+                ChildBags = ChildShellBags.Count,
+                Value = Value,
+                Slot = Slot,
+                AbsolutePath = AbsolutePath,
+                MRUPosition = MruPosition,
+                HexValue = HexValue,
+                NodeSlot = NodeSlot,
+                InternalID = InternalId,
+                ShellType = FriendlyName,
+                AccessedOn = la,
+                CreatedOn = co,
+                LastWriteTime = LastWriteTime,
+                MFTEntry = entry,
+                MFTSequenceNumber = seq,
+                ModifiedOn = LastModificationTime,
+                FirstInteracted = FirstInteracted,
+                LastInteracted = LastInteracted,
+                Miscellaneous = misc,
+                HasExplored = HasExplored
+            };
+        }
 
         public override string ToString()
         {

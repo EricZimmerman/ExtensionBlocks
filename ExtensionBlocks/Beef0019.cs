@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -16,11 +16,11 @@ namespace ExtensionBlocks
 
             GUID1 = Utils.ExtractGuidFromShellItem(rawBytes.Skip(8).Take(16).ToArray());
 
-            GUID1Folder = Utils.GetFolderNameFromGuid(GUID1);
+            GUID1Folder = GuidMapping.GuidMapping.GetDescriptionFromGuid(GUID1);
 
             GUID2 = Utils.ExtractGuidFromShellItem(rawBytes.Skip(24).Take(16).ToArray());
 
-            GUID2Folder = Utils.GetFolderNameFromGuid(GUID2);
+            GUID2Folder = GuidMapping.GuidMapping.GetDescriptionFromGuid(GUID2);
 
             VersionOffset = BitConverter.ToInt16(rawBytes, 40);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -14,13 +14,26 @@ namespace ExtensionBlocks
                 throw new Exception($"Signature mismatch! Should be 0xbeef0000 but is 0x{Signature:X}");
             }
 
+            if (rawBytes.Length == 0xe)
+            {
+                return;
+            }
+
+            //TODO lose linq stuff
             GUID1 = Utils.ExtractGuidFromShellItem(rawBytes.Skip(8).Take(16).ToArray());
 
-            GUID1Folder = Utils.GetFolderNameFromGuid(GUID1);
+            GUID1Folder = GuidMapping.GuidMapping.GetDescriptionFromGuid(GUID1);
+
+            if (rawBytes.Length == 0x18)
+            {
+                GUID2 = "(Not found)";
+                GUID2Folder = "(NA)";
+                return;
+            }
 
             GUID2 = Utils.ExtractGuidFromShellItem(rawBytes.Skip(24).Take(16).ToArray());
 
-            GUID2Folder = Utils.GetFolderNameFromGuid(GUID2);
+            GUID2Folder = GuidMapping.GuidMapping.GetDescriptionFromGuid(GUID2);
 
             VersionOffset = BitConverter.ToInt16(rawBytes, 40);
         }

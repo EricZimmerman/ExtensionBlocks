@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -64,6 +64,7 @@ namespace ExtensionBlocks
                 index += 4;
             }
 
+
             // in this case we want the rest of the extension data, but again, we arent interested in the version offset yet
             longstringsize = rawBytes.Length - index;
 
@@ -72,20 +73,14 @@ namespace ExtensionBlocks
             var stringpieces =
                 Utils.GetStringsFromMultistring(stringBytes);
 
-            if (stringpieces.Count == 1)
-            {
-                LongName = stringpieces[0];
-            }
-            else
-            {
-                LongName = String.Empty;
-            }
+            LongName = stringpieces[0];
 
             if (stringpieces.Count > 1)
             {
                 LocalisedName = stringpieces[1];
             }
 
+            //}
             index += longstringsize - 2;
 
             if (index > rawBytes.Length)
@@ -98,7 +93,7 @@ namespace ExtensionBlocks
             index += 2;
 
 #if DEBUG
-            Trace.Assert(rawBytes.Length == index, "Still have bytes in beef0004");
+            //(no assert: extra data is not an error, and a failed Trace.Assert ends the process)
 #endif
         }
 
@@ -139,9 +134,10 @@ namespace ExtensionBlocks
                     os = "Windows 2008, 7, 8";
                     break;
                 case 0x2e:
-                    os = "Windows 8.1, 10";
+                    os = "Windows 8.1/Windows 10";
                     break;
-                
+                default:
+                    break;
             }
 
             sb.AppendLine($"Identifier: {Identifier:X2} ({os})");
@@ -150,12 +146,14 @@ namespace ExtensionBlocks
             {
                 sb.AppendLine();
 
-                sb.AppendLine($"Created On: {CreatedOnTime.Value}");
+                sb.AppendLine(
+                    $"Created On: {CreatedOnTime.Value.ToString(Utils.GetDateTimeFormatWithMilliseconds())}");
             }
 
             if (LastAccessTime.HasValue)
             {
-                sb.AppendLine($"Last Access: {LastAccessTime.Value}");
+                sb.AppendLine(
+                    $"Last Access: {LastAccessTime.Value.ToString(Utils.GetDateTimeFormatWithMilliseconds())}");
             }
 
             sb.AppendLine();
@@ -206,7 +204,11 @@ namespace ExtensionBlocks
             }
 
 
-            sb.AppendLine($"File system hint: {MFTInformation.Note}");
+            if (string.IsNullOrEmpty(MFTInformation.Note) == false)
+            {
+                sb.AppendLine($"File system hint: {MFTInformation.Note}");
+            }
+
 
             return sb.ToString();
         }

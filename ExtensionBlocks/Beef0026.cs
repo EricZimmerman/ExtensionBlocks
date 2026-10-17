@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -11,35 +11,36 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0026)
             {
-                throw new Exception($"Signature mismatch! Should be Beef0026 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be Beef0026 but is 0x{Signature:X}");
             }
 
 
-            if (rawBytes[8] == 0x11 || rawBytes[8] == 0x10|| rawBytes[8] == 0x12 || rawBytes[8] == 0x34 || rawBytes[8] == 0x31)
+            if (rawBytes[8] == 0x11 || rawBytes[8] == 0x10 || rawBytes[8] == 0x12 || rawBytes[8] == 0x34 || rawBytes[8] == 0x31)
             {
-                var ft1 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12)).ToUniversalTime();
+                var ft1 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12)).ToUniversalTime();
 
                 CreatedOn = ft1.ToUniversalTime();
 
+                CreatedOn = TimeZoneInfo.ConvertTime(CreatedOn.Value, Utils.TimeZone);
 
-                var ft2 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 20)).ToUniversalTime();
+                var ft2 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 20)).ToUniversalTime();
 
                 LastModified = ft2.ToUniversalTime();
 
+                LastModified = TimeZoneInfo.ConvertTime(LastModified.Value, Utils.TimeZone);
 
-                var ft3 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 28)).ToUniversalTime();
+                var ft3 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 28)).ToUniversalTime();
 
                 LastAccessed = ft3.ToUniversalTime();
 
+                LastAccessed = TimeZoneInfo.ConvertTime(LastAccessed.Value, Utils.TimeZone);
 
                 return;
             }
 
             var shellPropertySheetListSize = BitConverter.ToUInt16(rawBytes, 8);
-
             if (shellPropertySheetListSize > rawBytes.Length - 8)
             {
-                //not enough data for there to be a property store, so bail
                 return;
             }
 
@@ -56,6 +57,11 @@ namespace ExtensionBlocks
         public DateTimeOffset? LastModified { get; }
         public DateTimeOffset? LastAccessed { get; }
 
+        //the format this block has always used, unless one is set
+
+        private static string TimeFormat => Utils.DateTimeFormat == null ? "yyyy-MM-dd HH:mm:ss.fffffff" : Utils.GetDateTimeFormatWithMilliseconds();
+
+
         public override string ToString()
         {
             var sb = new StringBuilder();
@@ -66,19 +72,19 @@ namespace ExtensionBlocks
             if (CreatedOn.HasValue)
             {
                 sb.AppendLine(
-                    $"Created: {CreatedOn.Value.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}");
+                    $"Created: {CreatedOn.Value.ToString(TimeFormat)}");
             }
 
             if (LastModified.HasValue)
             {
                 sb.AppendLine(
-                    $"Last modified: {LastModified.Value.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}");
+                    $"Last modified: {LastModified.Value.ToString(TimeFormat)}");
             }
 
             if (LastAccessed.HasValue)
             {
                 sb.AppendLine(
-                    $"Last accessed: {LastAccessed.Value.ToString("yyyy-MM-dd HH:mm:ss.fffffff")}");
+                    $"Last accessed: {LastAccessed.Value.ToString(TimeFormat)}");
             }
 
             if (PropertyStore != null)

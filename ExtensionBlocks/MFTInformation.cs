@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace ExtensionBlocks
 {
@@ -29,8 +29,8 @@ namespace ExtensionBlocks
             }
             else
             {
-                entryIndex2 = (entryIndex2*16777216); //2^24
-                entryIndex = (entryIndex1 + entryIndex2);
+                entryIndex2 = entryIndex2 * 16777216; //2^24
+                entryIndex = entryIndex1 + entryIndex2;
             }
 
             MFTEntryNumber = entryIndex;
@@ -49,7 +49,7 @@ namespace ExtensionBlocks
 
             if (entryIndex > 0 && sequenceNumber == 0)
             {
-                Note = "FAT";
+                Note = "FAT/CDFS";
             }
 
             if (entryIndex == 0 && sequenceNumber == 0)

@@ -1,4 +1,4 @@
-﻿namespace ExtensionBlocks
+namespace ExtensionBlocks
 {
     public interface IExtensionBlock
     {

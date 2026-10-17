@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -37,6 +37,33 @@ namespace ExtensionBlocks
 
         public Utils.ShellBagTypes ShellBagType { get; set; }
 
+
+        public virtual ShellBagView GetShellBagView()
+        {
+            if (MruPosition == 0 && LastWriteTime.HasValue)
+            {
+                LastInteracted = LastWriteTime.Value;
+            }
+
+            return new ShellBagView
+            {
+                BagPath = BagPath,
+                ChildBags = ChildShellBags.Count,
+                Value = Value,
+                Slot = Slot,
+                AbsolutePath = AbsolutePath,
+                MRUPosition = MruPosition,
+                HexValue = HexValue,
+                NodeSlot = NodeSlot,
+                InternalID = InternalId,
+                ShellType = FriendlyName,
+                LastWriteTime = LastWriteTime,
+                FirstInteracted = FirstInteracted,
+                LastInteracted = LastInteracted,
+                Miscellaneous = "",
+                HasExplored =  HasExplored
+            };
+        }
 
         public List<IExtensionBlock> ExtensionBlocks { get; set; }
 

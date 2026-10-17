@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -9,15 +9,69 @@ namespace ExtensionBlocks
 {
     public class Utils
     {
+        /// <summary>
+        ///     The format of the times in what ToString() returns for blocks and shell items (milliseconds are added to the
+        ///     seconds). Null, the default: the current culture's date and time patterns, with the offset
+        /// </summary>
+        public static string DateTimeFormat { get; set; }
+
+        /// <summary>
+        ///     The time zone that times read from shell items and blocks (MS-DOS times and FILETIMEs) are converted to. UTC by
+        ///     default
+        /// </summary>
+        public static TimeZoneInfo TimeZone { get; set; } = TimeZoneInfo.Utc;
+
+        //the last format made, and what it was made from (the format set, or the culture): shell items' ToString() asks for
+        //it for every time, and a regular expression each time made parsing property sheets twice as slow
+        private static Tuple<string, string> _formatCache;
+
         public static string GetDateTimeFormatWithMilliseconds()
         {
-            string fullPattern =
-                $"{DateTimeFormatInfo.CurrentInfo.ShortDatePattern} {DateTimeFormatInfo.CurrentInfo.LongTimePattern}";
-            fullPattern = Regex.Replace(fullPattern, "(:ss|:s)", "$1.fff");
+            var source = DateTimeFormat ?? "\0" + CultureInfo.CurrentCulture.Name;
+            var cache = _formatCache;
+            if (cache != null && cache.Item1 == source)
+            {
+                return cache.Item2;
+            }
 
-            fullPattern = $"{fullPattern} {" K"}";
+            string fullPattern;
+            if (DateTimeFormat != null)
+            {
+                fullPattern = Regex.Replace(DateTimeFormat, "(:ss|:s)", "$1.fff");
+            }
+            else
+            {
+                fullPattern =
+                    $"{DateTimeFormatInfo.CurrentInfo.ShortDatePattern} {DateTimeFormatInfo.CurrentInfo.LongTimePattern}";
+                fullPattern = Regex.Replace(fullPattern, "(:ss|:s)", "$1.fff");
 
+                fullPattern = $"{fullPattern} {" K"}";
+            }
+
+            _formatCache = Tuple.Create(source, fullPattern);
             return fullPattern;
+        }
+
+        /// <summary>
+        ///     A FILETIME, as DateTimeOffset.FromFileTime gives it (local offset; callers convert to UTC), or
+        ///     DateTimeOffset.MinValue when it is not a valid FILETIME (damaged data), instead of an exception that loses the
+        ///     whole block or shell item
+        /// </summary>
+        public static DateTimeOffset FromFileTime(long fileTime)
+        {
+            if (fileTime < 0 || fileTime > DateTime.MaxValue.ToFileTimeUtc())
+            {
+                return DateTimeOffset.MinValue;
+            }
+
+            try
+            {
+                return DateTimeOffset.FromFileTime(fileTime);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return DateTimeOffset.MinValue;
+            }
         }
 
         private class IdName:IEquatable<IdName>
@@ -3902,6 +3956,28 @@ new IdName (100, "Source Package Family Name"),
         }
 
 
+        /// <summary>
+        ///     As GetExtensionBlockFromBytes, with the block's type taken from its own signature, but a block that can't be
+        ///     parsed (damaged data) is returned as a BeefParseError with the reason instead of throwing, so the shell item it
+        ///     is in can still be read
+        /// </summary>
+        public static IExtensionBlock GetExtensionBlockFromBytesOrError(long signature, byte[] rawBytes)
+        {
+            if (rawBytes == null || rawBytes.Length < 8)
+            {
+                return new BeefParseError(rawBytes, $"only {rawBytes?.Length ?? 0} bytes");
+            }
+
+            try
+            {
+                return GetExtensionBlockFromBytes(0xbeef0000 | rawBytes[4], rawBytes);
+            }
+            catch (Exception ex)
+            {
+                return new BeefParseError(rawBytes, ex.Message);
+            }
+        }
+
         public static IExtensionBlock GetExtensionBlockFromBytes(long signature, byte[] rawBytes)
         {
             IExtensionBlock block = null;
@@ -3974,7 +4050,6 @@ new IdName (100, "Source Package Family Name"),
 
                     break;
 
-//                case 0xbeef000e:
 //                    var beef000e = new Beef000e(rawBytes);
 //                    block = beef000e;
 //
@@ -4075,6 +4150,26 @@ new IdName (100, "Source Package Family Name"),
                     var beef0029 = new Beef0029(rawBytes);
                     block = beef0029;
 
+                    break;
+
+                case 0xbeef000b:
+                    block = new Beef000b(rawBytes);
+                    break;
+
+                case 0xbeef000e:
+                    block = new Beef000e(rawBytes);
+                    break;
+
+                case 0xbeef0015:
+                    block = new Beef0015(rawBytes);
+                    break;
+
+                case 0xbeef001c:
+                    block = new Beef001c(rawBytes);
+                    break;
+
+                case 0xbeef0022:
+                    block = new Beef0022(rawBytes);
                     break;
 
                 default:
@@ -4189,6 +4284,33 @@ new IdName (100, "Source Package Family Name"),
             return new Guid(rawguid).ToString("D");
         }
 
+        /// <summary>The offset of the first copy of pattern in data, or -1</summary>
+        public static int IndexOf(byte[] data, byte[] pattern, int start = 0)
+        {
+            for (var i = Math.Max(0, start); i <= data.Length - pattern.Length; i++)
+            {
+                var match = true;
+                for (var j = 0; j < pattern.Length; j++)
+                {
+                    if (data[i + j] != pattern[j])
+                    {
+                        match = false;
+                        break;
+                    }
+                }
+
+                if (match)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>The signature of the 0xbeef0004 extension block as it is stored</summary>
+        internal static readonly byte[] Beef0004Signature = { 0x04, 0x00, 0xef, 0xbe };
+
         public static string GetFolderNameFromGuid(string guid)
         {
             return GuidMapping.GuidMapping.GetDescriptionFromGuid(guid);
@@ -4217,7 +4339,7 @@ new IdName (100, "Source Package Family Name"),
                 return null;
             }
 
-            return new DateTimeOffset(year, month, day, hour, minute, seconds, TimeSpan.Zero);
+            return TimeZoneInfo.ConvertTime(new DateTimeOffset(year, month, day, hour, minute, seconds, TimeSpan.Zero), TimeZone ?? TimeZoneInfo.Utc);
         }
     }
 }

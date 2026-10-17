@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace ExtensionBlocks
@@ -12,6 +12,8 @@ namespace ExtensionBlocks
             {
                 throw new Exception($"Signature mismatch! Should be 0xbeef000a but is 0x{Signature:X}");
             }
+
+            Message = $"The purpose of this extension block is unknown. Bytes: {BitConverter.ToString(rawBytes)}";
 
             VersionOffset = BitConverter.ToInt16(rawBytes, 12);
         }

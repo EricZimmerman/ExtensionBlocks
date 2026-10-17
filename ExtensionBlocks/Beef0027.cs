@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Text;
 
@@ -11,7 +11,7 @@ namespace ExtensionBlocks
         {
             if (Signature != 0xbeef0027)
             {
-                throw new Exception($"Signature mismatch! Should be 0xbeef0027 but is {Signature}");
+                throw new Exception($"Signature mismatch! Should be 0xbeef0027 but is 0x{Signature:X}");
             }
 
             var propStore = new PropertyStore(rawBytes.Skip(8).ToArray());

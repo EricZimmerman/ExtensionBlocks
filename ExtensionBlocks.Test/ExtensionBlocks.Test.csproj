@@ -10,6 +10,9 @@
     <PackageReference Include="NUnit3TestAdapter" Version="6.3.1" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestFiles\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="../ExtensionBlocks/ExtensionBlocks.csproj" />
   </ItemGroup>
 </Project>

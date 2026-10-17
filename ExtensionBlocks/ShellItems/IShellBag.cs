@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace ExtensionBlocks
@@ -87,5 +87,6 @@ namespace ExtensionBlocks
 
         List<IExtensionBlock> ExtensionBlocks { get; set; }
 
+        ShellBagView GetShellBagView();
     }
 }

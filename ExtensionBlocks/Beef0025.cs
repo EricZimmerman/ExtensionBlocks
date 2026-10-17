@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace ExtensionBlocks
@@ -13,15 +13,17 @@ namespace ExtensionBlocks
                 throw new Exception($"Signature mismatch! Should be Beef0025 but is 0x{Signature:X}");
             }
 
-            var ft1 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12));
+            var ft1 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 12)).ToUniversalTime();
 
             FileTime1 = ft1.ToUniversalTime();
 
+            FileTime1 = TimeZoneInfo.ConvertTime(FileTime1.Value, Utils.TimeZone);
 
-            var ft2 = DateTimeOffset.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 20));
+            var ft2 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, 20)).ToUniversalTime();
 
             FileTime2 = ft2.ToUniversalTime();
 
+            FileTime2 = TimeZoneInfo.ConvertTime(FileTime2.Value, Utils.TimeZone);
 
             VersionOffset = BitConverter.ToInt16(rawBytes, rawBytes.Length - 4);
         }
