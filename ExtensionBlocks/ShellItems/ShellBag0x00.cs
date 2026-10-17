@@ -399,23 +399,10 @@ namespace ExtensionBlocks
 
                 PropertyStores.Add(propStore);
 
-                if (propStore.Sheets.Any(t => t.PropertyNames.ContainsKey("32")))
-                {
-                    //the Delegate ID List (a vector of shell items): their extension blocks
-                    foreach (var extOffset in Utils.FindExtensionBlockSignatures(propBytes))
-                    {
-                        var binaryOffset = extOffset - 4;
-                        if (binaryOffset < 0)
-                        {
-                            continue;
-                        }
-
-                        var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
-                        var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();
-
-                        ExtensionBlocks.Add(Utils.GetExtensionBlockFromBytesOrError(0, exBytes));
-                    }
-                }
+                //Lnk also adds the extension blocks of the shell items in the Delegate ID List (property 32) to this item.
+                //They are those items' (a path: Users, Public, Pictures), not this one's, and ShellBags takes an item's
+                //times and MFT entry from its first 0xbeef0004 block, so they are not: the items, with their blocks, are
+                //in the property sheet's ExtraData
             }
             else
             {
@@ -441,7 +428,7 @@ namespace ExtensionBlocks
                     return;
                 }
 
-                Value = "!!! Unable to determine Value !!!";
+                Value = "No Property sheets found"; //(Lnk says !!! Unable to determine Value !!!; this says why)
             }
 
             index += shellPropertySheetListSize;

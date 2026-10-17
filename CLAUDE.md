@@ -23,6 +23,7 @@ Consumers:
 - `PropertyStore` keeps the sheets it could read (`ParseErrors`), and throws only when none could be read.
 - A shell item's `ToString()` has the registry lines (explored, child bags, deleted) only when it has a `BagPath` (a ShellBags item).
 - Chunk loops read a block longer than what is left as far as it goes (as Lnk does), instead of failing the item.
+- Differences from Lnk's classes, on purpose: network items keep their description (`\\server (Microsoft Network)`, as ShellBags always showed); a 0x00 property view with no sheets says `No Property sheets found` (Lnk: `!!! Unable to determine Value !!!`); and the extension blocks of the shell items in a property view's Delegate ID List are not added to the item (Lnk adds them; they belong to those items, a path, and ShellBags takes an item's times and MFT entry from its first 0xbeef0004 block: 2026.10.3 did, and SBECmd showed Users' times for Users\Public\Pictures).
 - Input may be corrupt or hostile: no loop may depend on a size from the data without moving forward, and no `Trace.Assert`/`Debug.Assert` on data. A string check against a control character must be ordinal (`StartsWith("\u0001")` is true for every string under ICU: Beef000b lost the drive letter).
 
 ## Commands
