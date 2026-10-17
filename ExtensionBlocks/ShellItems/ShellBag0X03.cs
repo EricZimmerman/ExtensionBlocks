@@ -23,7 +23,7 @@ namespace ExtensionBlocks
 
             var index = 0x2a; //first string
 
-            if (rawBytes[0x2c] == 0xe4 && rawBytes[0x2d] == 0x40)
+            if (rawBytes.Length > 0x2d && rawBytes[0x2c] == 0xe4 && rawBytes[0x2d] == 0x40)
             {
                 index = 0x2e;
 
@@ -32,19 +32,30 @@ namespace ExtensionBlocks
 
             }
 
-            var strings = Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index).Split('\0');
+            var strings = rawBytes.Length > index ? Encoding.Unicode.GetString(rawBytes, index, rawBytes.Length - index).Split('\0') : new string[0];
 
-            var s1 = strings[0];
-            var s2 = strings[2];
-            var s3 = strings[4];
+            //items with fewer strings (as in OpenSavePidlMRU) threw, and the whole value was lost
+            var s1 = strings.Length > 0 ? strings[0] : string.Empty;
+            var s2 = strings.Length > 2 ? strings[2] : string.Empty;
+            var s3 = strings.Length > 4 ? strings[4] : string.Empty;
 
             FriendlyName = "Unknown (Unconfirmed purpose)";
             ShellBagType = Utils.ShellBagTypes.Unknown;
 
             index = 0x1e;
 
-            var f = BitConverter.ToDouble(rawBytes, index);
-            var d = DateTime.FromOADate(f);
+            var d = DateTime.MinValue;
+            if (rawBytes.Length >= index + 8)
+            {
+                try
+                {
+                    d = DateTime.FromOADate(BitConverter.ToDouble(rawBytes, index));
+                }
+                catch (ArgumentException)
+                {
+                    //not a date
+                }
+            }
 
             if (d.Year > 1900)
             {

@@ -85,16 +85,20 @@ namespace ExtensionBlocks
                 sb.AppendLine();
             }
 
-            sb.AppendLine($"Has been explored: {HasExplored}");
-            sb.AppendLine();
-
-            if (IsDeleted)
+            //registry side: only for a ShellBags item (not an item from an LNK, an MRU value or inside another item)
+            if (BagPath.Length > 0)
             {
-                sb.AppendLine("Deleted: True");
+                sb.AppendLine($"Has been explored: {HasExplored}");
                 sb.AppendLine();
-            }
 
-            sb.AppendLine($"# Child Bags: {ChildShellBags.Count}");
+                if (IsDeleted)
+                {
+                    sb.AppendLine("Deleted: True");
+                    sb.AppendLine();
+                }
+
+                sb.AppendLine($"# Child Bags: {ChildShellBags.Count}");
+            }
 
             if (FirstInteracted.HasValue)
             {

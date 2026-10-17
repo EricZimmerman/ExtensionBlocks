@@ -24,17 +24,7 @@ namespace ExtensionBlocks
 
             BagPath = bagPath;
 
-            var strings = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, 5, rawBytes.Length - 5);
-            var segs = strings.Split(new[] {'\0'}, StringSplitOptions.RemoveEmptyEntries);
-
-            if (segs.Length == 1)
-            {
-                Value = $"{segs[0]}";
-            }
-            else
-            {
-                Value = $"{segs[0]} ({segs[1]})";
-            }
+            Value = Utils.GetNetworkLocationValue(rawBytes);
         }
 
         public override string ToString()

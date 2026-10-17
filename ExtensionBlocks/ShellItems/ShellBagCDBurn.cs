@@ -69,8 +69,9 @@ namespace ExtensionBlocks
                 {
                     if (subshellitemdatasize > 0)
                     {
-                        var shellBuff = new byte[subshellitemdatasize];
-                        Buffer.BlockCopy(rawBytes, index, shellBuff, 0, subshellitemdatasize);
+                        //a block longer than what is left is read as far as it goes (as Lnk does), not an error that loses the item
+                        var shellBuff = new byte[Math.Min(subshellitemdatasize, rawBytes.Length - index)];
+                        Buffer.BlockCopy(rawBytes, index, shellBuff, 0, shellBuff.Length);
 
                         chunks.Add(shellBuff);
                         index += subshellitemdatasize;

@@ -99,7 +99,7 @@ namespace ExtensionBlocks
 
             var len = 0;
 
-            while (rawBytes[index + len] != 0x0)
+            while (index + len < rawBytes.Length && rawBytes[index + len] != 0x0)
             {
                 len += 1;
             }
@@ -113,8 +113,9 @@ namespace ExtensionBlocks
 
             ShortName = shortName;
 
-            //where the 0xbeef0004 block's signature is (0 when it isn't there), found in the bytes (it was found in a hex string of them)
-            var beefPos = Math.Max(0, Utils.IndexOf(rawBytes, Utils.Beef0004Signature));
+            //where the 0xbeef0004 block's signature is (0 when it isn't there), looked for after the name so bytes in the
+            //header or name can't be taken for it (from Lnk)
+            var beefPos = Math.Max(0, Utils.IndexOf(rawBytes, Utils.Beef0004Signature, index));
 
             if (beefPos == 0)
             {
@@ -153,8 +154,9 @@ namespace ExtensionBlocks
                 {
                     if (subshellitemdatasize > 0)
                     {
-                        var shellBuff = new byte[subshellitemdatasize];
-                        Buffer.BlockCopy(rawBytes, index, shellBuff, 0, subshellitemdatasize);
+                        //a block longer than what is left is read as far as it goes (as Lnk does), not an error that loses the item
+                        var shellBuff = new byte[Math.Min(subshellitemdatasize, rawBytes.Length - index)];
+                        Buffer.BlockCopy(rawBytes, index, shellBuff, 0, shellBuff.Length);
 
                         chunks.Add(shellBuff);
                         index += subshellitemdatasize;

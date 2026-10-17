@@ -12,7 +12,8 @@ namespace ExtensionBlocks
 
             Slot = clone.Slot;
             MruPosition = clone.MruPosition;
-            FriendlyName = clone.FriendlyName;
+            //0x36 is a file (0x32) with a Unicode name (0x04), not a directory (as Lnk has it); 0x31 reads both the same way
+            FriendlyName = "File";
             ChildShellBags = clone.ChildShellBags;
             InternalId = clone.InternalId;
             HexValue = clone.HexValue;
@@ -22,7 +23,7 @@ namespace ExtensionBlocks
             LastAccessTime = clone.LastAccessTime;
             LastModificationTime = clone.LastModificationTime;
             ShortName = clone.ShortName;
-            ShellBagType = clone.ShellBagType;
+            ShellBagType = clone.ShellBagType == Utils.ShellBagTypes.Directory ? Utils.ShellBagTypes.File : clone.ShellBagType;
         }
 
         public string ShortName { get; }

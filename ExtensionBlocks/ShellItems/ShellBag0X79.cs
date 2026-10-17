@@ -431,17 +431,11 @@ namespace ExtensionBlocks
                     var extOffsets = new List<int>();
                     try
                     {
-                        var regexObj = new Regex("([0-9A-F]{2})-00-EF-BE", RegexOptions.IgnoreCase);
-                        var matchResult = regexObj.Match(BitConverter.ToString(propBytes));
-                        while (matchResult.Success)
-                        {
-                            extOffsets.Add(matchResult.Index);
-                            matchResult = matchResult.NextMatch();
-                        }
+                        extOffsets.AddRange(Utils.FindExtensionBlockSignatures(propBytes));
 
                         foreach (var extOffset in extOffsets)
                         {
-                            var binaryOffset = extOffset / 3 - 4;
+                            var binaryOffset = extOffset - 4;
                             var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
 
                             var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();

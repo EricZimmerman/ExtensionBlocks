@@ -26,7 +26,8 @@ namespace ExtensionBlocks
 
             var index = 0;
 
-            if (rawBytes[3] == 0x80 || rawBytes.Length == 0x16)
+            //size, type, a byte and a GUID (0x14 bytes), maybe followed by an empty extension block list (0x16) (from Lnk)
+            if (rawBytes[3] == 0x80 || rawBytes.Length == 0x16 || rawBytes.Length == 0x14)
             {
                 ProcessGuid(rawBytes);
             }
@@ -132,6 +133,17 @@ namespace ExtensionBlocks
 
             index += 2;
 
+            //damaged sizes threw from the array copies; say what is wrong instead (from Lnk; a size of 0 is fine)
+            if (identifiersize < 0 || identifiersize > rawBytes.Length - index)
+            {
+                throw new Exception($"Invalid identifier size ({identifiersize}): only {rawBytes.Length - index} bytes are left");
+            }
+
+            if (shellPropertySheetListSize < 0 || shellPropertySheetListSize > rawBytes.Length - index - identifiersize)
+            {
+                throw new Exception($"Invalid property sheet list size ({shellPropertySheetListSize}): only {rawBytes.Length - index - identifiersize} bytes are left");
+            }
+
             var identifierData = new byte[identifiersize];
 
             Array.Copy(rawBytes, index, identifierData, 0, identifiersize);
@@ -155,17 +167,11 @@ namespace ExtensionBlocks
                     var extOffsets = new List<int>();
                     try
                     {
-                        var regexObj = new Regex("([0-9A-F]{2})-00-EF-BE", RegexOptions.IgnoreCase);
-                        var matchResult = regexObj.Match(BitConverter.ToString(propBytes));
-                        while (matchResult.Success)
-                        {
-                            extOffsets.Add(matchResult.Index);
-                            matchResult = matchResult.NextMatch();
-                        }
+                        extOffsets.AddRange(Utils.FindExtensionBlockSignatures(propBytes));
 
                         foreach (var extOffset in extOffsets)
                         {
-                            var binaryOffset = extOffset / 3 - 4;
+                            var binaryOffset = extOffset - 4;
                             var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
 
                             var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();
@@ -252,6 +258,9 @@ namespace ExtensionBlocks
             var rawguid = Utils.ExtractGuidFromShellItem(rawguid1);
 
             var foldername = GuidMapping.GuidMapping.GetDescriptionFromGuid(rawguid);
+
+            //set before the early return: a 0x14 byte item (no extension blocks) had no value
+            Value = foldername;
 
             index += 16;
 

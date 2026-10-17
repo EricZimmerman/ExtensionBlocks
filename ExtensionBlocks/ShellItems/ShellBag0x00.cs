@@ -127,7 +127,7 @@ namespace ExtensionBlocks
                     return;
 
                 default: // includes known 0xbeebee00
-                    if (rawBytes.Length <= 0x64)
+                    if (rawBytes.Length <= 0x60) //as Lnk: longer ones are property views (0x64 took one for a server name)
                     {
                         FriendlyName = "Server name";
                         ShellBagType = Utils.ShellBagTypes.Network;
@@ -196,15 +196,26 @@ namespace ExtensionBlocks
 
             Value = Uri.UnescapeDataString(url.Replace("\0", ""));
 
-            index += 16;
+            //the full URL is 16 bytes on in ShellBags' items and 4 in OneDrive ones in OpenSavePidlMRU (which threw, and
+            //the item was lost); the first gap whose size fits is used, and there is none when neither does
+            foreach (var gap in new[] {16, 4})
+            {
+                if (index + gap + 4 > rawBytes.Length)
+                {
+                    continue;
+                }
 
-            size = BitConverter.ToUInt32(rawBytes, index);
-            index += 4;
+                size = BitConverter.ToUInt32(rawBytes, index + gap);
+                if (size == 0 || size > rawBytes.Length - (index + gap + 4))
+                {
+                    continue;
+                }
 
-            url = Encoding.Unicode.GetString(rawBytes, index, (int) size);
-            index += (int) size;
+                url = Encoding.Unicode.GetString(rawBytes, index + gap + 4, (int) size);
 
-            FullUrl = url.Replace("\0", "");
+                FullUrl = url.Replace("\0", "");
+                break;
+            }
         }
 
         private void ProcessFTPSubItem(byte[] rawBytes)
@@ -348,6 +359,7 @@ namespace ExtensionBlocks
 
         private void ProcessPropertyViewDefault(byte[] rawBytes)
         {
+            //as Lnk reads it (Lnk's was checked against LnkParse3): the value is worked out whether or not extension blocks follow
             FriendlyName = "Variable: Users property view";
             ShellBagType = Utils.ShellBagTypes.User;
             var index = 10;
@@ -359,6 +371,20 @@ namespace ExtensionBlocks
             var identifiersize = BitConverter.ToInt16(rawBytes, index);
 
             index += 2;
+
+            if (identifiersize > rawBytes.Length)
+            {
+                //not a property view: strings
+                index = 0xc;
+
+                var strs = CodePagesEncodingProvider.Instance.GetEncoding(1252).GetString(rawBytes, index, rawBytes.Length - index).Split('\0');
+
+                var p2 = string.Join(",", strs.Skip(1).ToList());
+
+                Value = $"{strs[0]} ({p2})";
+
+                return;
+            }
 
             var identifierData = new byte[identifiersize];
 
@@ -373,63 +399,58 @@ namespace ExtensionBlocks
 
                 PropertyStores.Add(propStore);
 
-//                var p = propStore.Sheets.Where(t => t.PropertyNames.ContainsKey("32"));
-//
-//                if (p.Any())
-//                {
-//                    //we can now look thry prop bytes for extension blocks
-//                    //TODO this is a hack until we can process vectors natively
-//
-//                    var extOffsets = new List<int>();
-//                    try
-//                    {
-//                        var regexObj = new Regex("([0-9A-F]{2})-00-EF-BE", RegexOptions.IgnoreCase);
-//                        var matchResult = regexObj.Match(BitConverter.ToString(propBytes));
-//                        while (matchResult.Success)
-//                        {
-//                            extOffsets.Add(matchResult.Index);
-//                            matchResult = matchResult.NextMatch();
-//                        }
-//
-//                        foreach (var extOffset in extOffsets)
-//                        {
-//                            var binaryOffset = extOffset / 3 - 4;
-//                            var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
-//
-//                            var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();
-//
-//                            var signature1 = BitConverter.ToUInt32(exBytes, 4);
-//
-//                            //Debug.WriteLine(" 0x1f bag sig: " + signature1.ToString("X8"));
-//
-//                            var block1 = Utils.GetExtensionBlockFromBytesOrError(signature1, exBytes);
-//
-//                            ExtensionBlocks.Add(block1);
-//                        }
-//                    }
-//                    catch (ArgumentException )
-//                    {
-//                        // Syntax error in the regular expression
-//                    }
-//
-//                }
-            }
+                if (propStore.Sheets.Any(t => t.PropertyNames.ContainsKey("32")))
+                {
+                    //the Delegate ID List (a vector of shell items): their extension blocks
+                    foreach (var extOffset in Utils.FindExtensionBlockSignatures(propBytes))
+                    {
+                        var binaryOffset = extOffset - 4;
+                        if (binaryOffset < 0)
+                        {
+                            continue;
+                        }
 
+                        var exSize = BitConverter.ToInt16(propBytes, binaryOffset);
+                        var exBytes = propBytes.Skip(binaryOffset).Take(exSize).ToArray();
+
+                        ExtensionBlocks.Add(Utils.GetExtensionBlockFromBytesOrError(0, exBytes));
+                    }
+                }
+            }
+            else
+            {
+                //no property sheets: zip contents (a date with /) or CD burning data
+                if (rawBytes.Length > 0x28 && (rawBytes[0x28] == 0x2f ||
+                                               rawBytes[0x24] == 0x4e && rawBytes[0x26] == 0x2f && rawBytes[0x28] == 0x41))
+                {
+                    var zip = new ShellBagZipContents(Slot, MruPosition, rawBytes, BagPath);
+                    FriendlyName = zip.FriendlyName;
+                    ShellBagType = zip.ShellBagType;
+                    Value = zip.Value;
+
+                    return;
+                }
+
+                if (rawBytes.Length > 8 && rawBytes[4] == 0x41 && rawBytes[5] == 0x75 && rawBytes[6] == 0x67 && rawBytes[7] == 0x4D)
+                {
+                    var cdb = new ShellBagCDBurn(Slot, MruPosition, rawBytes, BagPath);
+                    FriendlyName = cdb.FriendlyName;
+                    ShellBagType = cdb.ShellBagType;
+                    Value = cdb.Value;
+
+                    return;
+                }
+
+                Value = "!!! Unable to determine Value !!!";
+            }
 
             index += shellPropertySheetListSize;
 
             index += 2; //move past end of property sheet terminator
 
-            if (index == rawBytes.Length)
+            if (shellPropertySheetListSize > 0 && index + 2 <= rawBytes.Length)
             {
-                return;
-            }
-
-            var extBlockSize = BitConverter.ToInt16(rawBytes, index);
-
-            if (extBlockSize > 0)
-            {
-                //process extension blocks
+                var extBlockSize = BitConverter.ToInt16(rawBytes, index);
 
                 while (extBlockSize > 0)
                 {
@@ -437,13 +458,11 @@ namespace ExtensionBlocks
 
                     index += extBlockSize;
 
-                    var signature1 = BitConverter.ToUInt32(extBytes, 4);
+                    var signature1 = extBytes.Length >= 8 ? BitConverter.ToUInt32(extBytes, 4) : 0;
 
-                    var block1 = Utils.GetExtensionBlockFromBytesOrError(signature1, extBytes);
+                    ExtensionBlocks.Add(Utils.GetExtensionBlockFromBytesOrError(signature1, extBytes));
 
-                    ExtensionBlocks.Add(block1);
-
-                    if (rawBytes.Length == index)
+                    if (index + 2 > rawBytes.Length)
                     {
                         break;
                     }
@@ -452,48 +471,34 @@ namespace ExtensionBlocks
                 }
             }
 
-            if (rawBytes.Length < index)
+            if (PropertyStores.Count == 0)
             {
-                int terminator = BitConverter.ToInt16(rawBytes, index);
-
-                if (terminator > 0)
-                {
-                    throw new Exception($"Expected terminator of 0, but got {terminator}");
-                }
+                return;
             }
 
+            var valuestring = (from propertySheet in PropertyStores.First().Sheets
+                from propertyName in propertySheet.PropertyNames
+                where propertyName.Key == "10"
+                select propertyName.Value).FirstOrDefault();
 
-          
-
-            var valuestring = string.Empty;
-
-            if (PropertyStores.Count > 0)
+            if (valuestring == null)
             {
-                valuestring = (from propertySheet in PropertyStores.First().Sheets
-                    from propertyName in propertySheet.PropertyNames
-                    where propertyName.Key == "10"
-                    select propertyName.Value).FirstOrDefault();
+                var namesList =
+                    (from propertySheet in PropertyStores.First().Sheets
+                        from propertyName in propertySheet.PropertyNames
+                        select propertyName.Value)
+                    .ToList();
 
-                if (valuestring == null)
-                {
-                    var namesList =
-                        (from propertySheet in PropertyStores.First().Sheets
-                            from propertyName in propertySheet.PropertyNames
-                            select propertyName.Value)
-                        .ToList();
-
-                    valuestring = string.Join("::", namesList.ToArray());
-                }
+                valuestring = string.Join("::", namesList.ToArray());
             }
 
             if (valuestring == "")
             {
-                valuestring = "No Property sheets found";
+                valuestring = "No Property sheet value found";
             }
 
             Value = valuestring;
         }
-
         private void ProcessPropertyViewGUID(byte[] rawBytes)
         {
             // this is a guid

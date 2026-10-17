@@ -4308,6 +4308,57 @@ new IdName (100, "Source Package Family Name"),
             return -1;
         }
 
+        /// <summary>
+        ///     The offsets of the extension block signatures (0xbeefxxxx, stored as xx 00 ef be) in buffer, without overlap:
+        ///     what a regular expression over BitConverter.ToString(buffer) found, with no hex string (from Lnk)
+        /// </summary>
+        public static List<int> FindExtensionBlockSignatures(byte[] buffer)
+        {
+            var result = new List<int>();
+            for (var i = 0; i + 3 < buffer.Length;)
+            {
+                var e = Array.IndexOf(buffer, (byte) 0xef, i + 2);
+                if (e < 0 || e + 1 >= buffer.Length)
+                {
+                    break;
+                }
+
+                var p = e - 2;
+                if (buffer[e + 1] == 0xbe && buffer[e - 1] == 0x00)
+                {
+                    result.Add(p);
+                    i = p + 4;
+                }
+                else
+                {
+                    i = p + 1;
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///     The name of a network location shell item (0x41-0x47): its location, and its description in parentheses when
+        ///     flag 0x80 says it has one (flags at 4, 0x80: a description; location, description, comments as ANSI strings
+        ///     from 5). The strings were split without the flags, so an item without a description showed the first
+        ///     character of the Unicode copy of its name, and the 2 or 4 byte trailer was guessed
+        /// </summary>
+        public static string GetNetworkLocationValue(byte[] rawBytes, int codepage = 1252)
+        {
+            if (rawBytes.Length <= 5)
+            {
+                return "(None)";
+            }
+
+            var parts = CodePagesEncodingProvider.Instance.GetEncoding(codepage).GetString(rawBytes, 5, rawBytes.Length - 5).Split('\0');
+
+            var name = parts[0];
+            var description = (rawBytes[4] & 0x80) != 0 && parts.Length > 1 && parts[1].Length > 0 ? parts[1] : null;
+
+            return description == null ? name : $"{name} ({description})";
+        }
+
         /// <summary>The signature of the 0xbeef0004 extension block as it is stored</summary>
         internal static readonly byte[] Beef0004Signature = { 0x04, 0x00, 0xef, 0xbe };
 

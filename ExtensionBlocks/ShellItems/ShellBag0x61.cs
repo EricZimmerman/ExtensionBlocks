@@ -123,6 +123,8 @@ namespace ExtensionBlocks
             {
                 var uri = Encoding.Unicode.GetString(rawBytes, 0x8, rawBytes.Length - 0x8).Trim('\0');
                 URI = uri;
+                //the URI is also the item's name (it was left empty; as Lnk does)
+                Value = uri.Split('\0')[0];
                 index = rawBytes.Length - 2;
             }
             dataSize = BitConverter.ToUInt16(rawBytes, index);

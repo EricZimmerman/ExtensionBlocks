@@ -80,17 +80,11 @@ namespace ExtensionBlocks
                     var extOffsets = new List<int>();
                     try
                     {
-                        var regexObj = new Regex("([0-9A-F]{2})-00-EF-BE", RegexOptions.IgnoreCase);
-                        var matchResult = regexObj.Match(BitConverter.ToString(propertysheetBytes));
-                        while (matchResult.Success)
-                        {
-                            extOffsets.Add(matchResult.Index);
-                            matchResult = matchResult.NextMatch();
-                        }
+                        extOffsets.AddRange(Utils.FindExtensionBlockSignatures(propertysheetBytes));
 
                         foreach (var extOffset in extOffsets)
                         {
-                            var binaryOffset = extOffset / 3 - 4;
+                            var binaryOffset = extOffset - 4;
                             var exSize = BitConverter.ToInt16(propertysheetBytes, binaryOffset);
 
                             var exBytes = propertysheetBytes.Skip(binaryOffset).Take(exSize).ToArray();

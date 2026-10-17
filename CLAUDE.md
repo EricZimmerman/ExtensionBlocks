@@ -9,7 +9,8 @@ A `netstandard2.0` NuGet library that parses the `0xbeefXXXX` extension blocks f
 Consumers:
 - `ShellBags` (ShellBagsExplorer repo: SBECmd and ShellBags Explorer): the shell items, the blocks, `GetExtensionBlockFromBytesOrError`. It keeps only the registry side (`RawRegistryData`: BagMRU keys, the class by type byte `ExtensionBlocks.ShellBag0X{type}` found by reflection in this assembly). It sets `Utils.DateTimeFormat` to `yyyy-MM-dd HH:mm:ss` when it loads, and `Utils.TimeZone`.
 - `Lnk` (and `JumpList` through it): only the blocks (`GetExtensionBlockFromBytes`, which throws on damage; Lnk records the block as damaged) and `PropertyStore`/`PropertySheet`. Lnk has its own shell item classes. Its output (LECmd, JLECmd) shows the blocks' and sheets' `ToString()`.
-- `RegistryPluginBase` (RegistryPlugins): the blocks; three plugins (LastVisitedPidlMRU, OpenSavePidlMRU, Taskband) have their own older copies of the shell items.
+- `RegistryPluginBase` (RegistryPlugins): the blocks; LastVisitedPidlMRU, OpenSavePidlMRU and Taskband use the shell items through `ShellItemFactory` (since 2026.10.3; they had their own older copies).
+- Lnk still has its own shell item classes. 2026.10.3 brought their fixes here (checked: `Value` and `FriendlyName` the same as Lnk's for all 9,410 items of the LNK corpus, except network items with a description, which show it here, as ShellBags always did).
 
 ## Behavior to keep
 
@@ -20,6 +21,8 @@ Consumers:
 - `GetDateTimeFormatWithMilliseconds` is cached (it was a regular expression per call and made property sheets twice as slow).
 - `PropertySheet` keeps the shell items found in VT_VECTOR, VT_STREAM and VT_BLOB values as `ExtraData`, made when first read (`LazyText`): building their text while parsing made Lnk parse jump lists 60% slower. Only the 0x00 item in streams is made while parsing (it has its own "possible false positive" message). Sheet text: `Guid: ..., Key: n ==> property name, Value: ...` for numeric sheets.
 - `PropertyStore` keeps the sheets it could read (`ParseErrors`), and throws only when none could be read.
+- A shell item's `ToString()` has the registry lines (explored, child bags, deleted) only when it has a `BagPath` (a ShellBags item).
+- Chunk loops read a block longer than what is left as far as it goes (as Lnk does), instead of failing the item.
 - Input may be corrupt or hostile: no loop may depend on a size from the data without moving forward, and no `Trace.Assert`/`Debug.Assert` on data. A string check against a control character must be ordinal (`StartsWith("\u0001")` is true for every string under ICU: Beef000b lost the drive letter).
 
 ## Commands
@@ -39,6 +42,7 @@ dotnet pack --configuration Release                   # package includes README.
 - **`BeefBase`** (implements `IExtensionBlock`) reads the common header: size (UInt16 @0), version (UInt16 @2) and signature (UInt32 @4). Subclasses check the signature, parse their body, and set `VersionOffset` (usually the last 2 bytes of the block). Placeholder classes parse nothing and set `Message`.
 - **Property stores:** `Beef0010`, `0021`, `0022`, `0024`, `0026` and `0027` wrap a `PropertyStore`, a list of `PropertySheet`s ("1SPS" serialized property storage). Numeric keys are named through the big `Utils.PropertyStoreInfo` table (`GetDescriptionFromGuidAndKey`).
 - **`Beef0004`** (file entry: timestamps, MFT reference, long/localised name) is in almost every shell item, so its speed matters. `LongName` is the first string, `LocalisedName` the second.
+- **`ShellItemFactory.Create(bytes, slot, mru, bagPath)`**: the class for an item: signatures first (CD burning, MTP, CFSF, zip contents), then `ShellBag0X{type}` by name, else `ShellBagUnknown`; an item that can't be parsed throws (the parser's own exception). ShellBags and the plugins use it.
 - **Shell items** (`ShellItems/`): `ShellBag` (abstract) and `IShellBag`, one class per type byte (`ShellBag0X31`, ...) or signature (`ShellBagMTPDevice`, `ShellBagCFSF`, `ShellBagCDBurn`, `ShellBagZipContents`), `ShellBagUnknown`, `ShellBagParseError`, `ShellBagView`. The registry-side properties (last write, slot, node slot, child bags, interacted times) are set by ShellBags. Blocks that contain shell items: `Beef0005`, `Beef000e`, `Beef0017`, and property sheet values.
 - Helpers in `Utils`: `ExtractGuidFromShellItem`, `ExtractDateTimeOffsetFromBytes` (MS-DOS date/time, converted to `TimeZone`; null when unset or invalid), `FromFileTime` (`DateTimeOffset.MinValue` for an invalid FILETIME), `IndexOf` (bytes), `GetFolderNameFromGuid`.
 
