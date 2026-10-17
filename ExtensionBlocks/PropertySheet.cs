@@ -32,10 +32,10 @@ namespace ExtensionBlocks
 
             if (serializedVersion != 0x53505331)
             {
-                throw new Exception($"Version mismatch! {serializedVersion} != 31-53-50-53");
+                throw new Exception($"Version mismatch! {BitConverter.ToString(contents, sheetindex - 4, 4)} != 31-53-50-53");
             }
 
-            Version = serializedVersion;
+            Version = BitConverter.ToString(contents, sheetindex - 4, 4);
 
             var rawguidshellProperty = new byte[16];
 
@@ -1138,7 +1138,8 @@ namespace ExtensionBlocks
 
         public int Size { get; private set; }
 
-        public uint Version { get; private set; }
+        /// <summary>The sheet's version as its bytes ("31-53-50-53": 1SPS)</summary>
+        public string Version { get; private set; }
 
         public string GUID { get; private set; }
 
