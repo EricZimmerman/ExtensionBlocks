@@ -73,6 +73,35 @@ namespace ExtensionBlocks.Test
             Assert.That(bag.ShellBagType, Is.EqualTo(Utils.ShellBagTypes.File));
         }
 
+        [TestCase((byte) 0x31, "Directory")]
+        [TestCase((byte) 0x35, "Directory")]
+        [TestCase((byte) 0x36, "File")]
+        [TestCase((byte) 0x39, "Directory")]
+        [TestCase((byte) 0xB1, "Directory")]
+        [TestCase((byte) 0xB5, "Directory")]
+        public void WrapperKeepsWhatTheViewSets(byte type, string shellType)
+        {
+            //0x35, 0x36, 0x39, 0xB1 and 0xB5 are read by a 0x31 clone: the last interacted time the view sets (MRU
+            //position 0) was lost by the next Sync, so the text had no "Last interacted" line; 0x36's view and text said
+            //Directory
+            var name = type == 0x35 || type == 0x36 ? Unicode("Изображение") : Ansi("Folder");
+            var item = Item(new byte[] {type, 0x00}, new byte[4 + 4 + 2], name, new byte[2]);
+            var lastWrite = new DateTimeOffset(2026, 10, 20, 12, 34, 56, TimeSpan.Zero);
+
+            var bag = ShellItemFactory.Create(item, 3, 0, @"BagMRU\1");
+            bag.LastWriteTime = lastWrite;
+
+            var view = bag.GetShellBagView();
+            var text = bag.ToString();
+
+            Assert.That(view.LastInteracted, Is.EqualTo(lastWrite));
+            Assert.That(bag.LastInteracted, Is.EqualTo(lastWrite));
+            Assert.That(text, Does.Contain("Last interacted: "));
+            Assert.That(view.ShellType, Is.EqualTo(shellType));
+            Assert.That(text, Does.Contain($"Shell Type: {shellType}"));
+            Assert.That(bag.FriendlyName, Is.EqualTo(shellType));
+        }
+
         [Test]
         public void UriWithoutData()
         {

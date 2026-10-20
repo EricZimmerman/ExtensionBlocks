@@ -48,10 +48,11 @@ namespace ExtensionBlocks
         /// <summary>
         ///     The parts set from the registry after parsing (last write time, ...) are set on this item; the clone that
         ///     builds the view and the text needs them too (#237: Unicode name items, as accented names are, had no last
-        ///     write or interacted times)
+        ///     write or interacted times; 0x36's file name)
         /// </summary>
         private void Sync()
         {
+            clone.FriendlyName = FriendlyName;
             clone.LastWriteTime = LastWriteTime;
             clone.FirstInteracted = FirstInteracted;
             clone.LastInteracted = LastInteracted;
@@ -66,7 +67,11 @@ namespace ExtensionBlocks
         public override ShellBagView GetShellBagView()
         {
             Sync();
-            return clone.GetShellBagView();
+            var view = clone.GetShellBagView();
+            //the view sets the last interacted time (MRU position 0) on the clone; keep it here too, as every other item
+            //does, or the next Sync puts it back to null (ToString had no "Last interacted" line)
+            LastInteracted = clone.LastInteracted;
+            return view;
         }
 
         public override string ToString()
