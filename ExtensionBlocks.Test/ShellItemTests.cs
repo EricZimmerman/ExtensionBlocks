@@ -77,6 +77,7 @@ namespace ExtensionBlocks.Test
         [TestCase((byte) 0x35, "Directory")]
         [TestCase((byte) 0x36, "File")]
         [TestCase((byte) 0x39, "Directory")]
+        [TestCase((byte) 0x3D, "Directory")]
         [TestCase((byte) 0xB1, "Directory")]
         [TestCase((byte) 0xB5, "Directory")]
         public void WrapperKeepsWhatTheViewSets(byte type, string shellType)
@@ -278,6 +279,69 @@ namespace ExtensionBlocks.Test
             Assert.That(ShellItemFactory.Create(Item(new byte[] {0x22}, Encoding.ASCII.GetBytes("C:\\\0"), new byte[16])).Value, Is.EqualTo("C:"));
             Assert.That(ShellItemFactory.Create(Item(new byte[] {0x22, 0x00, 0xb8}, new byte[20])), Is.TypeOf<ShellBagUnknown>());
             Assert.That(ShellItemFactory.Create(Item(new byte[] {0xaa, 0x03, 0x58, 0x00}, new byte[20])), Is.TypeOf<ShellBagUnknown>());
+        }
+        [Test]
+        public void ArchiveContentsWhateverTheTypeByte()
+        {
+            //Windows 11 archive folders (ShellBags): bytes 2-3 vary, so the item is found by its layout, not by its type byte
+            //(0x54 here, whose class read it only partly; other bytes were unknown types or misread as GUIDs)
+            var item = Convert.FromBase64String("RgBUABAAAAAAAAAAAAAAAIAl6Cd3qdwBAwAAAAUADQBSAGUAcABvAHIAdABzAFwAMgAwADIANgBcAE0AYQByAGMAaAAAAAAA");
+
+            var bag = (ShellBagArchiveContents) ShellItemFactory.Create(item);
+
+            Assert.That(bag.Value, Is.EqualTo("March"), "the parent folders are items of their own");
+            Assert.That(bag.ArchivePath, Is.EqualTo(@"Reports\2026\March"));
+            Assert.That(bag.FileAttributes, Is.EqualTo(0x10));
+            Assert.That(bag.ModifiedOn, Is.EqualTo(new DateTimeOffset(2026, 3, 1, 12, 30, 15, TimeSpan.Zero)));
+            Assert.That(bag.GetShellBagView().ModifiedOn, Is.EqualTo(bag.ModifiedOn));
+            Assert.That(bag.ToString(), Does.Contain(@"Archive path: Reports\2026\March"));
+
+            //a read only folder at the root of the archive, 0xC3 at offset 2
+            var root = Convert.FromBase64String("LgDDehEAAAAAAAAAAAAAAABAVk2rdNwBAAAAAAYAAABiAGEAYwBrAHUAcAAAAAAA");
+            Assert.That(ShellItemFactory.Create(root).Value, Is.EqualTo("backup"));
+
+            //the lengths have to fit the item
+            root[0x1C] = 7;
+            Assert.That(ShellBagArchiveContents.IsArchiveContents(root), Is.False);
+        }
+
+        [Test]
+        public void DocumentDriveFolderAndFile()
+        {
+            //0xFF folders and 0xFC files with 0x55 at offset 3 (a document drive namespace extension, from ShellBags)
+            var folder = Convert.FromBase64String(
+                "5AD/VQwDDAAAAAABAAAAEAAAAACoo2JaSNoBAJC+piu13AEA+IIINLXcAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADEAQQBiAEMAZABFAGYARwBoAEkAagAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMQBLAGwATQBuAE8AcABRAHIAUwB0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAF9awgxyAA9NNUswAAAAAAAAAAAAA=");
+            var bag = (ShellBagDocumentDrive) ShellItemFactory.Create(folder);
+
+            Assert.That(bag.Value, Is.EqualTo("공유 폴더"));
+            Assert.That(bag.FriendlyName, Is.EqualTo("Document drive folder"));
+            Assert.That(bag.ItemId, Is.EqualTo("1AbCdEfGhIj"));
+            Assert.That(bag.ParentId, Is.EqualTo("1KlMnOpQrSt"));
+            Assert.That(bag.CreatedOn, Is.EqualTo(new DateTimeOffset(2024, 1, 16, 9, 0, 0, TimeSpan.Zero)));
+            Assert.That(bag.ModifiedOn, Is.EqualTo(new DateTimeOffset(2026, 3, 16, 10, 0, 0, TimeSpan.Zero)));
+            Assert.That(bag.AccessedOn, Is.EqualTo(new DateTimeOffset(2026, 3, 16, 11, 0, 0, TimeSpan.Zero)));
+            Assert.That(bag.GetShellBagView().CreatedOn, Is.EqualTo(bag.CreatedOn));
+
+            var file = (ShellBagDocumentDrive) ShellItemFactory.Create(Convert.FromBase64String(
+                "OwD8VS0QAAAAgPffOz4E3QEAjng8PgTdAYAkET0+BN0BAAAAAAAAAACsrAHIHMFfAHYAMgAAAAAAAAAAAA=="));
+
+            Assert.That(file.Value, Is.EqualTo("견적서_v2"));
+            Assert.That(file.FriendlyName, Is.EqualTo("Document drive file"));
+            Assert.That(file.ItemId, Is.Null);
+            Assert.That(file.ModifiedOn, Is.EqualTo(new DateTimeOffset(2026, 6, 25, 1, 2, 4, TimeSpan.Zero)));
+        }
+
+        [Test]
+        public void FolderOf3D()
+        {
+            //0x3D (ShellBags) is a 0x31 folder: a code page short name and a 0xbeef0004 block
+            var item = Convert.FromBase64String("UgA9AAAAAABXXJMtEAAwrvi8JMFYzgAAOgAJAAQA775XXJYlV1yTLS4AAAB2FAAAAAABAAAAAAAAAAAAAAAAAAAAmQ4BATCu+LwkwVjOAAAYAAAA");
+
+            var bag = ShellItemFactory.Create(item);
+
+            Assert.That(bag, Is.TypeOf<ShellBag0X3D>());
+            Assert.That(bag.Value, Is.EqualTo("기본설치"));
+            Assert.That(bag.ShellBagType, Is.EqualTo(Utils.ShellBagTypes.Directory));
         }
     }
 }

@@ -4,7 +4,7 @@ namespace ExtensionBlocks
 {
     /// <summary>
     ///     The shell item class for an item's bytes (moved from ShellBags): its signatures first (CD burning, MTP device,
-    ///     storage and folder, CFSF, zip contents), then the class for its type byte (ShellBag0X{type}), else
+    ///     storage and folder, CFSF, document drive, archive contents, zip contents), then the class for its type byte (ShellBag0X{type}), else
     ///     ShellBagUnknown. An item that can't be parsed throws: callers record it as damaged
     /// </summary>
     public static class ShellItemFactory
@@ -76,6 +76,18 @@ namespace ExtensionBlocks
                     case CfsfSignature:
                         return new ShellBagCFSF(slot, mruPosition, rawBytes, bagPath);
                 }
+            }
+
+            //found by their layout whatever the type byte: archive contents' bytes 2-3 vary (ShellBags sent them as unknown types of
+            //every value, and other types misread them, some as an unmapped GUID)
+            if (ShellBagDocumentDrive.IsDocumentDrive(rawBytes))
+            {
+                return new ShellBagDocumentDrive(slot, mruPosition, rawBytes, bagPath);
+            }
+
+            if (ShellBagArchiveContents.IsArchiveContents(rawBytes))
+            {
+                return new ShellBagArchiveContents(slot, mruPosition, rawBytes, bagPath);
             }
 
             //zip contents: a / in a date (or N/A) at one of these offsets
