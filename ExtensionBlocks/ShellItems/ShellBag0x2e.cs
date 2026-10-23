@@ -26,8 +26,11 @@ namespace ExtensionBlocks
 
             var index = 0;
 
-            //size, type, a byte and a GUID (0x14 bytes), maybe followed by an empty extension block list (0x16) (from Lnk)
-            if (rawBytes[3] == 0x80 || rawBytes.Length == 0x16 || rawBytes.Length == 0x14)
+            //size, type, a byte and a GUID (0x14 bytes), maybe followed by an empty extension block list (0x16) (from Lnk),
+            //or by extension blocks whatever the byte is (0x48 with a 0xbeef0026 block: the GUID's bytes read as the
+            //control panel signature below and it threw)
+            if (rawBytes[3] == 0x80 || rawBytes.Length == 0x16 || rawBytes.Length == 0x14 ||
+                rawBytes.Length >= 0x1C && BitConverter.ToUInt16(rawBytes, 0x1A) == 0xbeef)
             {
                 ProcessGuid(rawBytes);
             }
@@ -63,7 +66,8 @@ namespace ExtensionBlocks
 
                 var testSig2 = BitConverter.ToInt32(rawBytes, 5);
 
-                if (testSig2 >= 0x15032601)
+                //its strings run to 0x22 bytes from the end, from 0x116
+                if (testSig2 >= 0x15032601 && rawBytes.Length >= 0x116 + 0x22)
                 {
                     FriendlyName = "Control panel category";
                     ShellBagType = Utils.ShellBagTypes.ControlPanelCategory;

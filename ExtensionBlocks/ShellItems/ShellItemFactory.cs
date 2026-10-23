@@ -41,6 +41,27 @@ namespace ExtensionBlocks
             }
         }
 
+        /// <summary>A Unicode MM/dd/yyyy  HH:mm:ss at offset, as zip contents have</summary>
+        private static bool HasZipDate(byte[] rawBytes, int offset)
+        {
+            const string pattern = "00/00/0000  00:00:00";
+            if (rawBytes.Length < offset + pattern.Length * 2)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < pattern.Length; i++)
+            {
+                var c = (char) BitConverter.ToUInt16(rawBytes, offset + i * 2);
+                if (pattern[i] == '0' ? c < '0' || c > '9' : c != pattern[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private static IShellBag CreateItem(byte[] rawBytes, int slot, int mruPosition, string bagPath)
         {
             if (rawBytes == null || rawBytes.Length < 3)
@@ -90,8 +111,9 @@ namespace ExtensionBlocks
                 return new ShellBagArchiveContents(slot, mruPosition, rawBytes, bagPath);
             }
 
-            //zip contents: a / in a date (or N/A) at one of these offsets
-            if (rawBytes.Length > 0x28 && rawBytes[0x8] == 0 &&
+            //zip contents: a / in a date (or N/A) at one of these offsets; byte 8 is 0, or there is a whole date at 0x24 (some have
+            //data in bytes 4-9: they were unknown items of type 0x6C, 0x7F and 0x8A)
+            if (rawBytes.Length > 0x28 && (rawBytes[0x8] == 0 || HasZipDate(rawBytes, 0x24)) &&
                 (rawBytes[0x28] == 0x2f || rawBytes[0x26] == 0x2f || rawBytes[0x1a] == 0x2f || rawBytes[0x1c] == 0x2f))
             {
                 try

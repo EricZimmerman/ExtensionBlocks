@@ -44,6 +44,56 @@ namespace ExtensionBlocks.Test
             Assert.That(bag.Value, Is.Not.Empty);
         }
 
+        [Test]
+        public void RootFolderWithBlocksAfterTheGuid()
+        {
+            //from Exceptionless: type 0x2E, 0x48, the Downloads GUID and a 0xbeef0026 block; the GUID's bytes at 5 read as a
+            //control panel category signature and it threw
+            var item = Convert.FromBase64String("OgAuSJDiTTc/EmVFkWQ5xJJeRnsmAAEAJgDvvhEAAAAc9LVLuEbZAS5yGKAhStoBpqiHxiFK2gEUAAAA");
+
+            var bag = ShellItemFactory.Create(item);
+
+            Assert.That(bag, Is.TypeOf<ShellBag0X2E>());
+            Assert.That(bag.Value, Is.EqualTo(GuidMapping.GuidMapping.GetDescriptionFromGuid("374de290-123f-4565-9164-39c4925e467b")));
+            Assert.That(bag.Value, Is.Not.Empty);
+            Assert.That(bag.ExtensionBlocks.Single(), Is.TypeOf<Beef0026>());
+        }
+
+        [Test]
+        public void ZipContentsWithDataInBytes4To9()
+        {
+            //type 0x8A, data in bytes 4-9 (byte 8 is not 0), the date at 0x24, then the name's lengths and the name: these were
+            //unknown items
+            var item = Item(new byte[] {0x8a, 0xfb, 0xfe, 0x07, 0x00, 0x00, 0xee, 0x00}, new byte[0x16], new byte[] {0x10, 0x00, 0x01, 0x00},
+                Encoding.Unicode.GetBytes("02/03/2017  16:37:02"), new byte[] {0x00, 0x00, 0xfa, 0x31, 0x00, 0x00, 0x00, 0x00},
+                BitConverter.GetBytes(7), new byte[4], Unicode("Scripts"), new byte[4]);
+
+            var bag = ShellItemFactory.Create(item);
+
+            Assert.That(item[8], Is.Not.Zero);
+            Assert.That(bag, Is.TypeOf<ShellBagZipContents>());
+            Assert.That(bag.Value, Is.EqualTo("Scripts"));
+        }
+
+        [Test]
+        public void ShortControlPanelCategory()
+        {
+            //the control panel signature on an item too short for its strings: read as something else, not out of range
+            var item = Item(new byte[] {0x2e, 0x00, 0x00, 0x01, 0x26, 0x03, 0x15}, new byte[0x40]);
+
+            Exception error = null;
+            try
+            {
+                ShellItemFactory.Create(item);
+            }
+            catch (Exception ex)
+            {
+                error = ex.GetBaseException();
+            }
+
+            Assert.That(error, Is.Not.InstanceOf<ArgumentOutOfRangeException>());
+        }
+
         [TestCase((byte) 0x82, "Microsoft Network", TestName = "Network location with a description")]
         [TestCase((byte) 0x02, null, TestName = "Network location without a description")]
         public void NetworkLocation(byte flags, string description)
