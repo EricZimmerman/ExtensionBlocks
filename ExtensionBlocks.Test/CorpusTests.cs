@@ -28,7 +28,9 @@ namespace ExtensionBlocks.Test
             {"!CFSF", typeof(ShellBagCFSF)},
             {"!MtpDevice", typeof(ShellBagMTPDevice)},
             {"!MtpStorage", typeof(ShellBagMTPStorage)},
-            {"!MtpFolder", typeof(ShellBagMTPFolder)}
+            {"!MtpFolder", typeof(ShellBagMTPFolder)},
+            {"!Ftp", typeof(ShellBag0X00)},
+            {"!FindData", typeof(ShellBagFindData)}
         };
 
         private static string Corpus()
