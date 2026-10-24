@@ -355,6 +355,132 @@ namespace ExtensionBlocks.Test
             Assert.That(ShellBagArchiveContents.IsArchiveContents(root), Is.False);
         }
 
+        /// <summary>An FTP folder item: bytes 2-5, 0x00030005, attributes, size, modified, permissions, the ANSI name padded to 4 bytes, the UTF-16 one</summary>
+        private static byte[] FtpItem(byte[] bytes2To5, string name, DateTimeOffset modified)
+        {
+            var ansiBytes = Encoding.GetEncoding(949).GetBytes(name + "\0");
+            var padded = new byte[(ansiBytes.Length + 3) / 4 * 4];
+            Array.Copy(ansiBytes, padded, ansiBytes.Length);
+            var time = modified == DateTimeOffset.MinValue ? 0 : modified.ToFileTime();
+            return Item(bytes2To5, new byte[] {5, 0, 3, 0}, BitConverter.GetBytes(0x10), BitConverter.GetBytes(4096L),
+                BitConverter.GetBytes(time), BitConverter.GetBytes((ushort) 0x0755), new byte[6], padded, Unicode(name), new byte[2]);
+        }
+
+        [TestCase(new byte[] {0, 0, 0, 0}, TestName = "FTP folder with bytes 2-5 of 0")]
+        [TestCase(new byte[] {0x14, 0x00, 0xe9, 0xfd}, TestName = "FTP folder with bytes 2-5 set (an unknown type)")]
+        [TestCase(new byte[] {0x16, 0x00, 0x79, 0x00}, TestName = "FTP folder with bytes 2-5 set (a type with a class)")]
+        [TestCase(new byte[] {0x1f, 0x50, 0x00, 0x00}, TestName = "FTP folder with bytes 2-5 set (a root folder type)")]
+        public void FtpFolderWhateverBytes2To5(byte[] bytes2To5)
+        {
+            //ShellBags: FTP folders' bytes 2-5 are 0 in some hives and other values in others, which came in as unknown items or
+            //were misread by the type byte's class
+            var modified = new DateTimeOffset(2018, 3, 8, 17, 22, 0, TimeSpan.Zero);
+            var item = FtpItem(bytes2To5, "gisdata", modified);
+
+            Assert.That(ShellBag0X00.IsFtpItem(item), Is.True);
+            var bag = (ShellBag0X00) ShellItemFactory.Create(item);
+
+            Assert.That(bag.FriendlyName, Is.EqualTo("Variable: FTP URI"));
+            Assert.That(bag.ShellBagType, Is.EqualTo(Utils.ShellBagTypes.FtpUri));
+            Assert.That(bag.Value, Is.EqualTo("gisdata"));
+            Assert.That(bag.FTPFolderTime, Is.EqualTo(modified));
+        }
+
+        [TestCase("01. 소프트웨어", TestName = "FTP folder with a Korean name")]
+        [TestCase("ĀĂ folder", TestName = "FTP folder whose name starts with characters whose low byte is 0")]
+        [TestCase("abc", TestName = "FTP folder whose ANSI name and null fill 4 bytes")]
+        public void FtpFolderNames(string name)
+        {
+            //the UTF-16 name starts at the next multiple of 4 after the ANSI one (a search for the first byte that wasn't 0 cut
+            //off a first character whose low byte is 0)
+            var item = FtpItem(new byte[] {0x18, 0x00, 0x3c, 0x24}, name, DateTimeOffset.MinValue);
+
+            var bag = (ShellBag0X00) ShellItemFactory.Create(item, -1, -1, "", 949);
+
+            Assert.That(bag.Value, Is.EqualTo(name));
+            Assert.That(bag.FTPFolderTime, Is.Null);
+        }
+
+        [Test]
+        public void FtpFolderThatDoesNotFit()
+        {
+            var item = FtpItem(new byte[] {0x14, 0x00, 0xe9, 0xfd}, "cekftp", DateTimeOffset.MinValue);
+            Assert.That(ShellBag0X00.IsFtpItem(item), Is.True);
+
+            //the UTF-16 name not ending within the item, a control character in it, no attributes
+            var cut = (byte[]) item.Clone();
+            BitConverter.GetBytes((ushort) 0x34).CopyTo(cut, 0);
+            Assert.That(ShellBag0X00.IsFtpItem(cut), Is.False);
+
+            var control = (byte[]) item.Clone();
+            control[0x2E] = 0x07;
+            Assert.That(ShellBag0X00.IsFtpItem(control), Is.False);
+
+            var noAttributes = (byte[]) item.Clone();
+            noAttributes[0x0A] = 0;
+            Assert.That(ShellBag0X00.IsFtpItem(noAttributes), Is.False);
+            Assert.That(ShellItemFactory.Create(noAttributes), Is.Not.TypeOf<ShellBag0X00>());
+        }
+
+        /// <summary>A find data item: bytes 2-3, the GUID, the names' lengths and offsets, a count, the find data twice, the names</summary>
+        private static byte[] FindDataItem(byte type, byte b3, string name, string second, uint attributes, DateTimeOffset created,
+            DateTimeOffset accessed, DateTimeOffset modified)
+        {
+            var findData = BitConverter.GetBytes(attributes).Concat(BitConverter.GetBytes(created.ToFileTime()))
+                .Concat(BitConverter.GetBytes(accessed.ToFileTime())).Concat(BitConverter.GetBytes(modified.ToFileTime()))
+                .Concat(new byte[8]).ToArray();
+            var secondOffset = 0x68 + (name.Length + 1) * 2;
+            return Item(new[] {type, b3}, ShellBagFindData.ItemGuid.ToByteArray(), BitConverter.GetBytes((ushort) name.Length),
+                BitConverter.GetBytes((ushort) second.Length), BitConverter.GetBytes((ushort) 0x68),
+                BitConverter.GetBytes((ushort) secondOffset), BitConverter.GetBytes(1), findData, findData, Unicode(name),
+                Unicode(second), new byte[] {0x92, 0x6c, 0xe6, 0xa8});
+        }
+
+        [TestCase((byte) 0x07, (byte) 0x00, TestName = "Find data item with an unknown type byte")]
+        [TestCase((byte) 0x1F, (byte) 0x50, TestName = "Find data item with a root folder type byte (it threw)")]
+        [TestCase((byte) 0x16, (byte) 0x96, TestName = "Find data item with a type byte that has a class")]
+        public void FindDataWhateverTheTypeByte(byte type, byte b3)
+        {
+            //ShellBags: GUID 1ca7ea69-e26a-44c9-9182-a9128722c66f at 4 and the find data twice, seen with OneDrive folders; bytes 2-3 vary
+            var created = new DateTimeOffset(2016, 9, 18, 16, 1, 59, TimeSpan.Zero);
+            var accessed = new DateTimeOffset(2018, 1, 27, 15, 10, 50, TimeSpan.Zero);
+            var modified = new DateTimeOffset(2018, 1, 27, 15, 10, 51, TimeSpan.Zero);
+            var item = FindDataItem(type, b3, "Camera Roll", "Camera Roll", 0x30, created, accessed, modified);
+
+            var bag = (ShellBagFindData) ShellItemFactory.Create(item);
+
+            Assert.That(bag.Value, Is.EqualTo("Camera Roll"));
+            Assert.That(bag.FriendlyName, Is.EqualTo("Directory"));
+            Assert.That(bag.FileAttributes, Is.EqualTo(0x30));
+            Assert.That(bag.CreatedOn, Is.EqualTo(created));
+            Assert.That(bag.AccessedOn, Is.EqualTo(accessed));
+            Assert.That(bag.ModifiedOn, Is.EqualTo(modified));
+            Assert.That(bag.GetShellBagView().ModifiedOn, Is.EqualTo(modified));
+            Assert.That(bag.ToString(), Does.Not.Contain("Second name"));
+        }
+
+        [Test]
+        public void FindDataWithTwoNames()
+        {
+            var time = new DateTimeOffset(2016, 7, 15, 15, 30, 33, TimeSpan.Zero);
+            var item = FindDataItem(0x1F, 0x50, "OneDrive", "Luca", 0x10, time, time, time);
+
+            var bag = (ShellBagFindData) ShellItemFactory.Create(item);
+
+            Assert.That(bag.Value, Is.EqualTo("OneDrive"));
+            Assert.That(bag.SecondName, Is.EqualTo("Luca"));
+            Assert.That(bag.GetShellBagView().Miscellaneous, Does.Contain("second name: Luca"));
+
+            //a name that doesn't end where its length says: not this layout; a 0x1F item with only this GUID stays a root folder
+            var bad = (byte[]) item.Clone();
+            bad[0x14] = 9;
+            Assert.That(ShellBagFindData.IsFindData(bad), Is.False);
+
+            var root = Item(new byte[] {0x1f, 0x50}, ShellBagFindData.ItemGuid.ToByteArray());
+            Assert.That(ShellBagFindData.IsFindData(root), Is.False);
+            Assert.That(ShellItemFactory.Create(root), Is.TypeOf<ShellBag0X1F>());
+        }
+
         [Test]
         public void DocumentDriveFolderAndFile()
         {

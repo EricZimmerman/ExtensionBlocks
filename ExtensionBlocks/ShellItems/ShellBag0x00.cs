@@ -225,6 +225,79 @@ namespace ExtensionBlocks
             }
         }
 
+        /// <summary>
+        ///     An FTP folder (a child of an FTP URI item) whatever bytes 2-5 are: they are 0 in some hives and hold other
+        ///     values in others (those came in as unknown items of most type bytes, or were misread by the type's class).
+        ///     0x00 size, 0x06 0x00030005, 0x0A file attributes, 0x0E size, 0x16 modified (FILETIME), 0x1E Unix permissions,
+        ///     0x26 name (ANSI, null, padded to 4 bytes), name (UTF-16, null)
+        /// </summary>
+        public static bool IsFtpItem(byte[] rawBytes)
+        {
+            if (rawBytes.Length < 0x2C || BitConverter.ToUInt32(rawBytes, 6) != 0x00030005)
+            {
+                return false;
+            }
+
+            var size = BitConverter.ToUInt16(rawBytes, 0);
+            var attributes = BitConverter.ToUInt32(rawBytes, 0x0A);
+            if (size < 0x2C || size > rawBytes.Length || attributes == 0 || attributes > 0xFFFF)
+            {
+                return false;
+            }
+
+            var modified = BitConverter.ToInt64(rawBytes, 0x16);
+            if (modified != 0 && Utils.FromFileTime(modified) == DateTimeOffset.MinValue)
+            {
+                return false;
+            }
+
+            if (!FtpNames(rawBytes, size, out var ansiLength, out var unicodeStart, out var unicodeLength) || ansiLength == 0 ||
+                unicodeLength == 0)
+            {
+                return false;
+            }
+
+            for (var i = unicodeStart; i < unicodeStart + unicodeLength * 2; i += 2)
+            {
+                if (BitConverter.ToUInt16(rawBytes, i) < 0x20)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        ///     Where an FTP folder's names are: the ANSI one at 0x26 (its length without the null), the UTF-16 one after it,
+        ///     at the next multiple of 4 from 0x26 (its start and length in characters). False when they don't end within size
+        /// </summary>
+        private static bool FtpNames(byte[] rawBytes, int size, out int ansiLength, out int unicodeStart, out int unicodeLength)
+        {
+            ansiLength = 0;
+            unicodeStart = 0;
+            unicodeLength = 0;
+
+            const int ansiStart = 0x26;
+            while (ansiStart + ansiLength < size && rawBytes[ansiStart + ansiLength] != 0)
+            {
+                ansiLength += 1;
+            }
+
+            unicodeStart = ansiStart + (ansiLength + 1 + 3) / 4 * 4;
+            if (ansiStart + ansiLength >= size || unicodeStart + 2 > size)
+            {
+                return false;
+            }
+
+            while (unicodeStart + unicodeLength * 2 + 2 <= size && BitConverter.ToUInt16(rawBytes, unicodeStart + unicodeLength * 2) != 0)
+            {
+                unicodeLength += 1;
+            }
+
+            return unicodeStart + unicodeLength * 2 + 2 <= size;
+        }
+
         private void ProcessFTPSubItem(byte[] rawBytes)
         {
             FriendlyName = "Variable: FTP URI";
@@ -234,8 +307,6 @@ namespace ExtensionBlocks
 
             var ft1 = Utils.FromFileTime((long) BitConverter.ToUInt64(rawBytes, index)).ToUniversalTime();
 
-            index += 8;
-
             var fileTime1 = ft1.ToUniversalTime();
 
             if (fileTime1.Year > 1601)
@@ -243,40 +314,18 @@ namespace ExtensionBlocks
                 FTPFolderTime = TimeZoneInfo.ConvertTime(fileTime1, Utils.TimeZone);
             }
 
-            index += 8;
+            var size = Math.Min((int) BitConverter.ToUInt16(rawBytes, 0), rawBytes.Length);
 
-            var len1 = 0;
-
-            while (rawBytes[index + len1] != 0x00)
+            //the UTF-16 name starts at the next multiple of 4 after the ANSI one (a search for the first byte that isn't 0
+            //missed characters whose low byte is 0, and read past the end of damaged items)
+            if (!FtpNames(rawBytes, size, out var ansiLength, out var unicodeStart, out var unicodeLength))
             {
-                len1 += 1;
+                throw new Exception("The names of an FTP folder item don't end within the item");
             }
 
-            var s1 = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, len1);
+            ShortName = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, 0x26, ansiLength);
 
-            ShortName = s1;
-
-            index += len1;
-
-            while (rawBytes[index] == 0)
-            {
-                index += 1;
-            }
-
-
-            len1 = 0;
-
-            while (rawBytes[index + len1] != 0x00 || rawBytes[index + len1 + 1] != 0x00)
-            {
-                len1 += 1;
-            }
-
-            s1 = Encoding.Unicode.GetString(rawBytes, index, len1 + 1);
-
-
-            index += len1 + 1;
-
-            Value = s1;
+            Value = Encoding.Unicode.GetString(rawBytes, unicodeStart, unicodeLength * 2);
         }
 
         public override ShellBagView GetShellBagView()
