@@ -165,6 +165,62 @@ namespace ExtensionBlocks.Test
             Assert.That(bag.URI, Is.EqualTo("ms-settings:dateandtime"));
         }
 
+        private const string FtpUriHex =
+            "5A00610350000301000004000000B00B984272F6DB01FFFFFFFF000000000000000000000000150000001800000063796777696E2E6D6972726F722E726166616C2E636100000400000000000000040000000000000066747000";
+
+        [Test]
+        public void FtpUriAndFileFromComDlg32()
+        {
+            //Issues #261: an FTP share opened in a file dialog (OpenSavePidlMRU\txt). The 0x61 item ends with its scheme (a size
+            //read after it threw), and the file after it (0x00030009 at 6) was read as a server name
+            var uri = Convert.FromHexString(FtpUriHex);
+            var file = Convert.FromHexString(
+                "4A000000000009000300800000001A0000000000000000C081EA4467CB014406000000000000726F626F74732E747874000072006F0062006F00740073002E0074007800740000000000");
+
+            var uriBag = (ShellBag0X61) ShellItemFactory.Create(uri);
+            Assert.That(uriBag.Value, Is.EqualTo("cygwin.mirror.rafal.ca"));
+            Assert.That(uriBag.URI, Is.EqualTo("ftp"));
+            Assert.That(uriBag.FileTime1, Is.Not.Null);
+
+            Assert.That(ShellBag0X00.IsFtpItem(file), Is.True);
+            var fileBag = (ShellBag0X00) ShellItemFactory.Create(file);
+            Assert.That(fileBag.FriendlyName, Is.EqualTo("Variable: FTP file"));
+            Assert.That(fileBag.ShellBagType, Is.EqualTo(Utils.ShellBagTypes.FtpUri));
+            Assert.That(fileBag.IsFtpFile, Is.True);
+            Assert.That(fileBag.Value, Is.EqualTo("robots.txt"));
+            Assert.That(fileBag.ShortName, Is.EqualTo("robots.txt"));
+            Assert.That(fileBag.FileSize, Is.EqualTo(0x1A));
+            Assert.That(fileBag.FTPFolderTime!.Value.UtcDateTime, Is.EqualTo(DateTime.FromFileTimeUtc(0x01CB6744EA81C000)));
+            Assert.That(fileBag.ToString(), Does.Contain("FTP file time: "));
+            Assert.That(fileBag.ToString(), Does.Contain("File size: 26"));
+        }
+
+        [TestCase(0x78)]
+        [TestCase(0x79)]
+        public void PropertyViewEndingWithItsGuids(int type)
+        {
+            //(OpenSavePidlMRU) a 0x78 item that ends with its GUIDs, with no extension block size after them: reading one threw
+            var guid = new Guid("20D04FE0-3AEA-1069-A2D8-08002B30309D").ToByteArray();
+            var item = Item(new byte[] {(byte) type, 0x00}, BitConverter.GetBytes((ushort) 0x2A), new byte[] {0xC9, 0xC0, 0x1E, 0x0C},
+                new byte[4], new byte[2], new byte[16], guid);
+
+            var bag = ShellItemFactory.Create(item);
+
+            Assert.That(bag.Value, Is.EqualTo(GuidMapping.GuidMapping.GetDescriptionFromGuid(new Guid(guid).ToString())));
+            Assert.That(bag.ExtensionBlocks, Is.Empty);
+        }
+
+        [Test]
+        public void FtpUriCutShort()
+        {
+            //an item cut off in its scheme: what is there is read, nothing past the end
+            var uri = Convert.FromHexString(FtpUriHex);
+
+            var bag = (ShellBag0X61) ShellItemFactory.Create(uri.Take(uri.Length - 2).ToArray());
+
+            Assert.That(bag.URI, Is.EqualTo("ft"));
+        }
+
         [Test]
         public void Type03WithOneString()
         {

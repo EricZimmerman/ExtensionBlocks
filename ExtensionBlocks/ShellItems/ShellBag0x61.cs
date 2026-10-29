@@ -107,17 +107,15 @@ namespace ExtensionBlocks
                     index += (int) strSize;
                 }
 
+                //the scheme (ftp), up to a null or the end of the item
                 var len1 = 0;
 
-                while (rawBytes[index + len1] != 0x00)
+                while (index + len1 < rawBytes.Length && rawBytes[index + len1] != 0x00)
                 {
                     len1 += 1;
                 }
 
                 URI = CodePagesEncodingProvider.Instance.GetEncoding(Utils.CodePage).GetString(rawBytes, index, len1);
-
-
-                index += len1 + 1;
             }
             else
             {
@@ -125,14 +123,10 @@ namespace ExtensionBlocks
                 URI = uri;
                 //the URI is also the item's name (it was left empty; as Lnk does)
                 Value = uri.Split('\0')[0];
-                index = rawBytes.Length - 2;
             }
-            dataSize = BitConverter.ToUInt16(rawBytes, index);
-            index += 2;
 
-
-            //(no assert: extra data is not an error, and a failed Trace.Assert ends the process)
-            //(no assert: extra data is not an error, and a failed Trace.Assert ends the process)
+            //nothing is read after the scheme: in ComDlg32's MRUs the item ends with it (a size read after it threw, and the
+            //item was lost: RegistryPlugins #66, Issues #261)
         }
 
         public DateTimeOffset? FileTime1 { get; }

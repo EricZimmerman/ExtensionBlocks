@@ -111,6 +111,7 @@ namespace ExtensionBlocks
 
                     break;
                 case 0x00030005:
+                case 0x00030009:
                 case 0x00000005:
 
                     ProcessFTPSubItem(rawBytes);
@@ -167,7 +168,11 @@ namespace ExtensionBlocks
         /// </summary>
         public DateTimeOffset? LastAccessTime { get; set; }
 
+        /// <summary>For an FTP folder or file, its modified time</summary>
         public DateTimeOffset? FTPFolderTime { get; set; }
+
+        /// <summary>An FTP file (0x00030009), not a folder; FileSize is its size</summary>
+        public bool IsFtpFile { get; private set; }
 
         ///// <summary>
         /////     For files and directories, the MFT entry #
@@ -226,14 +231,15 @@ namespace ExtensionBlocks
         }
 
         /// <summary>
-        ///     An FTP folder (a child of an FTP URI item) whatever bytes 2-5 are: they are 0 in some hives and hold other
+        ///     An FTP folder or file (a child of an FTP URI item) whatever bytes 2-5 are: they are 0 in some hives and hold other
         ///     values in others (those came in as unknown items of most type bytes, or were misread by the type's class).
-        ///     0x00 size, 0x06 0x00030005, 0x0A file attributes, 0x0E size, 0x16 modified (FILETIME), 0x1E Unix permissions,
-        ///     0x26 name (ANSI, null, padded to 4 bytes), name (UTF-16, null)
+        ///     0x00 size, 0x06 0x00030005 (a folder) or 0x00030009 (a file, in ComDlg32's MRUs), 0x0A file attributes, 0x0E
+        ///     size, 0x16 modified (FILETIME), 0x1E Unix permissions, 0x26 name (ANSI, null, padded to 4 bytes), name (UTF-16, null)
         /// </summary>
         public static bool IsFtpItem(byte[] rawBytes)
         {
-            if (rawBytes.Length < 0x2C || BitConverter.ToUInt32(rawBytes, 6) != 0x00030005)
+            if (rawBytes.Length < 0x2C || BitConverter.ToUInt32(rawBytes, 6) != FtpFolderSignature &&
+                BitConverter.ToUInt32(rawBytes, 6) != FtpFileSignature)
             {
                 return false;
             }
@@ -298,10 +304,23 @@ namespace ExtensionBlocks
             return unicodeStart + unicodeLength * 2 + 2 <= size;
         }
 
+        private const uint FtpFolderSignature = 0x00030005;
+        private const uint FtpFileSignature = 0x00030009;
+
         private void ProcessFTPSubItem(byte[] rawBytes)
         {
             FriendlyName = "Variable: FTP URI";
             ShellBagType = Utils.ShellBagTypes.FtpUri;
+
+            //a file (opened from an FTP folder in a file dialog): its size is at 0x0E (it was read as a server name, its
+            //Value bytes 6 on as UTF-16)
+            if (BitConverter.ToUInt32(rawBytes, 6) == FtpFileSignature)
+            {
+                FriendlyName = "Variable: FTP file";
+                IsFtpFile = true;
+                var fileSize = BitConverter.ToUInt64(rawBytes, 0x0E);
+                FileSize = fileSize > int.MaxValue ? int.MaxValue : (int) fileSize;
+            }
 
             var index = 0x16;
 
@@ -665,7 +684,12 @@ namespace ExtensionBlocks
             {
                 sb.AppendLine();
                 sb.AppendLine(
-                    $"FTP folder time: {FTPFolderTime.Value.ToString(Utils.GetDateTimeFormatWithMilliseconds())}");
+                    $"FTP {(IsFtpFile ? "file" : "folder")} time: {FTPFolderTime.Value.ToString(Utils.GetDateTimeFormatWithMilliseconds())}");
+            }
+
+            if (IsFtpFile)
+            {
+                sb.AppendLine($"File size: {FileSize:N0}");
             }
 
             if (FullUrl != null)

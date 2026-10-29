@@ -115,7 +115,8 @@ namespace ExtensionBlocks
 
             var name = GuidMapping.GuidMapping.GetDescriptionFromGuid(rawguid);
 
-            var extsize1 = bin.ReadUInt16(); // BitConverter.ToUInt16(rawBytes, index);
+            //some end with the GUIDs: no extension blocks, not even their 0 terminator (reading one threw, and the item was lost)
+            var extsize1 = bin.BaseStream.Length - bin.BaseStream.Position >= 2 ? bin.ReadUInt16() : (ushort) 0;
 
             if (extsize1 > 0)
             {
@@ -124,11 +125,12 @@ namespace ExtensionBlocks
                 //move position back 2 so we get the entire block of data below
                 bin.BaseStream.Position -= 2;
 
-                while (bin.BaseStream.Position != bin.BaseStream.Length)
+                while (bin.BaseStream.Length - bin.BaseStream.Position >= 2)
                 {
                     extsize1 = bin.ReadUInt16();
 
-                    if (extsize1 == 0)
+                    //0 ends them; a block has at least its size, version and signature, and has to fit the item
+                    if (extsize1 < 8 || extsize1 > bin.BaseStream.Length - bin.BaseStream.Position + 2)
                     {
                         break;
                     }
